@@ -14,24 +14,22 @@ XMLScene::XMLScene(char *filename)
 		exit( 1 );
 	}
 
-	TiXmlElement* dgxElement= doc->FirstChildElement( "dgx" );
+	TiXmlElement* anfElement= doc->FirstChildElement( "anf" );
 
-	if (dgxElement == NULL)
+	if (anfElement == NULL)
 	{
-		printf("Main dgx block element not found! Exiting!\n");
+		printf("Main anf block element not found! Exiting!\n");
 		exit(1);
 	}
 
-	globElement = dgxElement->FirstChildElement( "globals" );
-	camsElement =  dgxElement->FirstChildElement( "cameras" );
-	lightsElement = dgxElement->FirstChildElement( "lights" );
-	textsElement =  dgxElement->FirstChildElement( "textures" );
-	appsElement =  dgxElement->FirstChildElement( "appearances" );
-	/*	matsElement = dgxElement->FirstChildElement( "Materials" );
-	leavesElement =  dgxElement->FirstChildElement( "Leaves" );
-	nodesElement =  dgxElement->FirstChildElement( "Nodes" );
-	*/
-	graphElement =  dgxElement->FirstChildElement( "graph" );
+
+
+	globElement = anfElement->FirstChildElement( "globals" );
+	matsElement = anfElement->FirstChildElement( "Materials" );
+	textsElement =  anfElement->FirstChildElement( "Textures" );
+	leavesElement =  anfElement->FirstChildElement( "Leaves" );
+	nodesElement =  anfElement->FirstChildElement( "Nodes" );
+	graphElement =  anfElement->FirstChildElement( "Graph" );
 
 
 	// Init
@@ -81,8 +79,7 @@ XMLScene::XMLScene(char *filename)
 				printf("Error parsing culling");
 		}
 		else
-			printf("culling not found\n");		
-
+			printf("culling not found\n");  
 
 		TiXmlElement* lightElement = globElement->FirstChildElement("lighting");
 		if (lightElement)
@@ -118,7 +115,8 @@ XMLScene::XMLScene(char *filename)
 				printf("Error parsing lightning");
 		}
 		else
-			printf("lightning not found\n");		
+			printf("lightning not found\n");
+
 
 		// repeat for each of the variables as needed
 	}

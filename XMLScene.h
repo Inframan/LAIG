@@ -8,6 +8,7 @@ class XMLScene
 public:
 	XMLScene(char *filename);
 	~XMLScene();
+
 	static TiXmlElement *findChildByAttribute(TiXmlElement *parent,const char * attr, const char *val);
 	
 protected:
@@ -20,9 +21,6 @@ protected:
 	TiXmlElement* leavesElement;
 	TiXmlElement* nodesElement;
 	TiXmlElement* graphElement;
-	TiXmlElement* camsElement;
-	TiXmlElement* lightsElement;
-	TiXmlElement* appsElement;
 };
 
 #endif
