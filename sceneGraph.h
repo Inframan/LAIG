@@ -1,5 +1,6 @@
 #pragma once
 #include <string>
+#include "node.h"
 
 using namespace std;
 
@@ -14,6 +15,7 @@ class sceneGraph
 	bool lLocal;
 	bool lEnabled;
 	float *lAmbient;//array
+	vector<Node> nodes;
 
 public:
 	sceneGraph(void);
@@ -26,6 +28,8 @@ public:
 	void setlLocal(bool local);
 	void setlEnabled(bool enable);
 	void setLAmbient(float ambient[4]);
+	void addNode(Node n){nodes.push_back(n);}
+	vector<Node> getNode() const{return nodes;}
 
 	~sceneGraph(void);
 };

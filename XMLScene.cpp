@@ -1,6 +1,6 @@
 #include "XMLScene.h"
 
-XMLScene::XMLScene(char *filename)
+XMLScene::XMLScene(char *filename, sceneGraph * graph)
 {
 
 	// Read XML from file
@@ -51,7 +51,13 @@ XMLScene::XMLScene(char *filename)
 			valstring = (char *) drawElement->Attribute("background");
 
 			if (mode&& shading&&valstring && sscanf(valstring,"%f %f %f %f",&r,&g,&b,&a) ==4)
+			{
+				float bg[] = {r,g,b,a};
+				graph->setDrawingMode(mode);
+				graph->setShading(shading);
+				graph->setBackground(bg);
 				printf("  drawing attributes: %s %s\n , background %f %f %f %f \n", mode, shading, r ,g ,b ,a);
+			}
 			else
 				printf("Error drawing frustum\n");
 		}
@@ -73,6 +79,8 @@ XMLScene::XMLScene(char *filename)
 
 			if(face && order)
 			{
+				graph->setCullingFace(face);
+				graph->setCullOrder(order);
 				printf("  culling values: face: %s  order: %s\n", face,order);
 			}
 			else
@@ -96,6 +104,8 @@ XMLScene::XMLScene(char *filename)
 
 			if(valStringD && valStringL && valStringE && valStringA && sscanf(valStringA,"%f %f %f %f",&r,&g,&b,&a) ==4)
 			{
+				float amb[] = {r,g,b,a};
+
 				if(strcmp(valStringD,"true")==0)
 					doublesided = 1;
 				else
@@ -108,6 +118,11 @@ XMLScene::XMLScene(char *filename)
 					enabled = 1;
 				else
 					enabled = 0;
+
+				graph->setDSided(doublesided);
+				graph->setlLocal(local);
+				graph->setlEnabled(enabled);
+				graph->setLAmbient(amb);
 
 				printf("lightning values: doublesided: %d  , local: %d , enabled:  %d \n ambient: %f %f %f %f \n",doublesided,local,enabled,r,g,b,a);
 			}
@@ -136,6 +151,9 @@ XMLScene::XMLScene(char *filename)
 		{
 			printf("Node id '%s' - Descendants:\n",node->Attribute("id"));
 			TiXmlElement *child=node->FirstChildElement();
+		
+			Node node1 = Node(node->Attribute("id"));
+
 			while (child)
 			{
 				if (strcmp(child->Value(),"Node")==0)
@@ -166,8 +184,22 @@ XMLScene::XMLScene(char *filename)
 
 					if (leaf)
 					{
+						char * valString=NULL;
+						valString = (char*) leaf->Attribute("pars");
+						char * t = (char*) leaf->Attribute("type");
+						string type(t);
 						// it is a leaf and it is present in the leaves section
 						printf("  - Leaf id: '%s' ; type: '%s'\n", child->Attribute("id"), leaf->Attribute("type"));
+
+						
+
+						if(type == "rectangle")
+						{
+							float x1,x2,y1,y2;
+							if(sscanf(valString,"%f %f %f %f",&x1,&y1,&x2,&y2) ==4)
+								node1.addRectangle(x1,y1,x2,y2);
+
+						}
 
 						// repeat for other leaf details
 					}
@@ -178,6 +210,7 @@ XMLScene::XMLScene(char *filename)
 				child=child->NextSiblingElement();
 			}
 			node=node->NextSiblingElement();
+			graph->addNode(node1);
 		}
 	}
 

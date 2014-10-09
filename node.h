@@ -9,7 +9,7 @@
 
 using namespace std;
 
-class node
+class Node
 {
 	string id;
 	vector<string> descendants;
@@ -20,7 +20,7 @@ class node
 	vector<torus> torusses;
 	vector<sphere> spheres;
 public:
-	node(string id);
+	Node(string id);
 	void setMatrix(vector<vector<int>> m);
 	void addDescendant(string id);
 	void addRectangle(float x1,float y1,float x2,float y2);
@@ -28,6 +28,8 @@ public:
 	void addCylinder(float base,float top,float height,int slices,int stacks);
 	void addSphere(float radius, int slices,int stacks);
 	void addTorus(float inner, float outer, int slices, int loops);
-	~node(void);
+	vector<rectangle> getRectangle() const{return rectangles;}
+
+	~Node(void);
 };
 

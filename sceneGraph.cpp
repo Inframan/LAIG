@@ -49,6 +49,8 @@ void sceneGraph::setLAmbient(float ambient[4])
 	lAmbient = ambient;
 }
 
+
+
 sceneGraph::~sceneGraph(void)
 {
 }

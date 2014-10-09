@@ -10,6 +10,7 @@
 #include "TPinterface.h"
 #include "LightingScene.h"
 #include "XMLScene.h"
+#include "sceneGraph.h"
 
 using std::cout;
 using std::exception;
@@ -17,14 +18,17 @@ using std::exception;
 
 int main(int argc, char* argv[]) {
 
-	XMLScene n = XMLScene("demograph.anf");
-
+	sceneGraph graph;
+	sceneGraph * pgraph = new sceneGraph();
+	pgraph = &graph;
+	
 	CGFapplication app = CGFapplication();
-
+	LightingScene * scene = new LightingScene();
 	try {
 		app.init(&argc, argv);
-
-		app.setScene(new LightingScene());
+		XMLScene n = XMLScene("demograph.anf",pgraph);
+		scene->setGraph(graph);
+		app.setScene(scene);
 		app.setInterface(new CGFinterface());
 		app.setInterface(new TPinterface());
 		
