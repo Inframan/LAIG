@@ -27,6 +27,8 @@ public:
 	int pauseClock(int call);
 	int pauseResetClock(int call);
 	void setGraph(sceneGraph pgraph);
+	void drawRectangle();
+	void drawTrigangle();
 
 	CGFlight* light0;
 	CGFlight* light1;
@@ -53,6 +55,8 @@ public:
 	CGFappearance* windowAppearence;
 	CGFappearance* robotAppearence;
 	
+
+
 	~LightingScene();
 };
 

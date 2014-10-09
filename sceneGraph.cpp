@@ -16,7 +16,7 @@ void sceneGraph::setShading(string mode)
 	shading = mode;
 }
 
-void sceneGraph::setBackground(float backg[4])
+void sceneGraph::setBackground(vector<float> backg)
 {
 	background = backg;
 }
@@ -44,7 +44,7 @@ void sceneGraph::setlEnabled(bool enable)
 	lEnabled = enable;
 }
 
-void sceneGraph::setLAmbient(float ambient[4])
+void sceneGraph::setLAmbient(vector<float> ambient)
 {
 	lAmbient = ambient;
 }

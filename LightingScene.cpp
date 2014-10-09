@@ -202,6 +202,8 @@ void LightingScene::display()
 	axis.draw();
 
 
+	//for(int i = 0; i < pgraph.getNode().size(); i++)
+
 	glBegin(GL_QUADS);
 	glVertex2f(pgraph.getNode()[2].getRectangle()[0].getCoords()[0] , pgraph.getNode()[2].getRectangle()[0].getCoords()[1]);
 	glVertex2f(pgraph.getNode()[2].getRectangle()[0].getCoords()[2] , pgraph.getNode()[2].getRectangle()[0].getCoords()[1]);

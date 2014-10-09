@@ -52,7 +52,11 @@ XMLScene::XMLScene(char *filename, sceneGraph * graph)
 
 			if (mode&& shading&&valstring && sscanf(valstring,"%f %f %f %f",&r,&g,&b,&a) ==4)
 			{
-				float bg[] = {r,g,b,a};
+				vector<float> bg;
+				bg.push_back(r);
+				bg.push_back(g);
+				bg.push_back(b);
+				bg.push_back(a);
 				graph->setDrawingMode(mode);
 				graph->setShading(shading);
 				graph->setBackground(bg);
@@ -104,7 +108,11 @@ XMLScene::XMLScene(char *filename, sceneGraph * graph)
 
 			if(valStringD && valStringL && valStringE && valStringA && sscanf(valStringA,"%f %f %f %f",&r,&g,&b,&a) ==4)
 			{
-				float amb[] = {r,g,b,a};
+				vector<float> amb;
+				amb.push_back(r);
+				amb.push_back(g);
+				amb.push_back(b);
+				amb.push_back(a);
 
 				if(strcmp(valStringD,"true")==0)
 					doublesided = 1;
@@ -191,14 +199,18 @@ XMLScene::XMLScene(char *filename, sceneGraph * graph)
 						// it is a leaf and it is present in the leaves section
 						printf("  - Leaf id: '%s' ; type: '%s'\n", child->Attribute("id"), leaf->Attribute("type"));
 
-						
-
 						if(type == "rectangle")
 						{
 							float x1,x2,y1,y2;
 							if(sscanf(valString,"%f %f %f %f",&x1,&y1,&x2,&y2) ==4)
 								node1.addRectangle(x1,y1,x2,y2);
 
+						}
+						else if(type == "triangle")
+						{
+							float x1,x2,x3,y1,y2,y3,z1,z2,z3;
+							if(sscanf(valString,"%f %f %f %f %f %f %f %f %f",&x1,&y1,&z1,&x2,&y2,&z2,&x3,&y3,&z3) ==4)
+								node1.addTriangle(x1,x2,x3,y1,y2,y3,z1,z2,z3);
 						}
 
 						// repeat for other leaf details
