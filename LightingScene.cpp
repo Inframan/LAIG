@@ -202,14 +202,8 @@ void LightingScene::display()
 	axis.draw();
 
 
-	//for(int i = 0; i < pgraph.getNode().size(); i++)
+	drawNode(pgraph.getNodes().begin()->first);
 
-	glBegin(GL_QUADS);
-	glVertex2f(pgraph.getNode()[2].getRectangle()[0].getCoords()[0] , pgraph.getNode()[2].getRectangle()[0].getCoords()[1]);
-	glVertex2f(pgraph.getNode()[2].getRectangle()[0].getCoords()[2] , pgraph.getNode()[2].getRectangle()[0].getCoords()[1]);
-	glVertex2f(pgraph.getNode()[2].getRectangle()[0].getCoords()[2] , pgraph.getNode()[2].getRectangle()[0].getCoords()[3]);
-	glVertex2f(pgraph.getNode()[2].getRectangle()[0].getCoords()[0] , pgraph.getNode()[2].getRectangle()[0].getCoords()[3]);
-	glEnd();
 	
 	
 	// ---- END Background, camera and axis setup
@@ -378,3 +372,52 @@ void LightingScene::setGraph(sceneGraph graph)
 {
 	pgraph=graph;
 }
+
+
+
+void LightingScene::drawNode(string id)
+{
+	map<string,Node> copyMap;
+	map<string,Node>::iterator it;
+
+	copyMap = pgraph.getNodes(); // para evitar que o iterador fique a apontar para o vazio
+	it =  copyMap.find(id);
+
+	Node n = it->second;
+
+	for(int i = 0; i < n.getRectangle().size();i++)
+	{
+		drawRectangle(n.getRectangle()[i].getCoords());
+	}
+
+	for(int i = 0; i < n.getTriangle().size();i++)
+	{
+		drawTriangle(n.getTriangle()[i].getCoords());
+	}
+
+	for(int i = 0; i < n.getDescendants().size();i++)
+		drawNode(n.getDescendants()[i]);
+
+
+}
+
+void LightingScene::drawRectangle(vector<float> coords)
+{
+	glBegin(GL_QUADS);
+	glVertex2f(coords[0] ,coords[1]);
+	glVertex2f(coords[2] , coords[1]);
+	glVertex2f(coords[2] , coords[3]);
+	glVertex2f(coords[0] ,coords[3]);
+	glEnd();
+}
+
+
+void LightingScene::drawTriangle(vector<float> coords)
+{
+	glBegin(GL_TRIANGLE_STRIP);
+	glVertex3f(coords[0],coords[1],coords[2]);
+	glVertex3f(coords[3],coords[4],coords[5]);
+	glVertex3f(coords[6],coords[7],coords[8]);
+	glEnd();
+}
+

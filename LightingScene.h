@@ -27,8 +27,10 @@ public:
 	int pauseClock(int call);
 	int pauseResetClock(int call);
 	void setGraph(sceneGraph pgraph);
-	void drawRectangle();
-	void drawTrigangle();
+	void drawRectangle(vector<float> coords);
+	void drawTriangle(vector<float> coords);
+	void drawNode(string id);
+	 
 
 	CGFlight* light0;
 	CGFlight* light1;

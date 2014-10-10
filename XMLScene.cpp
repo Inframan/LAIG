@@ -172,9 +172,12 @@ XMLScene::XMLScene(char *filename, sceneGraph * graph)
 
 					if (noderef)
 					{
+						char* d = NULL;
+						d = (char*) child->Attribute("id");
+						string desc(d);
+						node1.addDescendant(d);
 						// print id
 						printf("  - Node id: '%s'\n", child->Attribute("id"));
-
 						// prints some of the data
 						printf("    - Material id: '%s' \n", noderef->FirstChildElement("material")->Attribute("id"));
 						printf("    - Texture id: '%s' \n", noderef->FirstChildElement("texture")->Attribute("id"));
@@ -209,8 +212,8 @@ XMLScene::XMLScene(char *filename, sceneGraph * graph)
 						else if(type == "triangle")
 						{
 							float x1,x2,x3,y1,y2,y3,z1,z2,z3;
-							if(sscanf(valString,"%f %f %f %f %f %f %f %f %f",&x1,&y1,&z1,&x2,&y2,&z2,&x3,&y3,&z3) ==4)
-								node1.addTriangle(x1,x2,x3,y1,y2,y3,z1,z2,z3);
+							if(sscanf(valString,"%f %f %f %f %f %f %f %f %f",&x1,&y1,&z1,&x2,&y2,&z2,&x3,&y3,&z3) ==9)
+								node1.addTriangle(x1,y1,z1,x2,y2,z2,x3,y3,z3);
 						}
 
 						// repeat for other leaf details

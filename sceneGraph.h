@@ -2,6 +2,7 @@
 #include <string>
 #include "node.h"
 #include <vector>
+#include <map>
 
 using namespace std;
 
@@ -16,9 +17,10 @@ class sceneGraph
 	bool lLocal;
 	bool lEnabled;
 	vector<float> lAmbient;//array
-	vector<Node> nodes;
+	map<string,Node> nodes;
 
 public:
+	
 	sceneGraph(void);
 	void setDrawingMode(string mode);
 	void setShading(string mode);
@@ -29,8 +31,8 @@ public:
 	void setlLocal(bool local);
 	void setlEnabled(bool enable);
 	void setLAmbient(vector<float> ambient);
-	void addNode(Node n){nodes.push_back(n);}
-	vector<Node> getNode() const{return nodes;}
+	void addNode(Node n){nodes[n.getID()] = n;}
+	map<string,Node> getNodes() const{return nodes;}
 
 	~sceneGraph(void);
 };

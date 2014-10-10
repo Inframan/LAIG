@@ -1,6 +1,11 @@
 #include "node.h"
 
 
+Node::Node()
+{
+
+}
+
 Node::Node(string id)
 {
 	this->id = id;

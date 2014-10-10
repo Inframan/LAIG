@@ -11,10 +11,14 @@ rectangle::rectangle(float x1,float y1,float x2,float y2)
 }
 
 
-float * rectangle:: getCoords() const
+vector<float> rectangle:: getCoords() const
 {
-	float coords[] = {x1,y1,x2,y2};
-	return coords;
+	vector<float> temp;
+	temp.push_back(x1);
+	temp.push_back(y1);
+	temp.push_back(x2);
+	temp.push_back(y2);
+	return temp;
 }
 
 rectangle::~rectangle(void)

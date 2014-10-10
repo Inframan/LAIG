@@ -20,6 +20,7 @@ class Node
 	vector<torus> torusses;
 	vector<sphere> spheres;
 public:
+	Node();
 	Node(string id);
 	void setMatrix(vector<vector<int>> m);
 	void addDescendant(string id);
@@ -29,6 +30,9 @@ public:
 	void addSphere(float radius, int slices,int stacks);
 	void addTorus(float inner, float outer, int slices, int loops);
 	vector<rectangle> getRectangle() const{return rectangles;}
+	vector<triangle> getTriangle() const{return triangles;}
+	string getID() const {return id;}
+	vector<string> getDescendants()const { return descendants;}
 
 	~Node(void);
 };
