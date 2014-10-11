@@ -3,21 +3,13 @@
 
 #include "CGFscene.h"
 #include "CGFappearance.h"
-#include "myTable.h"
-#include "Plane.h"
-#include "myClock.h"
-#include "myClockHand.h"
-#include "myCylinder.h"
-#include "MyRobot.h"
-#include "TPinterface.h"
 #include "sceneGraph.h"
+
 
 class LightingScene : public CGFscene
 {
-	 bool clockAnimation;
 	 sceneGraph pgraph;
 public:
-	int sceneVar;
 	int light0On, light1On, light2On, light3On;
 	void init();
 	void display();
@@ -30,7 +22,8 @@ public:
 	void drawRectangle(vector<float> coords);
 	void drawTriangle(vector<float> coords);
 	void drawNode(string id);
-	 
+	void drawCylinder(vector<float> coords,int stacks,int slices);
+	void drawSphere(float radius,int stacks,int slices);
 
 	CGFlight* light0;
 	CGFlight* light1;
@@ -38,25 +31,8 @@ public:
 	CGFlight* light3;
 
 
-	myTable* table;
-	myCylinder* cylinder;
-	myCylinder* cylinder1;
-	myClock* clock;
-	Plane* wall;
-	Plane* boardA;
-	Plane* boardB;
-	myRobot* robot;
 	CGFappearance* materialA;
 	CGFappearance* materialB;
-
-	CGFappearance* floorAppearence;
-	CGFappearance* tableAppearence;
-	CGFappearance* slidesAppearence;
-	CGFappearance* wallAppearence;
-	CGFappearance* boardAppearence;
-	CGFappearance* windowAppearence;
-	CGFappearance* robotAppearence;
-	
 
 
 	~LightingScene();

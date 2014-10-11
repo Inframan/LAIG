@@ -7,7 +7,6 @@
 #include <exception>
 
 #include "CGFapplication.h"
-#include "TPinterface.h"
 #include "LightingScene.h"
 #include "XMLScene.h"
 #include "sceneGraph.h"
@@ -30,7 +29,6 @@ int main(int argc, char* argv[]) {
 		scene->setGraph(graph);
 		app.setScene(scene);
 		app.setInterface(new CGFinterface());
-		app.setInterface(new TPinterface());
 		
 		app.run();
 	}

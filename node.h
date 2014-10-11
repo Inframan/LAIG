@@ -31,6 +31,8 @@ public:
 	void addTorus(float inner, float outer, int slices, int loops);
 	vector<rectangle> getRectangle() const{return rectangles;}
 	vector<triangle> getTriangle() const{return triangles;}
+	vector<cylinder> getCylinder() const{return cylinders;}
+	vector<sphere> getSphere() const{return spheres;}
 	string getID() const {return id;}
 	vector<string> getDescendants()const { return descendants;}
 

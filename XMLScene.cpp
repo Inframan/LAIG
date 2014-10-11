@@ -215,6 +215,20 @@ XMLScene::XMLScene(char *filename, sceneGraph * graph)
 							if(sscanf(valString,"%f %f %f %f %f %f %f %f %f",&x1,&y1,&z1,&x2,&y2,&z2,&x3,&y3,&z3) ==9)
 								node1.addTriangle(x1,y1,z1,x2,y2,z2,x3,y3,z3);
 						}
+						else if(type == "cylinder")
+						{
+							float base,top,height;
+							int slices,stacks;
+							if(sscanf(valString,"%f %f %f %d %d",&base,&top,&height,&slices,&stacks) ==5)
+								node1.addCylinder(base,top,height,slices,stacks);
+						}
+						else if(type == "sphere")
+						{
+							float radius;
+							int slices,stacks;
+							if(sscanf(valString,"%f %d %d",&radius,&slices,&stacks) ==3)
+								node1.addSphere(radius,slices,stacks);
+						}
 
 						// repeat for other leaf details
 					}

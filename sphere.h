@@ -6,6 +6,9 @@ class sphere
 	int stacks;
 public:
 	sphere(float radius, int slices,int stacks);
+	float getRadius()const;
+	int getSlices()const;
+	int getStacks()const;
 	~sphere(void);
 };
 

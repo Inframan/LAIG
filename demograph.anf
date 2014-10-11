@@ -39,9 +39,10 @@
   </Materials>
 
   <Leaves>
-	  <!--<Leaf id="cilindro" type="cylinder" pars="3 3 3 0 1" />-->
+	  <Leaf id="cilindro" type="cylinder" pars="3 3 3 4 1" />-->
 	  <Leaf id="quad" type="rectangle" pars="1 1 2 2" />
-	  <Leaf id="tri" type="triangle" pars="1 1 1 2 2 2 3 3 3" />
+	  <Leaf id="tri" type="triangle" pars="0 0 0 1 0 0 0 1 1" />
+	  <Leaf id="sph" type="sphere" pars="3 4 4" />
   </Leaves>
 
 
@@ -79,6 +80,7 @@
 	  <Node id="2">
 		  <Node id="3" />
 		  <Leaf id="tri" />
+		  <Leaf id="sph" />
 	  </Node>
 	  <Node id="3">
 		  <Leaf id="quad" />

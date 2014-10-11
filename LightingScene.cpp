@@ -1,9 +1,6 @@
 #include "LightingScene.h"
 #include "CGFaxis.h"
 #include "CGFapplication.h"
-#include "myTable.h"
-#include "Plane.h"
-#include "myCylinder.h"
 
 #include <math.h>
 
@@ -59,13 +56,10 @@ void LightingScene::init()
 {
 
 	
-
-	sceneVar=0;
 	light0On = 1;
 	light1On = 1;
 	light2On = 0;
 	light3On = 0;
-	clockAnimation = true;
 	// Enables lighting computations
 	glEnable(GL_LIGHTING);
 	glEnable(GL_NORMALIZE);
@@ -128,38 +122,11 @@ void LightingScene::init()
 	// Uncomment below to enable normalization of lighting normal vectors
 	// glEnable (GL_NORMALIZE);
 
-	//Declares scene elements
-	table = new myTable();
-	wall = new Plane();
-	clock = new myClock();
-	cylinder = new myCylinder(10,10, true);
-	cylinder1 = new myCylinder(10,10,false);
-	robot = new myRobot(10);
-
-	boardA = new Plane(BOARD_A_DIVISIONS);
-	boardB = new Plane(BOARD_B_DIVISIONS);
 
 	//Declares materials
 	materialA = new CGFappearance(ambientNull,difA,specA,shininessA);
 	materialB = new CGFappearance(ambientNull,difB,specB,shininessB);
 
-	//Declares Textures
-	tableAppearence = new CGFappearance(ambientNull,difA,specA,shininessA);
-	tableAppearence->setTexture("table.png");
-	tableAppearence->setTextureWrap(GL_REPEAT,GL_REPEAT);
-
-	slidesAppearence = new CGFappearance(ambientNull,difSlides,specSlides,shininessSlides);
-	slidesAppearence->setTexture("slides.png");
-	slidesAppearence->setTextureWrap(GL_CLAMP,GL_CLAMP);
-
-	boardAppearence = new CGFappearance(ambientNull,difBoard,specBoard,shininessBoard);
-	boardAppearence->setTexture("board.png");
-	boardAppearence->setTextureWrap(GL_CLAMP,GL_CLAMP);
-
-	robotAppearence = new CGFappearance (ambientNull, difA , specA, shininessA);
-	robotAppearence->setTexture("robot1.jpg");
-	robotAppearence->setTextureWrap(GL_CLAMP,GL_CLAMP);
-	setUpdatePeriod(100);
 }
 
 void LightingScene::display() 
@@ -211,160 +178,17 @@ void LightingScene::display()
 	// ---- BEGIN Primitive drawing section
 
 
-	
-
-	/*
-
-	//First Table
-	glPushMatrix();
-	glTranslated(5,0,8);
-	table->draw(materialA, tableAppearence);
-	glPopMatrix();
-	/*
-	//Second Table
-	glPushMatrix();
-	glTranslated(12,0,8);
-	table->draw(materialA, tableAppearence);
-	glPopMatrix();
-	*/
-	/*materialA->apply();
-	//Floor
-	glPushMatrix();
-	glTranslated(7.5,0,7.5);
-	glScaled(15,0.2,15);
-	wall->draw();
-	glPopMatrix();
-
-	//LeftWall
-	glPushMatrix();
-	glTranslated(0,4,7.5);
-	glRotated(-90.0,0,0,1);
-
-	glScaled(8,0.2,15);
-	wall->draw();
-	glPopMatrix();
-
-	//PlaneWall
-	glPushMatrix();
-	glTranslated(7.5,4,0);
-	glRotated(90.0,1,0,0);
-	glScaled(15,0.2,8);
-	wall->draw();
-	glPopMatrix();
-
-
-	// Board A
-	glPushMatrix();
-	glTranslated(4,4,0.2);
-	glScaled(BOARD_WIDTH,BOARD_HEIGHT,1);
-	glRotated(90.0,1,0,0);
-	slidesAppearence->apply();
-	boardA->draw();
-	glPopMatrix();
-
-	//PlaneB
-	glPushMatrix();
-	glTranslated(10.5,4,0.2);
-	glScaled(BOARD_WIDTH,BOARD_HEIGHT,1);
-	glRotated(90.0,1,0,0);
-	boardAppearence->apply();
-	boardB->draw();
-	glPopMatrix();
-
-	//cylinder
-	materialA->apply();
-	glPushMatrix();
-	glScaled(1,8,1);
-	glTranslated(1,0,2);
-	glRotated(-90, 1,0,0);
-	cylinder->draw();
-	glPopMatrix();
-
-
-	glPushMatrix();
-	glScaled(1,8,1);
-	glTranslated(14,0,2);
-	glRotated(-90, 1,0,0);
-	cylinder1->draw();
-	glPopMatrix();
-
-
-	//clock
-	glPushMatrix();
-	glTranslated(7,8,0);
-	clock->draw();
-	glPopMatrix();
-
-	//robot
-
-	glPushMatrix();
-	robotAppearence->apply();
-	glTranslated(4,0,4);
-	robot->draw();
-	glPopMatrix();
-	*/
-	// ---- END Primitive drawing section
-
-
-	// We have been drawing in a memory area that is not visible - the back buffer, 
-	// while the graphics card is showing the contents of another buffer - the front buffer
-	// glutSwapBuffers() will swap pointers so that the back buffer becomes the front buffer and vice-versa
 	glutSwapBuffers();
 }
 
 
 void LightingScene::update(unsigned long millis)
 {
-	if(clockAnimation)
-		clock->update(millis);
 
 }
 
 LightingScene::~LightingScene() 
 {
-	delete(light0);
-	delete(light1);
-
-	delete(table);
-	delete(wall);
-	delete(boardA);
-	delete(boardB);
-	delete(materialA);
-	delete(materialB);
-}
-
-void LightingScene::toggleSomething(unsigned char key)
-{
-
-	robot->processKeyboard(key);
-}
-
-int LightingScene:: pauseClock(int call)
-{
-	clockAnimation = !clockAnimation;
-	return clockAnimation;
-}
-
-int LightingScene:: resetClock(int call)
-{
-	clock = new myClock();
-	return 1;
-}
-
-
-int LightingScene:: pauseResetClock(int call)
-{
-	if(call = 0)
-	{
-		clockAnimation = !clockAnimation;
-		return 0;
-	}
-	else
-	{
-		clock = new myClock();
-		clockAnimation = !clockAnimation;
-		return 1;
-	}
 }
 
 
@@ -395,26 +219,78 @@ void LightingScene::drawNode(string id)
 		drawTriangle(n.getTriangle()[i].getCoords());
 	}
 
+	
+	for(int i = 0; i < n.getCylinder().size();i++)
+	{
+		drawCylinder(n.getCylinder()[i].getCoords(),n.getCylinder()[i].getStacks(),n.getCylinder()[i].getSlices());
+	}
+
+	for(int i = 0; i < n.getSphere().size();i++)
+	{
+		drawSphere( n.getSphere()[i].getRadius(),n.getSphere()[i].getStacks(),n.getSphere()[i].getSlices());
+	}
+
+
 	for(int i = 0; i < n.getDescendants().size();i++)
 		drawNode(n.getDescendants()[i]);
 
 
 }
 
+void LightingScene::drawSphere(float radius,int stacks,int slices)
+{
+	GLUquadric * quad;
+
+	quad = gluNewQuadric();
+
+	gluQuadricDrawStyle(quad,GLU_FILL);
+	gluQuadricNormals(quad,GLU_SMOOTH);
+	gluQuadricOrientation(quad,GLU_OUTSIDE);
+
+	gluSphere(quad,radius,slices,stacks);
+
+	
+	gluDeleteQuadric(quad);
+}
+
+void LightingScene::drawCylinder(vector<float> coords,int stacks,int slices)
+{
+	GLUquadric * quad,*disk1,*disk2;
+
+	quad = gluNewQuadric();
+	disk1 = gluNewQuadric();
+	disk2 = gluNewQuadric();
+
+	gluQuadricDrawStyle(quad,GLU_FILL);
+	gluQuadricNormals(quad,GLU_SMOOTH);
+	gluQuadricOrientation(quad,GLU_OUTSIDE);
+
+	gluCylinder(quad,coords[0],coords[1],coords[2],slices,stacks);
+
+	glPushMatrix();
+	glTranslated(0,0,coords[2]);
+	gluDisk(disk1,0,coords[0],slices,stacks);
+	glPopMatrix();
+
+	glPushMatrix();
+	glRotated(180,0,1,0);
+	gluDisk(disk2,0,coords[0],slices,stacks);
+	glPopMatrix();
+
+	gluDeleteQuadric(quad);
+	gluDeleteQuadric(disk1);
+}
+
 void LightingScene::drawRectangle(vector<float> coords)
 {
-	glBegin(GL_QUADS);
-	glVertex2f(coords[0] ,coords[1]);
-	glVertex2f(coords[2] , coords[1]);
-	glVertex2f(coords[2] , coords[3]);
-	glVertex2f(coords[0] ,coords[3]);
-	glEnd();
+
+	glRectd(coords[0] ,coords[1],coords[2],coords[3]);
 }
 
 
 void LightingScene::drawTriangle(vector<float> coords)
 {
-	glBegin(GL_TRIANGLE_STRIP);
+	glBegin(GL_TRIANGLES);
 	glVertex3f(coords[0],coords[1],coords[2]);
 	glVertex3f(coords[3],coords[4],coords[5]);
 	glVertex3f(coords[6],coords[7],coords[8]);
