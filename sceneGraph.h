@@ -33,9 +33,18 @@ public:
 	void setlLocal(bool local);
 	void setlEnabled(bool enable);
 	void setLAmbient(vector<float> ambient);
-	void addNode(Node n){nodes[n.getID()] = n;}
-	string getRootID() const {return rootId;}
-	map<string,Node> getNodes() const{return nodes;}
+	void addNode(Node n);
+	string getRootID() const;
+	map<string,Node> getNodes() const;
+
+	bool getDoubleSided()const;
+	bool getLocalLight()const;
+	bool getLightEnable()const;
+	string getCulFace()const;
+	string getCulOrder()const;
+	string getDrawingMode()const;
+	string getShading();
+	vector<float> getBackground()const;
 
 	~sceneGraph(void);
 };

@@ -50,6 +50,64 @@ void sceneGraph::setLAmbient(vector<float> ambient)
 }
 
 
+void sceneGraph:: addNode(Node n)
+{
+	nodes[n.getID()] = n;
+}
+
+string sceneGraph:: getRootID() const 
+{
+	return rootId;
+}
+
+map<string,Node> sceneGraph:: getNodes() const
+{
+	return nodes;
+}
+
+bool sceneGraph:: getDoubleSided()const
+{
+	return lDoubleSided;
+}
+
+bool sceneGraph:: getLocalLight()const
+{
+	return lLocal;
+}
+
+bool sceneGraph::getLightEnable()const
+{
+	return lEnabled;
+}
+
+string sceneGraph::getCulFace()const
+{
+	return cullingFace;
+}
+	
+string sceneGraph::getCulOrder()const
+{
+	return cullingOrder;
+}
+	
+string sceneGraph::getDrawingMode()const
+{
+	return drawingMode;
+}
+	
+string sceneGraph::getShading()
+{
+	return shading;
+}
+
+
+vector<float> sceneGraph::getBackground()const
+{
+	return background;
+}
+
+
+
 
 sceneGraph::~sceneGraph(void)
 {

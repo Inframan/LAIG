@@ -61,19 +61,60 @@ void LightingScene::init()
 	light2On = 0;
 	light3On = 0;
 	// Enables lighting computations
-	glEnable(GL_LIGHTING);
+	
+
+	
+
+	if(pgraph.getCulFace() == "none")
+		glCullFace(GL_NONE);
+	else if(pgraph.getCulFace() == "back")
+		glCullFace(GL_BACK);
+	else  if(pgraph.getCulFace() == "front")
+		glCullFace(GL_FRONT);
+	else  if(pgraph.getCulFace() == "both")
+		glCullFace(GL_FRONT_AND_BACK);
+
+	if(pgraph.getCulOrder() == "ccw")
+		glFrontFace(GL_CCW);
+	else if(pgraph.getCulOrder() == "cw")
+		glFrontFace(GL_CW);
+
+
+	if(pgraph.getLightEnable())
+		glEnable(GL_LIGHTING);
 	glEnable(GL_NORMALIZE);
 	// Sets up some lighting parameters
 	// Computes lighting only using the front face normals and materials
-	glLightModelf(GL_LIGHT_MODEL_TWO_SIDE, GL_FALSE);  
+	
+	if(pgraph.getDoubleSided())
+	{
+		glLightModelf(GL_LIGHT_MODEL_TWO_SIDE, GL_FALSE);  
+	}
+
+	if(pgraph.getLocalLight())
+		glLightModelf(GL_LIGHT_MODEL_LOCAL_VIEWER,GL_FALSE);
 
 	// Define ambient light (do not confuse with ambient component of individual lights)
-	glLightModelfv(GL_LIGHT_MODEL_AMBIENT, globalAmbientLight);  
+	float backAmbientLight[4] = {0,0,0,0};
+	for(int i = 0; i < 4;i++)
+		backAmbientLight[i] = pgraph.getBackground()[i];
+
+	glLightModelfv(GL_LIGHT_MODEL_AMBIENT, backAmbientLight);  
 
 	// Declares and enables two lights, with null ambient component
 
-	glShadeModel(GL_SMOOTH);
+	if(pgraph.getShading() == "gouraud")
+		glShadeModel(GL_SMOOTH);
+	else if(pgraph.getShading() == "flat")
+		glShadeModel(GL_FLAT);
 
+
+	if(pgraph.getDrawingMode() == "fill")
+		glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
+	else if(pgraph.getDrawingMode() == "line")
+		glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
+	else if(pgraph.getDrawingMode() == "point")
+		glPolygonMode(GL_FRONT_AND_BACK, GL_POINT);
 
 	light0 = new CGFlight(GL_LIGHT0, light0_pos);
 	light0->setAmbient(ambientNull);
