@@ -59,9 +59,9 @@
                 <!-- ex: bloco transforms pode ficar sem conteudo -->
                 <!-- ex: bloco transforms pode ser R,T (nao tem S) -->
                 <!-- ex: bloco transforms pode ser R,S,T,S -->
-                <transform type="translate" to="ff ff ff" />
-                <transform type="rotate" axis="ee" angle="ff" />
-                <transform type="scale" factor="ff ff ff" />
+                <transform type="translate" to="10 0 0" />
+               <transform type="rotate" axis="x" angle="50" />
+                <transform type="scale" factor="1 1 2" />
             </transforms>
           
             <!-- declaracao da aparencia a utilizar -->

@@ -34,6 +34,7 @@ public:
 	void setlEnabled(bool enable);
 	void setLAmbient(vector<float> ambient);
 	void addNode(Node n){nodes[n.getID()] = n;}
+	string getRootID() const {return rootId;}
 	map<string,Node> getNodes() const{return nodes;}
 
 	~sceneGraph(void);

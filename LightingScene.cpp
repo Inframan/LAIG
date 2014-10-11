@@ -169,7 +169,7 @@ void LightingScene::display()
 	axis.draw();
 
 
-	drawNode(pgraph.getNodes().begin()->first);
+	drawNode(pgraph.getRootID());
 
 	
 	
@@ -209,6 +209,20 @@ void LightingScene::drawNode(string id)
 
 	Node n = it->second;
 
+	float m[16] = {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0};
+
+
+	for(int i = 0; i < 4;i++)
+	{
+		for(int j = 0; j<4;j++)
+		{
+			m[i*4+j] = n.getMatrix()[i][j];
+		}
+	}
+
+	glPushMatrix();
+	glMultMatrixf(m);
+
 	for(int i = 0; i < n.getRectangle().size();i++)
 	{
 		drawRectangle(n.getRectangle()[i].getCoords());
@@ -234,7 +248,7 @@ void LightingScene::drawNode(string id)
 	for(int i = 0; i < n.getDescendants().size();i++)
 		drawNode(n.getDescendants()[i]);
 
-
+	glPopMatrix();
 }
 
 void LightingScene::drawSphere(float radius,int stacks,int slices)

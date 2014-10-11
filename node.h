@@ -13,7 +13,7 @@ class Node
 {
 	string id;
 	vector<string> descendants;
-	vector<vector<int>> matrix;
+	vector<vector<float>> matrix;
 	vector<triangle> triangles;
 	vector<rectangle> rectangles;
 	vector<cylinder> cylinders;
@@ -22,7 +22,7 @@ class Node
 public:
 	Node();
 	Node(string id);
-	void setMatrix(vector<vector<int>> m);
+	void setMatrix(float m[4][4]);
 	void addDescendant(string id);
 	void addRectangle(float x1,float y1,float x2,float y2);
 	void addTriangle(float x1,float y1,float z1,float x2,float y2,float z2,float x3,float y3,float z3);
@@ -35,6 +35,8 @@ public:
 	vector<sphere> getSphere() const{return spheres;}
 	string getID() const {return id;}
 	vector<string> getDescendants()const { return descendants;}
+	vector<vector<float>> getMatrix()const;
+
 
 	~Node(void);
 };

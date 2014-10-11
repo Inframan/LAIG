@@ -1,4 +1,5 @@
 #include "XMLScene.h"
+#include "GL/glu.h"
 
 XMLScene::XMLScene(char *filename, sceneGraph * graph)
 {
@@ -173,33 +174,56 @@ XMLScene::XMLScene(char *filename, sceneGraph * graph)
 
 				char * valString = NULL, * t = NULL;
 				float m[4][4];
-
+				
+				glLoadIdentity();
 				while(tranformation)
 				{
 					t = (char *) tranformation->Attribute("type");
 					string type(t);
 
-					if(t == "translate")
+					if(type == "translate")
 					{
 						float x,y,z;
 						valString = (char*) tranformation->Attribute("to");
 						if(sscanf(valString,"%f %f %f",&x,&y,&z) == 3)
 						{
-
+							glTranslated(x,y,z);
 						}
 					}
-					else if(t == "rotate")
+					else if(type == "rotate")
 					{
-
+						float angle;
+						char * eixo = NULL;
+						eixo = (char *) tranformation->Attribute("axis");
+						valString = (char*) tranformation->Attribute("angle");
+						if(sscanf(valString,"%f",&angle) == 1)
+						{
+							if(eixo[0] == 'x')
+								glRotated(angle,1,0,0);
+							else	if(eixo[0] == 'y')
+								glRotated(angle,0,1,0);
+							else 	if(eixo[0] == 'z')
+								glRotated(angle,0,0,1);
+							else
+								printf("erro na rotação \n");
+						}
 					}
-					else if(t == "scale")
+					else if(type == "scale")
 					{
-
+						float x,y,z;
+						valString = (char*) tranformation->Attribute("factor");
+						if(sscanf(valString,"%f %f %f",&x,&y,&z) == 3)
+						{
+							glScaled(x,y,z);
+						}
 					}
 
 					tranformation = tranformation->NextSiblingElement();
 				}
 
+				glGetFloatv(GL_MODELVIEW_MATRIX, &m[0][0]);
+
+				node1.setMatrix(m);
 			}
 
 			TiXmlElement * appearance = transforms->NextSiblingElement();

@@ -9,12 +9,18 @@ Node::Node()
 Node::Node(string id)
 {
 	this->id = id;
-
 }
 
-void Node:: setMatrix(vector<vector<int>> m)
+void Node:: setMatrix(float m[4][4])
 {
-	matrix = m;
+	vector<float> temp;
+	for(int i = 0; i < 4;i++)
+	{
+		temp.clear();
+		for(int j = 0; j <4;j++)
+			temp.push_back(m[i][j]);
+		matrix.push_back(temp);
+	}
 }
 
 void Node::addDescendant(string id)
@@ -50,6 +56,11 @@ void Node::addTorus(float inner, float outer, int slices, int loops)
 	torus t(inner,outer,slices,loops);
 	torusses.push_back(t);
 }
+
+vector<vector<float>> Node::getMatrix() const
+ {
+	 return  matrix;
+ }
 
 Node::~Node(void)
 {
