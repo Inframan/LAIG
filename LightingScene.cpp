@@ -269,7 +269,7 @@ void LightingScene::drawCylinder(vector<float> coords,int stacks,int slices)
 
 	glPushMatrix();
 	glTranslated(0,0,coords[2]);
-	gluDisk(disk1,0,coords[0],slices,stacks);
+	gluDisk(disk1,0,coords[1],slices,stacks);
 	glPopMatrix();
 
 	glPushMatrix();

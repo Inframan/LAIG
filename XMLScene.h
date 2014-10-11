@@ -18,10 +18,10 @@ protected:
 	TiXmlDocument* doc;
 
 	TiXmlElement* globElement; 
-	TiXmlElement* matsElement;
+	TiXmlElement* lightsElement;
 	TiXmlElement* textsElement;
-	TiXmlElement* leavesElement;
-	TiXmlElement* nodesElement;
+	TiXmlElement* appearancesElement;
+	TiXmlElement* camerasElement;
 	TiXmlElement* graphElement;
 };
 

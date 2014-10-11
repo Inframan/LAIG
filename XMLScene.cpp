@@ -25,11 +25,11 @@ XMLScene::XMLScene(char *filename, sceneGraph * graph)
 
 
 	globElement = anfElement->FirstChildElement( "globals" );
-	matsElement = anfElement->FirstChildElement( "Materials" );
-	textsElement =  anfElement->FirstChildElement( "Textures" );
-	leavesElement =  anfElement->FirstChildElement( "Leaves" );
-	nodesElement =  anfElement->FirstChildElement( "Nodes" );
-	graphElement =  anfElement->FirstChildElement( "Graph" );
+	camerasElement = anfElement->FirstChildElement( "cameras" );
+	lightsElement = anfElement->FirstChildElement( "lights" );
+	appearancesElement = anfElement->FirstChildElement( "appearances" );
+	textsElement = anfElement->FirstChildElement( "textures" );
+	graphElement =  anfElement->FirstChildElement( "graph" );
 
 
 	// Init
@@ -152,91 +152,175 @@ XMLScene::XMLScene(char *filename, sceneGraph * graph)
 		printf("Graph block not found!\n");
 	else
 	{
+
+		char * rootId = (char*) graphElement->Attribute("rootid");
+		string rID(rootId);
+		graph->setRootID(rID);
 		char *prefix="  -";
 		TiXmlElement *node=graphElement->FirstChildElement();
 
 		while (node)
 		{
-			printf("Node id '%s' - Descendants:\n",node->Attribute("id"));
-			TiXmlElement *child=node->FirstChildElement();
-		
 			Node node1 = Node(node->Attribute("id"));
 
-			while (child)
+			printf("Node id '%s' - Descendants:\n",node->Attribute("id"));
+			TiXmlElement * transforms = node->FirstChildElement();
+			if (transforms == NULL)
+				printf("Transforms block not found!\n");
+			else //TRANSFORMACOES MATRICIAIS
 			{
-				if (strcmp(child->Value(),"Node")==0)
+				TiXmlElement * tranformation = transforms->FirstChildElement();
+
+				char * valString = NULL, * t = NULL;
+				float m[4][4];
+
+				while(tranformation)
 				{
-					// access node data by searching for its id in the nodes section
+					t = (char *) tranformation->Attribute("type");
+					string type(t);
 
-					TiXmlElement *noderef=findChildByAttribute(nodesElement,"id",child->Attribute("id"));
-
-					if (noderef)
+					if(t == "translate")
 					{
-						char* d = NULL;
-						d = (char*) child->Attribute("id");
-						string desc(d);
-						node1.addDescendant(d);
-						// print id
-						printf("  - Node id: '%s'\n", child->Attribute("id"));
-						// prints some of the data
-						printf("    - Material id: '%s' \n", noderef->FirstChildElement("material")->Attribute("id"));
-						printf("    - Texture id: '%s' \n", noderef->FirstChildElement("texture")->Attribute("id"));
+						float x,y,z;
+						valString = (char*) tranformation->Attribute("to");
+						if(sscanf(valString,"%f %f %f",&x,&y,&z) == 3)
+						{
 
-						// repeat for other leaf details
+						}
 					}
-					else
-						printf("  - Node id: '%s': NOT FOUND IN THE NODES SECTION\n", child->Attribute("id"));
-
-				}
-				if (strcmp(child->Value(),"Leaf")==0)
-				{
-					// access leaf data by searching for its id in the leaves section
-					TiXmlElement *leaf=findChildByAttribute(leavesElement,"id",child->Attribute("id"));
-
-					if (leaf)
+					else if(t == "rotate")
 					{
-						char * valString=NULL;
-						valString = (char*) leaf->Attribute("pars");
-						char * t = (char*) leaf->Attribute("type");
-						string type(t);
-						// it is a leaf and it is present in the leaves section
-						printf("  - Leaf id: '%s' ; type: '%s'\n", child->Attribute("id"), leaf->Attribute("type"));
 
-						if(type == "rectangle")
-						{
-							float x1,x2,y1,y2;
-							if(sscanf(valString,"%f %f %f %f",&x1,&y1,&x2,&y2) ==4)
-								node1.addRectangle(x1,y1,x2,y2);
-
-						}
-						else if(type == "triangle")
-						{
-							float x1,x2,x3,y1,y2,y3,z1,z2,z3;
-							if(sscanf(valString,"%f %f %f %f %f %f %f %f %f",&x1,&y1,&z1,&x2,&y2,&z2,&x3,&y3,&z3) ==9)
-								node1.addTriangle(x1,y1,z1,x2,y2,z2,x3,y3,z3);
-						}
-						else if(type == "cylinder")
-						{
-							float base,top,height;
-							int slices,stacks;
-							if(sscanf(valString,"%f %f %f %d %d",&base,&top,&height,&slices,&stacks) ==5)
-								node1.addCylinder(base,top,height,slices,stacks);
-						}
-						else if(type == "sphere")
-						{
-							float radius;
-							int slices,stacks;
-							if(sscanf(valString,"%f %d %d",&radius,&slices,&stacks) ==3)
-								node1.addSphere(radius,slices,stacks);
-						}
-
-						// repeat for other leaf details
 					}
-					else
-						printf("  - Leaf id: '%s' - NOT FOUND IN THE LEAVES SECTION\n",child->Attribute("id"));
+					else if(t == "scale")
+					{
+
+					}
+
+					tranformation = tranformation->NextSiblingElement();
 				}
 
-				child=child->NextSiblingElement();
+			}
+
+			TiXmlElement * appearance = transforms->NextSiblingElement();
+			if (appearance == NULL)
+				printf("Appearance block not found!\n");
+			else //Definir aparencia do nó
+			{
+			}
+
+			TiXmlElement *primitives = appearance->NextSiblingElement();
+			if (primitives == NULL)
+				printf("Primitives block not found!\n");
+			else //Definir primitivas
+			{
+				TiXmlElement *primitivesDef = primitives->FirstChildElement("rectangle");	
+
+				while(primitivesDef)
+				{
+					char * valString1=NULL, * valString2 = NULL;
+					printf("  - Type id: '%s'\n", primitivesDef->Attribute("type"));
+
+					valString1 = (char *) primitivesDef->Attribute("xy1");
+					valString2 = (char *) primitivesDef->Attribute("xy2");
+					float x1,x2,y1,y2;
+					if(sscanf(valString1,"%f %f",&x1,&y1) ==2 && sscanf(valString2,"%f %f",&x2,&y2) ==2)
+						node1.addRectangle(x1,y1,x2,y2);
+
+
+
+					primitivesDef = primitivesDef->NextSiblingElement("rectangle");
+				}
+
+				primitivesDef = primitives->FirstChildElement("triangle");
+
+				while(primitivesDef)
+				{
+					char * valString1=NULL, * valString2 = NULL;
+					printf("  - Type id: '%s'\n", primitivesDef->Attribute("type"));
+
+
+					char * valString3=NULL;
+					float x1,x2,x3,y1,y2,y3,z1,z2,z3;
+					valString1 = (char *) primitivesDef->Attribute("xyz1");
+					valString2 = (char *) primitivesDef->Attribute("xyz2");
+					valString3 = (char *) primitivesDef->Attribute("xyz3");
+					if(sscanf(valString1,"%f %f %f",&x1,&y1,&z1) ==3 && sscanf(valString2,"%f %f %f",&x2,&y2,&z2) ==3 && sscanf(valString3,"%f %f %f",&x3,&y3,&z3) ==3)
+						node1.addTriangle(x1,y1,z1,x2,y2,z2,x3,y3,z3);
+
+
+					primitivesDef = primitivesDef->NextSiblingElement("triangle");
+				}
+
+
+				primitivesDef = primitives->FirstChildElement("cylinder");
+
+				while(primitivesDef)
+				{
+					char * valString1=NULL, * valString2 = NULL;
+
+					char * sHeigh = NULL,* sSlices = NULL,* sStacks = NULL;
+					valString1 = (char *) primitivesDef->Attribute("base");
+					valString2 = (char *) primitivesDef->Attribute("top");
+					sHeigh = (char *) primitivesDef->Attribute("height");
+					sSlices = (char *) primitivesDef->Attribute("slices");
+					sStacks = (char *) primitivesDef->Attribute("stacks");
+					float base,top,height;
+					int slices,stacks;
+
+					if(sscanf(valString1,"%f",&base) ==1 && sscanf(valString2,"%f",&top)==1 
+						&& sscanf(sHeigh,"%f",&height) == 1 && sscanf(sSlices,"%d",&slices) == 1 && sscanf(sStacks,"%d",&stacks) == 1 )
+						node1.addCylinder(base,top,height,slices,stacks);
+
+					primitivesDef = primitivesDef->NextSiblingElement("cylinder");
+				}
+
+
+				primitivesDef = primitives->FirstChildElement("sphere");
+
+				while(primitivesDef)
+				{
+					char * valString1=NULL, * valString2 = NULL;
+					printf("  - Type id: '%s'\n", primitivesDef->Attribute("type"));
+
+					char * sSlices = NULL,* sStacks = NULL;
+					valString1 = (char *) primitivesDef->Attribute("radius");
+					sSlices = (char *) primitivesDef->Attribute("slices");
+					sStacks = (char *) primitivesDef->Attribute("stacks");
+					float radius;
+					int slices,stacks;
+					if(sscanf(valString1,"%f",&radius) ==1 && sscanf(sSlices,"%d",&slices) == 1 && sscanf(sStacks,"%d",&stacks) == 1 )
+						node1.addSphere(radius,slices,stacks);
+
+					primitivesDef = primitivesDef->NextSiblingElement("sphere");
+				}
+
+
+			}
+
+
+			TiXmlElement *descendants=primitives->NextSiblingElement();
+
+			if(descendants == NULL)
+				printf("Descendants block not found!\n");
+			else
+			{
+				TiXmlElement *child =descendants->FirstChildElement();
+
+				if(child != NULL)
+					while (child)
+					{
+						char * nodeC = NULL;
+						nodeC = (char *) child->Attribute("noderef");
+
+						string childID(nodeC);
+
+						node1.addDescendant(childID);
+
+						child = child->NextSiblingElement();
+					}
+
+
 			}
 			node=node->NextSiblingElement();
 			graph->addNode(node1);

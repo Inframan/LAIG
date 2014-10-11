@@ -8,6 +8,7 @@ using namespace std;
 
 class sceneGraph
 {
+	string rootId;
 	string drawingMode;
 	string shading;
 	vector<float> background;//array
@@ -22,6 +23,7 @@ class sceneGraph
 public:
 	
 	sceneGraph(void);
+	void setRootID(string id){rootId = id;}
 	void setDrawingMode(string mode);
 	void setShading(string mode);
 	void setBackground(vector<float> background);
