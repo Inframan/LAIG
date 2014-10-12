@@ -1,7 +1,8 @@
 #include "LightingScene.h"
 #include "CGFaxis.h"
 #include "CGFapplication.h"
-
+#include "perspective.h"
+#include "orthogonal.h"
 #include <math.h>
 
 float pi = acos(-1.0);
@@ -61,9 +62,27 @@ void LightingScene::init()
 	light2On = 0;
 	light3On = 0;
 	// Enables lighting computations
-	
+	map<string,camera *> copyCam;
+	map<string,camera *>::iterator it;
 
+	copyCam = pgraph.getCameras(); // para evitar que o iterador fique a apontar para o vazio
+	it =  pgraph.getCameras().find(pgraph.getRootCamera());
+
+	/*CGFcamera * firstCamera = new CGFcamera();
 	
+	if(it->second->getType() == "perspective")
+	{
+		//gluPerspective(
+		firstCamera->setX(((perspective *) it->second)->getPos()[0]);
+		firstCamera->setY(((perspective *) it->second)->getPos()[1]);
+		firstCamera->setZ(((perspective *) it->second)->getPos()[2]);
+		//firstCamera->
+	}
+
+	*/
+	//CGFscene::activeCamera->applyView();
+		
+	//CGFcamera * cam = new CGFcamera(
 
 	if(pgraph.getCulFace() == "none")
 		glCullFace(GL_NONE);

@@ -106,6 +106,26 @@ vector<float> sceneGraph::getBackground()const
 	return background;
 }
 
+void sceneGraph::setCameraID(string id)
+{
+	rootCamera = id;
+}
+
+string sceneGraph::getRootCamera()const
+{
+	return rootCamera;
+}
+
+
+void sceneGraph::addCamera(camera* cam)
+{
+	cameras[cam->getID()] = cam;
+}
+	
+map<string,camera *> sceneGraph::getCameras() const
+{
+	return cameras;
+}
 
 
 

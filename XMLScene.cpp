@@ -147,6 +147,32 @@ XMLScene::XMLScene(char *filename, sceneGraph * graph)
 
 	// Other blocks could be validated/processed here
 
+	////////CAMERAS   /////////////
+	if (camerasElement == NULL)
+		printf("Cameras block not found!\n");
+	else
+	{
+		char * rootCamera = NULL;
+		rootCamera = (char*) camerasElement->Attribute("initial");
+		string rc(rootCamera);
+		graph->setCameraID(rc);
+
+		TiXmlElement *cam=camerasElement->FirstChildElement("ortho");
+
+		while(cam)
+		{
+			camera camr;
+			char * camID = NULL;
+			camID = (char*)cam->Attribute("id");			
+		
+
+
+			cam = cam->NextSiblingElement("ortho");
+		}
+
+
+	}
+
 
 	// graph section
 	if (graphElement == NULL)
@@ -355,7 +381,7 @@ XMLScene::XMLScene(char *filename, sceneGraph * graph)
 					while (child)
 					{
 						char * nodeC = NULL;
-						nodeC = (char *) child->Attribute("noderef");
+						nodeC = (char *) child->Attribute("id");
 
 						string childID(nodeC);
 

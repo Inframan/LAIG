@@ -17,7 +17,7 @@ void myTorus::draw()
 	double da =360/ (double) slices;
 	double dl = 360/ (double) loops;
 
-	double x1 = 1.0 , y1=0.0; 
+	double x1 = inner , y1=0.0; 
 	a+=da;
 	l+=dl;
 	double x2=cos(a*myPi/180);

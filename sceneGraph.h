@@ -20,6 +20,9 @@ class sceneGraph
 	bool lEnabled;
 	vector<float> lAmbient;//array
 	map<string,Node> nodes;
+	string rootCamera;
+	map<string,camera *> cameras;
+	
 
 public:
 	
@@ -37,7 +40,11 @@ public:
 	void addNode(Node n);
 	string getRootID() const;
 	map<string,Node> getNodes() const;
+	void addCamera(camera * cam);
+	map<string,camera *> getCameras() const;
+	void setCameraID(string id);
 
+	string getRootCamera()const;
 	bool getDoubleSided()const;
 	bool getLocalLight()const;
 	bool getLightEnable()const;

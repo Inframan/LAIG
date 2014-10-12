@@ -25,7 +25,7 @@ int main(int argc, char* argv[]) {
 	LightingScene * scene = new LightingScene();
 	try {
 		app.init(&argc, argv);
-		XMLScene n = XMLScene("demograph.anf",pgraph);
+		XMLScene n = XMLScene(argv[1],pgraph);
 		scene->setGraph(graph);
 		app.setScene(scene);
 		app.setInterface(new CGFinterface());

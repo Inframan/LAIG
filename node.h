@@ -6,6 +6,7 @@
 #include "cylinder.h"
 #include "torus.h"
 #include "sphere.h"
+#include "camera.h"
 
 using namespace std;
 
