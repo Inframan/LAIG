@@ -59,9 +59,11 @@
                 <!-- ex: bloco transforms pode ficar sem conteudo -->
                 <!-- ex: bloco transforms pode ser R,T (nao tem S) -->
                 <!-- ex: bloco transforms pode ser R,S,T,S -->
-                <transform type="translate" to="10 0 0" />
+     <!--           <transform type="translate" to="10 0 0" />
                <transform type="rotate" axis="x" angle="50" />
                 <transform type="scale" factor="1 1 2" />
+
+              -->
             </transforms>
           
             <!-- declaracao da aparencia a utilizar -->
@@ -80,11 +82,11 @@
                 <!-- Primitivas : rectangle, triangle, cylinder, sphere, torus -->
                 <!--   Comandos a serem interpretados genericamente como em OpenGL/GLUT, exceto -->
                 <!--   o cilindro, que deve adicionalmente ter topos ou tampas) -->            
-                <rectangle xy1="0 0" xy2="1 1" />
+            <!--    <rectangle xy1="0 0" xy2="1 1" />
                 <triangle xyz1="1 0 1" xyz2="0 0 1" xyz3="1 0 0" />
                 <cylinder base="4" top="5" height="3" slices="20" stacks="6" />      <!-- deve ter topos -->
-                <sphere radius="2" slices="40" stacks="40" />
-                <torus inner="ff" outer="ff" slices="ii" loops="ii" />
+           <!--     <sphere radius="2" slices="40" stacks="40" />
+               --> <torus inner="1" outer="2" slices="4" loops="6" />
              </primitives>
                
              <!-- bloco "descendants" -->

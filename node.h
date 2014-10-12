@@ -32,6 +32,7 @@ public:
 	vector<rectangle> getRectangle() const{return rectangles;}
 	vector<triangle> getTriangle() const{return triangles;}
 	vector<cylinder> getCylinder() const{return cylinders;}
+	vector<torus> getTorus() const{return torusses;}
 	vector<sphere> getSphere() const{return spheres;}
 	string getID() const {return id;}
 	vector<string> getDescendants()const { return descendants;}

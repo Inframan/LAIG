@@ -285,12 +285,27 @@ void LightingScene::drawNode(string id)
 		drawSphere( n.getSphere()[i].getRadius(),n.getSphere()[i].getStacks(),n.getSphere()[i].getSlices());
 	}
 
+	for(int i = 0; i < n.getTorus().size();i++)
+	{
+		drawTorus(n.getTorus()[i].getInner(),n.getTorus()[i].getOuter(),n.getTorus()[i].getLoops(),n.getTorus()[i].getSlices());
+	}
+
 
 	for(int i = 0; i < n.getDescendants().size();i++)
 		drawNode(n.getDescendants()[i]);
 
 	glPopMatrix();
 }
+
+
+void LightingScene:: drawTorus(float inner,float outer,int loops,int slices)
+{
+	myTorus * torus = new myTorus(inner,outer,slices,loops);
+
+	torus->draw();
+
+}
+
 
 void LightingScene::drawSphere(float radius,int stacks,int slices)
 {

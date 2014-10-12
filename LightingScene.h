@@ -4,6 +4,7 @@
 #include "CGFscene.h"
 #include "CGFappearance.h"
 #include "sceneGraph.h"
+#include "myTorus.h"
 
 
 class LightingScene : public CGFscene
@@ -24,6 +25,8 @@ public:
 	void drawNode(string id);
 	void drawCylinder(vector<float> coords,int stacks,int slices);
 	void drawSphere(float radius,int stacks,int slices);
+	void drawTorus(float inner,float outer,int loops,int slices);
+
 
 	CGFlight* light0;
 	CGFlight* light1;

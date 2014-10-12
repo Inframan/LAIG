@@ -319,6 +319,26 @@ XMLScene::XMLScene(char *filename, sceneGraph * graph)
 					primitivesDef = primitivesDef->NextSiblingElement("sphere");
 				}
 
+				primitivesDef = primitives->FirstChildElement("torus");
+
+				while(primitivesDef)
+				{
+					char * valString1=NULL, * valString2 = NULL;
+					printf("  - Type id: '%s'\n", primitivesDef->Attribute("type"));
+
+					char * sSlices = NULL,* sLoops = NULL;
+					valString1 = (char *) primitivesDef->Attribute("inner");
+					valString2 = (char *) primitivesDef->Attribute("outer");
+					sSlices = (char *) primitivesDef->Attribute("slices");
+					sLoops = (char *) primitivesDef->Attribute("loops");
+					float inner,outer;
+					int slices,loops;
+					if(sscanf(valString1,"%f",&inner) ==1 &&sscanf(valString2,"%f",&outer) ==1 && sscanf(sSlices,"%d",&slices) == 1 && sscanf(sLoops,"%d",&loops) == 1 )
+						node1.addTorus(inner,outer,slices,loops);
+
+					primitivesDef = primitivesDef->NextSiblingElement("torus");
+				}
+
 
 			}
 
