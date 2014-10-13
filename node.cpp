@@ -62,6 +62,12 @@ vector<vector<float>> Node::getMatrix() const
 	 return  matrix;
  }
 
+
+void Node::setDescendants(vector<Node*> descendantNode){
+
+	this->descendantNode=descendantNode;
+}
+
 Node::~Node(void)
 {
 }

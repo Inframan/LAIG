@@ -60,6 +60,13 @@ string sceneGraph:: getRootID() const
 	return rootId;
 }
 
+Node * sceneGraph::getRootNode() const{
+	return rootNode;
+}
+void sceneGraph::setRootNode(){
+	rootNode = &nodes.find(rootId)->second;
+}
+
 map<string,Node> sceneGraph:: getNodes() const
 {
 	return nodes;
@@ -116,7 +123,25 @@ string sceneGraph::getRootCamera()const
 	return rootCamera;
 }
 
+void sceneGraph::setDescendantNode(){
 
+	
+
+	map<string,Node>::iterator it;
+
+	for(it = nodes.begin(); it != nodes.end(); it++) {
+		vector<Node*>tmp;
+		
+		for (int i = 0 ; i<it->second.getDescendants().size();i++)
+		{
+			tmp.push_back(&nodes.find(it->second.getDescendants()[i])->second);
+		}
+		it->second.setDescendants(tmp);
+	}
+}
+
+
+/*
 void sceneGraph::addCamera(camera* cam)
 {
 	cameras[cam->getID()] = cam;
@@ -128,7 +153,7 @@ map<string,camera *> sceneGraph::getCameras() const
 }
 
 
-
+*/
 sceneGraph::~sceneGraph(void)
 {
 }

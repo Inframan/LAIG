@@ -22,7 +22,8 @@ public:
 	void setGraph(sceneGraph pgraph);
 	void drawRectangle(vector<float> coords);
 	void drawTriangle(vector<float> coords);
-	void drawNode(string id);
+	//void drawNode(string id);
+	void drawNode(Node *n);
 	void drawCylinder(vector<float> coords,int stacks,int slices);
 	void drawSphere(float radius,int stacks,int slices);
 	void drawTorus(float inner,float outer,int loops,int slices);

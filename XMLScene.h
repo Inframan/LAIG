@@ -4,6 +4,8 @@
 
 #include "sceneGraph.h"
 #include "tinyxml.h"
+#include "orthogonal.h"
+#include "perspective.h"
 
 class XMLScene
 {

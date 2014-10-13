@@ -10,6 +10,7 @@ using namespace std;
 class sceneGraph
 {
 	string rootId;
+	Node * rootNode;
 	string drawingMode;
 	string shading;
 	vector<float> background;//array
@@ -39,6 +40,8 @@ public:
 	void setLAmbient(vector<float> ambient);
 	void addNode(Node n);
 	string getRootID() const;
+	Node * getRootNode() const;
+	void setRootNode();
 	map<string,Node> getNodes() const;
 	void addCamera(camera * cam);
 	map<string,camera *> getCameras() const;
@@ -53,7 +56,7 @@ public:
 	string getDrawingMode()const;
 	string getShading();
 	vector<float> getBackground()const;
-
+	void setDescendantNode();
 	~sceneGraph(void);
 };
 

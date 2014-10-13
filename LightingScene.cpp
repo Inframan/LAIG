@@ -62,12 +62,12 @@ void LightingScene::init()
 	light2On = 0;
 	light3On = 0;
 	// Enables lighting computations
-	map<string,camera *> copyCam;
+/*	map<string,camera *> copyCam;
 	map<string,camera *>::iterator it;
 
 	copyCam = pgraph.getCameras(); // para evitar que o iterador fique a apontar para o vazio
 	it =  pgraph.getCameras().find(pgraph.getRootCamera());
-
+	*/
 	/*CGFcamera * firstCamera = new CGFcamera();
 	
 	if(it->second->getType() == "perspective")
@@ -229,7 +229,7 @@ void LightingScene::display()
 	axis.draw();
 
 
-	drawNode(pgraph.getRootID());
+	drawNode(pgraph.getRootNode());
 
 	
 	
@@ -259,15 +259,9 @@ void LightingScene::setGraph(sceneGraph graph)
 
 
 
-void LightingScene::drawNode(string id)
+void LightingScene::drawNode(Node *n)
 {
-	map<string,Node> copyMap;
-	map<string,Node>::iterator it;
-
-	copyMap = pgraph.getNodes(); // para evitar que o iterador fique a apontar para o vazio
-	it =  copyMap.find(id);
-
-	Node n = it->second;
+	
 
 	float m[16] = {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0};
 
@@ -276,46 +270,45 @@ void LightingScene::drawNode(string id)
 	{
 		for(int j = 0; j<4;j++)
 		{
-			m[i*4+j] = n.getMatrix()[i][j];
+			m[i*4+j] = n->getMatrix()[i][j];
 		}
 	}
 
 	glPushMatrix();
 	glMultMatrixf(m);
 
-	for(int i = 0; i < n.getRectangle().size();i++)
+	for(int i = 0; i < n->getRectangle().size();i++)
 	{
-		drawRectangle(n.getRectangle()[i].getCoords());
+		drawRectangle(n->getRectangle()[i].getCoords());
 	}
 
-	for(int i = 0; i < n.getTriangle().size();i++)
+	for(int i = 0; i < n->getTriangle().size();i++)
 	{
-		drawTriangle(n.getTriangle()[i].getCoords());
+		drawTriangle(n->getTriangle()[i].getCoords());
 	}
 
 	
-	for(int i = 0; i < n.getCylinder().size();i++)
+	for(int i = 0; i < n->getCylinder().size();i++)
 	{
-		drawCylinder(n.getCylinder()[i].getCoords(),n.getCylinder()[i].getStacks(),n.getCylinder()[i].getSlices());
+		drawCylinder(n->getCylinder()[i].getCoords(),n->getCylinder()[i].getStacks(),n->getCylinder()[i].getSlices());
 	}
 
-	for(int i = 0; i < n.getSphere().size();i++)
+	for(int i = 0; i < n->getSphere().size();i++)
 	{
-		drawSphere( n.getSphere()[i].getRadius(),n.getSphere()[i].getStacks(),n.getSphere()[i].getSlices());
+		drawSphere( n->getSphere()[i].getRadius(),n->getSphere()[i].getStacks(),n->getSphere()[i].getSlices());
 	}
 
-	for(int i = 0; i < n.getTorus().size();i++)
+	for(int i = 0; i < n->getTorus().size();i++)
 	{
-		drawTorus(n.getTorus()[i].getInner(),n.getTorus()[i].getOuter(),n.getTorus()[i].getLoops(),n.getTorus()[i].getSlices());
+		drawTorus(n->getTorus()[i].getInner(),n->getTorus()[i].getOuter(),n->getTorus()[i].getLoops(),n->getTorus()[i].getSlices());
 	}
 
 
-	for(int i = 0; i < n.getDescendants().size();i++)
-		drawNode(n.getDescendants()[i]);
+	for(int i = 0; i < n->getDescendants().size();i++)
+	drawNode(n->getDescendantNode()[i]);
 
 	glPopMatrix();
 }
-
 
 void LightingScene:: drawTorus(float inner,float outer,int loops,int slices)
 {

@@ -161,18 +161,27 @@ XMLScene::XMLScene(char *filename, sceneGraph * graph)
 
 		while(cam)
 		{
-			camera camr;
+			camera * camr;
 			char * camID = NULL;
-			camID = (char*)cam->Attribute("id");			
-		
+			camID = (char*)cam->Attribute("id");     
+			char * direction = (char *) cam->Attribute("direction");
+			char * stNear = (char *) cam->Attribute("near");
+			char * stFar = (char *) cam->Attribute("far");
+			char * stLeft = (char *) cam->Attribute("left");
+			char * stRight = (char *) cam->Attribute("right");
+			char * stTop = (char *) cam->Attribute("top");
+			char * stBot = (char *) cam->Attribute("bottom");
+			float near,far,left,right,top,bot;
 
+			if(sscanf(stNear,"%f",&near) == 1 && sscanf(stFar,"%f",&far) == 1 && sscanf(stLeft,"%f",&left) == 1
+				&& sscanf(stRight,"%f",&right) == 1 && sscanf(stTop,"%f",&top) == 1 && sscanf(stBot,"%f",&bot) == 1)
+				camr = new orthogonal(camID,direction[0],near,far,left,right,top,bot);
 
 			cam = cam->NextSiblingElement("ortho");
 		}
 
 
 	}
-
 
 	// graph section
 	if (graphElement == NULL)
@@ -200,7 +209,7 @@ XMLScene::XMLScene(char *filename, sceneGraph * graph)
 
 				char * valString = NULL, * t = NULL;
 				float m[4][4];
-				
+
 				glLoadIdentity();
 				while(tranformation)
 				{
@@ -397,6 +406,8 @@ XMLScene::XMLScene(char *filename, sceneGraph * graph)
 		}
 	}
 
+	graph->setDescendantNode();
+	graph->setRootNode();
 }
 
 XMLScene::~XMLScene()

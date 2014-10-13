@@ -20,12 +20,14 @@ int main(int argc, char* argv[]) {
 	sceneGraph graph;
 	sceneGraph * pgraph = new sceneGraph();
 	pgraph = &graph;
-	
+	char* filename = "myScene.anf";
+	if (argc >1)
+		filename = argv[1];
 	CGFapplication app = CGFapplication();
 	LightingScene * scene = new LightingScene();
 	try {
 		app.init(&argc, argv);
-		XMLScene n = XMLScene(argv[1],pgraph);
+		XMLScene n = XMLScene(filename,pgraph);
 		scene->setGraph(graph);
 		app.setScene(scene);
 		app.setInterface(new CGFinterface());

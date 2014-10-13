@@ -14,6 +14,7 @@ class Node
 {
 	string id;
 	vector<string> descendants;
+	vector<Node*> descendantNode;
 	vector<vector<float>> matrix;
 	vector<triangle> triangles;
 	vector<rectangle> rectangles;
@@ -37,7 +38,9 @@ public:
 	vector<sphere> getSphere() const{return spheres;}
 	string getID() const {return id;}
 	vector<string> getDescendants()const { return descendants;}
+	vector<Node *> getDescendantNode() const { return descendantNode;}
 	vector<vector<float>> getMatrix()const;
+	void setDescendants(vector<Node *> descendantNode);
 
 
 	~Node(void);
