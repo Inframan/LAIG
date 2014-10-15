@@ -216,7 +216,6 @@ void LightingScene::init()
 
 void LightingScene::display() 
 {
-	printf( "display start\n");
 /*
  map<string,camera *> copyCam;
  map<string,camera *>::iterator it;
@@ -369,8 +368,7 @@ void LightingScene::drawNode(Node *n)
 
 	for(int i = 0; i < n->getSphere().size();i++)
 	{
-		
-		printf( "drew a sphere\n");
+	
 		drawSphere( n->getSphere()[i].getRadius(),n->getSphere()[i].getStacks(),n->getSphere()[i].getSlices());
 	}
 
@@ -385,9 +383,6 @@ void LightingScene::drawNode(Node *n)
 
 	glPopMatrix();
 
-	myTorus t(4, 4 ,3,4);
-
-	t.draw();
 
 }
 

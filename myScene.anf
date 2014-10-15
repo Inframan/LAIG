@@ -16,37 +16,25 @@
 
 
 	<lights>
-		<light id="secLight">
-			<ambient r="0.5" g="0.5" b="0.7" a="0.5" />
-		</light>
             <!-- Deve existir pelo menos uma luz declarada -->
             <!-- Atributo "marker" indica se deve ou nao desenhar-se uma esfera representativa -->
-            <light id="L1" type="omni" enabled="true" marker="false" pos="7.5 20 5" >
-               <component type="ambient" value="1.0 0.8 0.0 0.4" />
-               <component type="diffuse" value="1.0 0.8 0.0 0.4" />
+          	 <light id="L1" type="omni" enabled="true" marker="false" pos="2 2 2" >
+               <component type="ambient" value="0.0 0.0 0.0 0.1" />
+               <component type="diffuse" value="0.2 0.1 0.1 0.4" />
                <component type="specular" value="1.0 0.8 0.0 0.4" />
 
             </light>
-            <!-- Deve existir pelo menos uma luz declarada -->
-            <!-- Atributo "marker" indica se deve ou nao desenhar-se uma esfera representativa -->
-            <light id="L2" type="omni" enabled="true" marker="false" pos="17.5 20 5" >
-               <component type="ambient" value="1.0 0.8 0.0 0.4" />
-               <component type="diffuse" value="1.0 0.8 0.0 0.4" />
-               <component type="specular" value="1.0 0.8 0.0 0.4" />
 
-            </light>
-            <light id="L3" type="spot" enabled="true" marker="false" pos="12.5 15 5" target="12.5 9 5"  
-                angle="19" exponent="0.9" >
-
-                <component type="ambient" value="1.0 0.0 0.0 0.9" />
-               <component type="diffuse" value="1.0 0.0 0.0 0.9" />
-               <component type="specular" value="1.0 0.0 0.0 0.9" />
+             <light id="L1" type="omni" enabled="true" marker="false" pos="8 5 8" >
+               <component type="ambient" value="0.0 0.0 0.0 0.1" />
+               <component type="diffuse" value="0.6 0.1 0.6 0.4" />
+               <component type="specular" value="0.0 0.8 1.0 0.4" />
 
             </light>
 	</lights>
 
 	<textures>
-		<texture id="metal" file="robot4.png" texlength_S="1.0" texlength_t="1.0" />
+		<texture id="metal" file="robot4.png" texlength_s="1.0" texlength_t="1.0" />
 	</textures>
 
 	<appearances>
@@ -281,7 +269,7 @@
 
 			<descendants>				
 				<noderef id="sphere"/>
-				<!-- <noderef="anel"/> -->
+				<noderef id="anel"/>
 			</descendants>
 		</node>
 
@@ -320,9 +308,17 @@
 		</node>
 
 		
-		<!-- <node id="anel"> <transforms> </transforms> <appearanceref id=""/> 
-			<primitives> <torus inner="3" outer="4" slices="10" loops="12"/> </primitives> 
-			</node> -->
+		<node id="anel"> 
+			<transforms> 
+				<transform type="rotate" axis="x" angle="20" />
+				<transform type="scale" factor="1 1 0.05"/>
+			</transforms> 
+
+			<appearanceref id=""/> 
+			<primitives> 
+				<torus inner="0.2" outer="1.5" slices="25" loops="25"/> 
+			</primitives> 
+		</node>
 		<node id="sphere">
 
 			<transforms>
@@ -343,3 +339,4 @@
 
 	</graph>
 </anf>
+

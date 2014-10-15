@@ -272,6 +272,37 @@ XMLScene::XMLScene(char *filename, sceneGraph * graph)
 	}
 	
 	
+	if (appearancesElement == NULL)
+		printf("Appearances block not found!\n");
+	else
+	{
+	}
+
+	if (textsElement == NULL)
+		printf("Text block not found!\n");
+	else
+	{
+		TiXmlElement *textures=textsElement->FirstChildElement();
+
+		while(textures){
+
+		char *Id=NULL , *file=NULL, *texlength_s=NULL, *texlength_t=NULL;
+		float texlength_S=0, texlength_T=0;
+		Id = (char*) textures->Attribute("id");
+		file =(char*) textures->Attribute("file");
+		texlength_s= (char *)textures->Attribute("texlength_s");
+		texlength_t= (char *)textures->Attribute("texlength_t");
+		
+		if(sscanf(texlength_s,"%f",&texlength_S) == 1 && sscanf(texlength_t,"%f",&texlength_T) == 1){
+			Texture t = Texture(Id , file,texlength_S,texlength_T);
+			graph->addTexture(t);	
+		}
+
+		textures= textures->NextSiblingElement();
+		}
+
+	}
+	
 
 	// graph section
 	if (graphElement == NULL)

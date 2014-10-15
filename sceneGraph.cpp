@@ -150,7 +150,17 @@ vector<myLight> sceneGraph::getLights()const
 	return lights;
 }
 
-
+vector<Texture> sceneGraph::getTextures() const{
+return textures;
+}
+void sceneGraph::setTextures(vector<Texture> textures)
+{
+	this->textures=textures;
+}
+void sceneGraph::addTexture(Texture t)
+{
+	textures.push_back(t);
+}
 /*
 void sceneGraph::addCamera(camera* cam)
 {
