@@ -14,6 +14,15 @@ myLight::myLight(string id,string type, bool enabled,bool marker, vector<float> 
 	this->pos=pos;
 }
 
+bool myLight::getEnabled()const
+{
+	return enabled;
+}
+
+bool myLight::getMarker()const
+{
+	return marker;
+}
 
 void myLight::setSpecular(vector<float> specular)
 {
@@ -45,6 +54,11 @@ vector<float> myLight::getDiffuse()const
 	return diffuse;
 }
 
+
+vector<float> myLight::getPos()const
+{
+	return pos;
+}
 
 
 myLight::~myLight(void)

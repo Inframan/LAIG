@@ -191,6 +191,7 @@ XMLScene::XMLScene(char *filename, sceneGraph * graph)
 		printf("Cameras block not found!\n");
 	else
 	{
+		
 		char * rootCamera = NULL;
 
 		TiXmlElement *light=lightsElement->FirstChildElement("light");
@@ -209,7 +210,7 @@ XMLScene::XMLScene(char *filename, sceneGraph * graph)
 			string sE(sEnabled),	sM(sMarker);
 			pos = (char*) light->Attribute("pos");
 
-			if(sscanf(pos,"%f %f %F",&posX,&posY,&posZ) == 3)
+			if(sscanf(pos,"%f %f %f",&posX,&posY,&posZ) == 3)
 			{
 				if(sE == "true")
 					enabled = true;
@@ -223,7 +224,7 @@ XMLScene::XMLScene(char *filename, sceneGraph * graph)
 				posV.push_back(posX);
 				posV.push_back(posY);
 				posV.push_back(posZ);
-
+			
 			}
 			
 			myLight lightToSave = myLight(id,type,enabled,marker,posV);
@@ -259,18 +260,18 @@ XMLScene::XMLScene(char *filename, sceneGraph * graph)
 
 				}
 
-
+				
 				lightComponent = lightComponent->NextSiblingElement();
 			}
 
 			graph->addLight(lightToSave);
 			light = light->NextSiblingElement();
 		}
-
+		
 		
 	}
-
-
+	
+	
 
 	// graph section
 	if (graphElement == NULL)

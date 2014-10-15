@@ -14,9 +14,12 @@ public:
 	void setSpecular(vector<float> specular);
 	void setAmbient(vector<float> ambient);
 	void setDiffuse(vector<float> diffuse);
+	bool getEnabled()const;
+	bool getMarker()const;
 	vector<float> getAmbient()const;
 	vector<float> getSpecular()const;
 	vector<float> getDiffuse()const;
+	vector<float> getPos()const;
 	~myLight(void);
 };
 

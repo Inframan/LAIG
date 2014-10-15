@@ -9,7 +9,8 @@
 
 class LightingScene : public CGFscene
 {
-	 sceneGraph pgraph;
+	sceneGraph pgraph;
+	vector<CGFlight *> lightsVector;
 public:
 	int light0On, light1On, light2On, light3On;
 	void init();
@@ -28,11 +29,6 @@ public:
 	void drawSphere(float radius,int stacks,int slices);
 	void drawTorus(float inner,float outer,int loops,int slices);
 
-
-	CGFlight* light0;
-	CGFlight* light1;
-	CGFlight* light2;
-	CGFlight* light3;
 
 
 	CGFappearance* materialA;

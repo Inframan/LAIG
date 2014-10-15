@@ -53,6 +53,8 @@ float shininessBoard = 200.f;
 float ambientNull[4]={0,0,0,1};
 float yellow[4]={1,1,0,1};
 
+unsigned int lightArray[8] = {GL_LIGHT0,GL_LIGHT1,GL_LIGHT2,GL_LIGHT3,GL_LIGHT4,GL_LIGHT5,GL_LIGHT6,GL_LIGHT7};
+
 void LightingScene::init() 
 {
 
@@ -135,6 +137,29 @@ void LightingScene::init()
 	else if(pgraph.getDrawingMode() == "point")
 		glPolygonMode(GL_FRONT_AND_BACK, GL_POINT);
 
+
+	for(int i = 0; i < pgraph.getLights().size();i++)
+	{
+		myLight temp = pgraph.getLights()[i];
+		float pos[3] = {temp.getPos()[0],temp.getPos()[i],temp.getPos()[2]};
+		float ambient[4] = {temp.getAmbient()[0],temp.getAmbient()[i],temp.getAmbient()[2],temp.getAmbient()[3]};
+		float diffuse[4] =  {temp.getDiffuse()[0],temp.getDiffuse()[i],temp.getDiffuse()[2],temp.getDiffuse()[3]};
+		float specular[4] =  {temp.getSpecular()[0],temp.getSpecular()[i],temp.getSpecular()[2],temp.getSpecular()[3]};
+
+		CGFlight* newLight = new CGFlight(lightArray[i],pos);
+		newLight->setAmbient(ambient);
+		newLight->setDiffuse(diffuse);
+		newLight->setSpecular(specular);
+		
+		if(temp.getEnabled())
+			newLight->enable();
+		else
+			newLight->disable();
+
+		lightsVector.push_back(newLight);
+	}
+
+		/*
 	light0 = new CGFlight(GL_LIGHT0, light0_pos);
 	light0->setAmbient(ambientNull);
 	light0->setSpecular(yellow);
@@ -176,7 +201,7 @@ void LightingScene::init()
 	else
 		light3->enable();
 
-
+		*/
 
 
 	// Uncomment below to enable normalization of lighting normal vectors
@@ -190,7 +215,8 @@ void LightingScene::init()
 }
 
 void LightingScene::display() 
-{printf( "display start\n");
+{
+	printf( "display start\n");
 /*
  map<string,camera *> copyCam;
  map<string,camera *>::iterator it;
@@ -246,7 +272,12 @@ void LightingScene::display()
 	// Apply transformations corresponding to the camera position relative to the origin
 	CGFscene::activeCamera->applyView();
 
-
+	for(int i = 0; i < pgraph.getLights().size();i++)
+	{
+		if(pgraph.getLights()[i].getMarker())
+			lightsVector[i]->draw();
+	}
+	/*
 	light0->draw();
 	light0->disable();
 	if (light0On != 0)
@@ -266,6 +297,7 @@ void LightingScene::display()
 	light3->disable();
 	if (light3On != 0)
 		light3->enable();
+		*/
 
 	// Draw axis
 	axis.draw();

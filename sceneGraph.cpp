@@ -140,6 +140,10 @@ void sceneGraph::setDescendantNode(){
 	}
 }
 
+void sceneGraph::addLight(myLight light)
+{
+	lights.push_back(light);
+}
 
 vector<myLight> sceneGraph::getLights()const
 {
