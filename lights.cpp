@@ -14,6 +14,7 @@ myLight::myLight(string id,string type, bool enabled,bool marker, vector<float> 
 	this->pos=pos;
 }
 
+
 bool myLight::getEnabled()const
 {
 	return enabled;
@@ -60,6 +61,35 @@ vector<float> myLight::getPos()const
 	return pos;
 }
 
+void myLight::setTarget(vector<float> target)
+{
+	this->target = target;
+}
+
+void myLight::setAngle(float angle)
+{
+	this->angle = angle;
+}
+
+void myLight::setExponent(float exponent)
+{
+	this->exponent = exponent;
+}
+
+vector<float> myLight::getTarget()const
+{
+	return target;
+}
+
+float myLight::getAngle()const
+{
+	return angle;
+}
+
+float myLight::getExponent()const
+{
+	return exponent;
+}
 
 myLight::~myLight(void)
 {

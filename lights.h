@@ -6,7 +6,8 @@ using namespace std;
 class myLight
 {
 	string id,type;
-	vector<float> pos, ambient, diffuse,specular;
+	vector<float> pos, ambient, diffuse,specular,target;
+	float angle, exponent;
 	bool enabled,marker;	
 public:
 	myLight(void);
@@ -16,10 +17,16 @@ public:
 	void setDiffuse(vector<float> diffuse);
 	bool getEnabled()const;
 	bool getMarker()const;
+	void setTarget(vector<float> target);
+	void setAngle(float angle);
+	void setExponent(float exponent);
 	vector<float> getAmbient()const;
 	vector<float> getSpecular()const;
 	vector<float> getDiffuse()const;
 	vector<float> getPos()const;
+	vector<float> getTarget()const;
+	float getExponent()const;
+	float getAngle()const;
 	~myLight(void);
 };
 
