@@ -141,6 +141,12 @@ void sceneGraph::setDescendantNode(){
 }
 
 
+vector<myLight> sceneGraph::getLights()const
+{
+	return lights;
+}
+
+
 /*
 void sceneGraph::addCamera(camera* cam)
 {

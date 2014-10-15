@@ -3,7 +3,7 @@
 #include "node.h"
 #include <vector>
 #include <map>
-
+#include "lights.h"
 
 using namespace std;
 
@@ -23,7 +23,7 @@ class sceneGraph
 	map<string,Node> nodes;
 	string rootCamera;
 	map<string,camera *> cameras;
-	
+	vector<myLight> lights;
 
 public:
 	
@@ -46,6 +46,8 @@ public:
 	void addCamera(camera * cam);
 	map<string,camera *> getCameras() const;
 	void setCameraID(string id);
+	void addLight(myLight light);
+	vector<myLight> getLights()const;
 
 	string getRootCamera()const;
 	bool getDoubleSided()const;

@@ -36,6 +36,8 @@ XMLScene::XMLScene(char *filename, sceneGraph * graph)
 	// Init
 	// An example of well-known, required nodes
 
+
+	/////////GLOBAL VARIABLES
 	if (globElement == NULL)
 		printf("Init block not found!\n");
 	else
@@ -182,6 +184,93 @@ XMLScene::XMLScene(char *filename, sceneGraph * graph)
 
 
 	}
+
+	//////////////LIGHTS 
+
+	if (lightsElement == NULL)
+		printf("Cameras block not found!\n");
+	else
+	{
+		char * rootCamera = NULL;
+
+		TiXmlElement *light=lightsElement->FirstChildElement("light");
+
+		while(light)
+		{
+			int enabled,marker;
+			float posX,posY,posZ;
+			vector<float> posV;
+			char * id = NULL, *type = NULL, *sEnabled = NULL, * sMarker = NULL, *pos = NULL;
+
+			id = (char*) light->Attribute("id");
+			type = (char*) light->Attribute("type");
+			sEnabled = (char*) light->Attribute("enabled");			
+			sMarker = (char*) light->Attribute("marker");		
+			string sE(sEnabled),	sM(sMarker);
+			pos = (char*) light->Attribute("pos");
+
+			if(sscanf(pos,"%f %f %F",&posX,&posY,&posZ) == 3)
+			{
+				if(sE == "true")
+					enabled = true;
+				else 
+					enabled = false;
+				if(sM == "true")
+					marker = true;
+				else
+					marker = false;
+
+				posV.push_back(posX);
+				posV.push_back(posY);
+				posV.push_back(posZ);
+
+			}
+			
+			myLight lightToSave = myLight(id,type,enabled,marker,posV);
+
+			TiXmlElement *lightComponent = light->FirstChildElement();//
+
+			while(lightComponent)
+			{
+				float r,g,b,a;
+				char * type = (char*) lightComponent->Attribute("type");
+				string t(type);
+				char * valString = (char*) lightComponent->Attribute("value");
+
+				if(sscanf(valString,"%f %f %f %f",&r,&g,&b,&a) == 4)
+				{
+					vector<float> values;
+					values.push_back(r);
+					values.push_back(g);
+					values.push_back(b);
+					values.push_back(a);
+					if(t == "ambient")
+					{
+						lightToSave.setAmbient(values);
+					}
+					else if(t == "diffuse")
+					{
+						lightToSave.setDiffuse(values);
+					}
+					else if(t == "specular")
+					{
+						lightToSave.setSpecular(values);
+					}
+
+				}
+
+
+				lightComponent = lightComponent->NextSiblingElement();
+			}
+
+			graph->addLight(lightToSave);
+			light = light->NextSiblingElement();
+		}
+
+		
+	}
+
+
 
 	// graph section
 	if (graphElement == NULL)
