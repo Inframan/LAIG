@@ -26,6 +26,11 @@ void myTorus::draw()
 		glBegin(GL_TRIANGLE_STRIP);
 		// inner loop
 		while (v < 2 * pi + dv) {
+			double cosV = cos(v), sinV = sin(v), cosW = cos(w),sinW = sin(w),
+				cosVdV = cos(v + dv), sinVdV = sin(v+dv), cosWdW = cos(w+dw),sinWdW = sin(w+dw);
+
+
+
 			glNormal3d(
 					(outer + rr * cos(v)) * cos(w)
 							- (outer + inner * cos(v)) * cos(w),
@@ -35,14 +40,14 @@ void myTorus::draw()
 			glVertex3d((outer + inner * cos(v)) * cos(w),
 					(outer + inner * cos(v)) * sin(w), inner * sin(v));
 			glNormal3d(
-					(outer + rr * cos(v + dv)) * cos(w + dw)
-							- (outer + inner * cos(v + dv)) * cos(w + dw),
-					(outer + rr * cos(v + dv)) * sin(w + dw)
-							- (outer + inner * cos(v + dv)) * sin(w + dw),
-					rr * sin(v + dv) - inner * sin(v + dv));
-			glVertex3d((outer + inner * cos(v + dv)) * cos(w + dw),
-					(outer + inner * cos(v + dv)) * sin(w + dw),
-					inner * sin(v + dv));
+					(outer + rr * cosVdV) * cosWdW
+							- (outer + inner * cosVdV) * cosWdW,
+					(outer + rr * cosVdV) * sinWdW
+							- (outer + inner * cosVdV) * sinWdW,
+					rr * sinVdV - inner * sinVdV);
+			glVertex3d((outer + inner * cosVdV) * cosWdW,
+					(outer + inner * cosVdV) * sinWdW,
+					inner * sinVdV);
 			v += dv;
 		} // inner loop
 		glEnd();
