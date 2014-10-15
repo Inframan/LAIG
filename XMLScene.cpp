@@ -191,7 +191,7 @@ XMLScene::XMLScene(char *filename, sceneGraph * graph)
 		printf("Cameras block not found!\n");
 	else
 	{
-		
+
 		char * rootCamera = NULL;
 
 		TiXmlElement *light=lightsElement->FirstChildElement("light");
@@ -224,10 +224,30 @@ XMLScene::XMLScene(char *filename, sceneGraph * graph)
 				posV.push_back(posX);
 				posV.push_back(posY);
 				posV.push_back(posZ);
+
+			}
+
+			myLight lightToSave = myLight(id,type,enabled,marker,posV);
 			
+			if(type == "spot")
+			{
+				float angle, exponent, targetX,targetY,targetZ;
+				char *valAngle =NULL,*valExp =NULL,*valTarget =NULL;
+				valAngle = (char*) light->Attribute("angle");
+				valExp = (char*) light->Attribute("exponent");
+				valTarget = (char*) light->Attribute("target");
+				if(sscanf(valAngle,"%f",&angle) ==1 && sscanf(valExp,"%f",&exponent)  == 1 && sscanf(valTarget,"%f %f %f",&targetX,&targetY,&targetZ) == 3)
+				{
+					vector<float> targetV;
+					targetV.push_back(targetX);
+					targetV.push_back(targetY);
+					targetV.push_back(targetZ);
+					lightToSave.setAngle(angle);
+					lightToSave.setExponent(exponent);
+					lightToSave.setTarget(targetV);
+				}
 			}
 			
-			myLight lightToSave = myLight(id,type,enabled,marker,posV);
 
 			TiXmlElement *lightComponent = light->FirstChildElement();//
 
@@ -260,18 +280,18 @@ XMLScene::XMLScene(char *filename, sceneGraph * graph)
 
 				}
 
-				
+
 				lightComponent = lightComponent->NextSiblingElement();
 			}
 
 			graph->addLight(lightToSave);
 			light = light->NextSiblingElement();
 		}
-		
-		
+
+
 	}
-	
-	
+
+
 	if (appearancesElement == NULL)
 		printf("Appearances block not found!\n");
 	else
@@ -286,23 +306,23 @@ XMLScene::XMLScene(char *filename, sceneGraph * graph)
 
 		while(textures){
 
-		char *Id=NULL , *file=NULL, *texlength_s=NULL, *texlength_t=NULL;
-		float texlength_S=0, texlength_T=0;
-		Id = (char*) textures->Attribute("id");
-		file =(char*) textures->Attribute("file");
-		texlength_s= (char *)textures->Attribute("texlength_s");
-		texlength_t= (char *)textures->Attribute("texlength_t");
-		
-		if(sscanf(texlength_s,"%f",&texlength_S) == 1 && sscanf(texlength_t,"%f",&texlength_T) == 1){
-			Texture t = Texture(Id , file,texlength_S,texlength_T);
-			graph->addTexture(t);	
-		}
+			char *Id=NULL , *file=NULL, *texlength_s=NULL, *texlength_t=NULL;
+			float texlength_S=0, texlength_T=0;
+			Id = (char*) textures->Attribute("id");
+			file =(char*) textures->Attribute("file");
+			texlength_s= (char *)textures->Attribute("texlength_s");
+			texlength_t= (char *)textures->Attribute("texlength_t");
 
-		textures= textures->NextSiblingElement();
+			if(sscanf(texlength_s,"%f",&texlength_S) == 1 && sscanf(texlength_t,"%f",&texlength_T) == 1){
+				Texture t = Texture(Id , file,texlength_S,texlength_T);
+				graph->addTexture(t);	
+			}
+
+			textures= textures->NextSiblingElement();
 		}
 
 	}
-	
+
 
 	// graph section
 	if (graphElement == NULL)
