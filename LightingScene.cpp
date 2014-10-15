@@ -190,7 +190,49 @@ void LightingScene::init()
 }
 
 void LightingScene::display() 
-{
+{printf( "display start\n");
+/*
+ map<string,camera *> copyCam;
+ map<string,camera *>::iterator it;
+ CGFcamera * firstCamera = new CGFcamera();
+
+ copyCam = pgraph.getCameras(); // para evitar que o iterador fique a apontar para o vazio
+ it =  copyCam.find(pgraph.getRootCamera());
+
+ /* if(it->second->getType() == "perspective")
+ {
+ gluPerspective(
+ firstCamera->setX(((perspective *) it->second)->getPos()[0]);
+ firstCamera->setY(((perspective *) it->second)->getPos()[1]);
+ firstCamera->setZ(((perspective *) it->second)->getPos()[2]);
+ //firstCamera->
+ }
+ else*//* if(it->second->getType() == "ortho")
+ {
+  char dir = ( (orthogonal *) it->second)->getDirection();
+  switch( dir)
+  {
+  case 'z':
+   glOrtho( ((orthogonal *) it->second)->getLeft(),((orthogonal *) it->second)->getRight(),((orthogonal *) it->second)->gotBot(),
+    ((orthogonal *) it->second)->getTop(),((orthogonal *) it->second)->getNear(),((orthogonal *) it->second)->getFar());
+   break;
+  case 'y':
+   glRotated(90,1,0,0);
+   glOrtho( ((orthogonal *) it->second)->getLeft(),((orthogonal *) it->second)->getRight(),((orthogonal *) it->second)->gotBot(),
+    ((orthogonal *) it->second)->getTop(),((orthogonal *) it->second)->getNear(),((orthogonal *) it->second)->getFar());
+   break;
+  case 'x':
+   //glRotated(90,0,1,0);
+   glOrtho( ((orthogonal *) it->second)->getLeft(),((orthogonal *) it->second)->getRight(),((orthogonal *) it->second)->gotBot(),
+    ((orthogonal *) it->second)->getTop(),((orthogonal *) it->second)->getNear(),((orthogonal *) it->second)->getFar());  
+  
+   break;
+  }
+
+
+  firstCamera->applyView();
+ }
+ */
 
 	// ---- BEGIN Background, camera and axis setup
 
@@ -295,6 +337,8 @@ void LightingScene::drawNode(Node *n)
 
 	for(int i = 0; i < n->getSphere().size();i++)
 	{
+		
+		printf( "drew a sphere\n");
 		drawSphere( n->getSphere()[i].getRadius(),n->getSphere()[i].getStacks(),n->getSphere()[i].getSlices());
 	}
 
@@ -308,6 +352,11 @@ void LightingScene::drawNode(Node *n)
 	drawNode(n->getDescendantNode()[i]);
 
 	glPopMatrix();
+
+	myTorus t(4, 4 ,3,4);
+
+	t.draw();
+
 }
 
 void LightingScene:: drawTorus(float inner,float outer,int loops,int slices)

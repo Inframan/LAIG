@@ -19,9 +19,30 @@
 		<light id="secLight">
 			<ambient r="0.5" g="0.5" b="0.7" a="0.5" />
 		</light>
-		<light id="mainLight">
-			<ambient r="1" g="1" b="1" a="0.5" />
-		</light>
+            <!-- Deve existir pelo menos uma luz declarada -->
+            <!-- Atributo "marker" indica se deve ou nao desenhar-se uma esfera representativa -->
+            <light id="L1" type="omni" enabled="true" marker="false" pos="7.5 20 5" >
+               <component type="ambient" value="1.0 0.8 0.0 0.4" />
+               <component type="diffuse" value="1.0 0.8 0.0 0.4" />
+               <component type="specular" value="1.0 0.8 0.0 0.4" />
+
+            </light>
+            <!-- Deve existir pelo menos uma luz declarada -->
+            <!-- Atributo "marker" indica se deve ou nao desenhar-se uma esfera representativa -->
+            <light id="L2" type="omni" enabled="true" marker="false" pos="17.5 20 5" >
+               <component type="ambient" value="1.0 0.8 0.0 0.4" />
+               <component type="diffuse" value="1.0 0.8 0.0 0.4" />
+               <component type="specular" value="1.0 0.8 0.0 0.4" />
+
+            </light>
+            <light id="L3" type="spot" enabled="true" marker="false" pos="12.5 15 5" target="12.5 9 5"  
+                angle="19" exponent="0.9" >
+
+                <component type="ambient" value="1.0 0.0 0.0 0.9" />
+               <component type="diffuse" value="1.0 0.0 0.0 0.9" />
+               <component type="specular" value="1.0 0.0 0.0 0.9" />
+
+            </light>
 	</lights>
 
 	<textures>

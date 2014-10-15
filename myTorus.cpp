@@ -11,6 +11,7 @@ myTorus::myTorus(float inner, float outer, int slices, int loops)
 
 void myTorus::draw()
 {
+	/*
 	double myPi = acos(-1.0);
 	double a=0;
 	double l = 0;
@@ -54,6 +55,29 @@ void myTorus::draw()
 		y2=sin(a*myPi/180);
 	}	
 
+	*/
+
+	/* Draw a torus */
+
+   int i, j, k;
+   double s, t, x, y, z, twopi;
+
+   twopi = 2 * acos(-1.0);
+   for (i = 0; i < loops; i++) {
+      glBegin(GL_QUAD_STRIP);
+      for (j = 0; j <= slices; j++) {
+         for (k = 1; k >= 0; k--) {
+            s = (i + k) % loops + 0.5;
+            t = j % loops;
+
+            x = (1+.1*cos(s*twopi/loops))*cos(t*twopi/slices);
+            y = (1+.1*cos(s*twopi/loops))*sin(t*twopi/slices);
+            z = .1 * sin(s * twopi / loops);
+            glVertex3f(x, y, z);
+         }
+      }
+      glEnd();
+   }
 
 }
 
