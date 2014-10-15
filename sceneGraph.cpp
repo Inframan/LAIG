@@ -145,6 +145,13 @@ void sceneGraph::addLight(myLight light)
 	lights.push_back(light);
 }
 
+
+void sceneGraph::addAppearence(Appearence appearence){
+	appearences.push_back(appearence);	
+}
+vector <Appearence> sceneGraph::getAppearence(){
+	return appearences;
+}
 vector<myLight> sceneGraph::getLights()const
 {
 	return lights;

@@ -5,6 +5,7 @@
 #include <map>
 #include "lights.h"
 #include "texture.h"
+#include "Appearence.h"
 
 using namespace std;
 
@@ -26,6 +27,7 @@ class sceneGraph
 	map<string,camera *> cameras;
 	vector<myLight> lights;
 	vector<Texture> textures;
+	vector<Appearence> appearences;
 
 public:
 	
@@ -49,6 +51,8 @@ public:
 	map<string,camera *> getCameras() const;
 	void setCameraID(string id);
 	void addLight(myLight light);
+	void addAppearence(Appearence appearence);
+	vector <Appearence> getAppearence();
 	vector<myLight> getLights()const;
 	vector<Texture>getTextures()const;
 	void setTextures(vector <Texture> textures);

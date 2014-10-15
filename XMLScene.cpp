@@ -228,28 +228,17 @@ XMLScene::XMLScene(char *filename, sceneGraph * graph)
 			}
 
 			myLight lightToSave = myLight(id,type,enabled,marker,posV);
-			
-			if(type == "spot")
-			{
-				float angle, exponent, targetX,targetY,targetZ;
-				char *valAngle =NULL,*valExp =NULL,*valTarget =NULL;
-				valAngle = (char*) light->Attribute("angle");
-				valExp = (char*) light->Attribute("exponent");
-				valTarget = (char*) light->Attribute("target");
-				if(sscanf(valAngle,"%f",&angle) ==1 && sscanf(valExp,"%f",&exponent)  == 1 && sscanf(valTarget,"%f %f %f",&targetX,&targetY,&targetZ) == 3)
-				{
-					vector<float> targetV;
-					targetV.push_back(targetX);
-					targetV.push_back(targetY);
-					targetV.push_back(targetZ);
-					lightToSave.setAngle(angle);
-					lightToSave.setExponent(exponent);
-					lightToSave.setTarget(targetV);
-				}
-			}
-			
 
 			TiXmlElement *lightComponent = light->FirstChildElement();//
+
+			vector<float> zeros;// serve para pôr as luzes a 0
+			zeros.push_back(0.0);
+			zeros.push_back(0.0);
+			zeros.push_back(0.0);
+			zeros.push_back(0.0);
+			lightToSave.setAmbient(zeros);
+			lightToSave.setDiffuse(zeros);
+			lightToSave.setSpecular(zeros);
 
 			while(lightComponent)
 			{
@@ -292,11 +281,9 @@ XMLScene::XMLScene(char *filename, sceneGraph * graph)
 	}
 
 
-	if (appearancesElement == NULL)
-		printf("Appearances block not found!\n");
-	else
-	{
-	}
+
+
+	//TEXTURE BLOCK
 
 	if (textsElement == NULL)
 		printf("Text block not found!\n");
@@ -320,6 +307,74 @@ XMLScene::XMLScene(char *filename, sceneGraph * graph)
 
 			textures= textures->NextSiblingElement();
 		}
+
+	}
+
+	//appearence block
+
+	if (appearancesElement == NULL)
+		printf("Appearence block not found!\n");
+	else
+	{
+
+
+
+		TiXmlElement *appearances=appearancesElement->FirstChildElement("appearance");
+
+		while(appearances)
+		{
+			float shininess = 0;
+			char * id = NULL, *shininessStr = NULL, *textureref = NULL;
+
+			id = (char*) appearances->Attribute("id");
+			shininessStr = (char*) appearances->Attribute("shininess");
+			textureref = (char*) appearances->Attribute("textureref");			
+
+
+			sscanf(shininessStr,"%f",&shininess);
+
+			Appearence appearenceToSave = Appearence(id,shininess,textureref);
+
+
+			TiXmlElement * appearenceComponent = appearances->FirstChildElement();
+
+			while(appearenceComponent)
+			{
+				float r,g,b,a;
+				char * type = (char*) appearenceComponent->Attribute("type");
+				string t(type);
+				char * valString = (char*) appearenceComponent->Attribute("value");
+
+				if(sscanf(valString,"%f %f %f %f",&r,&g,&b,&a) == 4)
+				{
+					vector<float> values;
+					values.push_back(r);
+					values.push_back(g);
+					values.push_back(b);
+					values.push_back(a);
+					if(t == "ambient")
+					{
+						appearenceToSave.setAmbient(values);
+					}
+					else if(t == "diffuse")
+					{
+						appearenceToSave.setDiffuse(values);
+					}
+					else if(t == "specular")
+					{
+						appearenceToSave.setSpecular(values);
+					}
+
+				}
+
+
+				appearenceComponent = appearenceComponent->NextSiblingElement();
+			}
+
+			graph->addAppearence(appearenceToSave);
+			appearances = appearances->NextSiblingElement();
+		}
+
 
 	}
 
