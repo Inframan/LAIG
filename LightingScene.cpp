@@ -7,7 +7,14 @@
 
 float pi = acos(-1.0);
 float deg2rad=pi/180.0;
+/*
+float ambA[3] = {0.2, 0.2, 0.2};
+float difA[3] = {0.0, 0.0, 0.0};
+float specA[3] = {0.0, 0.0, 0.0};
+float shininessA = 1000.0f;
 
+*/
+float ambientNull[4]={0,0,0,1};
 
 
 unsigned int lightArray[8] = {GL_LIGHT0,GL_LIGHT1,GL_LIGHT2,GL_LIGHT3,GL_LIGHT4,GL_LIGHT5,GL_LIGHT6,GL_LIGHT7};
@@ -123,7 +130,7 @@ void LightingScene::init()
 			glLightfv(lightArray[i],GL_SPOT_DIRECTION,target);
 			pos[3] = 0.0;
 		}
-
+		
 
 		CGFlight* newLight = new CGFlight(lightArray[i],pos);
 		newLight->setAmbient(ambient);
@@ -142,9 +149,9 @@ void LightingScene::init()
 	}
 
 	//Declares materials
-	/*
+/*	
 	materialA = new CGFappearance(ambientNull,difA,specA,shininessA);
-	materialB = new CGFappearance(ambientNull,difB,specB,shininessB);
+/*	materialB = new CGFappearance(ambientNull,difB,specB,shininessB);
 	*/
 }
 
@@ -212,15 +219,15 @@ void LightingScene::display()
 		if(pgraph.getLights()[i].getMarker())
 			lightsVector[i]->draw();
 		lightsVector[i]->update();
+
 	}
 	// Draw axis
+	
+	
 	axis.draw();
 
-
+	
 	drawNode(pgraph.getRootNode());
-
-
-
 	// ---- END Background, camera and axis setup
 
 	// ---- BEGIN Primitive drawing section
@@ -264,9 +271,8 @@ void LightingScene::drawNode(Node *n)
 
 	glPushMatrix();
 	glMultMatrixf(m);
-	if(n->getAppearence() != NULL){
-	
-		n->getAppearence()->getAppearance()->setTexture(n->getAppearence()->getTexture()->getFile());
+	if(n->getAppearenceRef() != "inherited"){
+		n->getAppearence()->getAppearance()->setTexture( n->getAppearence()->getTexture()->getFile().c_str());
 		n->getAppearence()->getAppearance()->apply();
 	}
 	for(int i = 0; i < n->getRectangle().size();i++)
@@ -320,7 +326,7 @@ void LightingScene::drawSphere(float radius,int stacks,int slices)
 	GLUquadric * quad;
 
 	quad = gluNewQuadric();
-
+	gluQuadricTexture(quad,GL_TRUE);
 	gluQuadricDrawStyle(quad,GLU_FILL);
 	gluQuadricNormals(quad,GLU_SMOOTH);
 	gluQuadricOrientation(quad,GLU_OUTSIDE);
@@ -338,6 +344,10 @@ void LightingScene::drawCylinder(vector<float> coords,int stacks,int slices)
 	quad = gluNewQuadric();
 	disk1 = gluNewQuadric();
 	disk2 = gluNewQuadric();
+
+	gluQuadricTexture(quad,GL_TRUE);
+	gluQuadricTexture(disk1,GL_TRUE);
+	gluQuadricTexture(disk2,GL_TRUE);
 
 	gluQuadricDrawStyle(quad,GLU_FILL);
 	gluQuadricNormals(quad,GLU_SMOOTH);

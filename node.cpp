@@ -35,8 +35,13 @@ void Node::setAppearence(Appearence* app)
 
 }
 
-Appearence* Node::getAppearence(){
+Appearence* Node::getAppearence()const{
 return app;
+}
+
+string Node::getAppearenceRef()const
+{
+	return appRef;
 }
 
 void Node::addDescendant(string id)

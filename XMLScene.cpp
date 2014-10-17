@@ -404,7 +404,11 @@ XMLScene::XMLScene(char *filename, sceneGraph * graph)
 				for(int j= 0 ; j < graph->getTextures().size();j++){
 				
 					if (textureref == graph->getTextures()[j].getID())
-						appearenceToSave.setTexture(&graph->getTextures()[j]);
+					{
+						Texture * text = new Texture();
+						(*text) = graph->getTextures()[j];
+						appearenceToSave.setTexture(text);
+					}
 				}
 				appearenceComponent = appearenceComponent->NextSiblingElement();
 				
@@ -507,9 +511,13 @@ XMLScene::XMLScene(char *filename, sceneGraph * graph)
 				id = (char*) appearanceref->Attribute("id");
 				string ID(id);
 				node1.setAppearenceRef(ID);
-				if(ID != "")
-				node1.setAppearence(&graph->getAppearence().find(ID)->second);
-
+				if(ID != "inherited")
+				{
+					Appearence *app = new Appearence();
+					(*app) = graph->getAppearence().find(ID)->second;
+				
+					node1.setAppearence(app);
+				}
 			}
 
 			TiXmlElement *primitives = appearanceref->NextSiblingElement();

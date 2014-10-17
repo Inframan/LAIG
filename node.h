@@ -30,8 +30,8 @@ public:
 	void setMatrix(float m[4][4]);
 	void setAppearenceRef(string appRef);
 	void setAppearence(Appearence* app);
-	Appearence* getAppearence();
-	string getAppearenceRef();
+	Appearence* getAppearence()const;
+	string getAppearenceRef()const;
 	void addDescendant(string id);
 	void addRectangle(float x1,float y1,float x2,float y2);
 	void addTriangle(float x1,float y1,float z1,float x2,float y2,float z2,float x3,float y3,float z3);
