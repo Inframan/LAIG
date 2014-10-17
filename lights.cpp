@@ -91,6 +91,11 @@ float myLight::getExponent()const
 	return exponent;
 }
 
+string myLight::getType() const
+{
+	return type;
+}
+
 myLight::~myLight(void)
 {
 }

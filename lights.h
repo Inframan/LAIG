@@ -26,6 +26,7 @@ public:
 	vector<float> getPos()const;
 	vector<float> getTarget()const;
 	float getExponent()const;
+	string getType()const;
 	float getAngle()const;
 	~myLight(void);
 };

@@ -188,11 +188,10 @@ XMLScene::XMLScene(char *filename, sceneGraph * graph)
 	//////////////LIGHTS 
 
 	if (lightsElement == NULL)
-		printf("Cameras block not found!\n");
+		printf("Lights block not found!\n");
 	else
 	{
 
-		char * rootCamera = NULL;
 
 		TiXmlElement *light=lightsElement->FirstChildElement("light");
 
@@ -203,8 +202,10 @@ XMLScene::XMLScene(char *filename, sceneGraph * graph)
 			vector<float> posV;
 			char * id = NULL, *type = NULL, *sEnabled = NULL, * sMarker = NULL, *pos = NULL;
 
+
 			id = (char*) light->Attribute("id");
 			type = (char*) light->Attribute("type");
+			string t(type);
 			sEnabled = (char*) light->Attribute("enabled");			
 			sMarker = (char*) light->Attribute("marker");		
 			string sE(sEnabled),	sM(sMarker);
@@ -228,6 +229,25 @@ XMLScene::XMLScene(char *filename, sceneGraph * graph)
 			}
 
 			myLight lightToSave = myLight(id,type,enabled,marker,posV);
+
+			if(t == "spot")
+			{
+				float angle, exponent, targetX,targetY,targetZ;
+				char *valAngle =NULL,*valExp =NULL,*valTarget =NULL;
+				valAngle = (char*) light->Attribute("angle");
+				valExp = (char*) light->Attribute("exponent");
+				valTarget = (char*) light->Attribute("target");
+				if(sscanf(valAngle,"%f",&angle) ==1 && sscanf(valExp,"%f",&exponent)  == 1 && sscanf(valTarget,"%f %f %f",&targetX,&targetY,&targetZ) == 3)
+				{
+					vector<float> targetV;
+					targetV.push_back(targetX);
+					targetV.push_back(targetY);
+					targetV.push_back(targetZ);
+					lightToSave.setAngle(angle);
+					lightToSave.setExponent(exponent);
+					lightToSave.setTarget(targetV);
+				}
+			}
 
 			TiXmlElement *lightComponent = light->FirstChildElement();//
 

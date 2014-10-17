@@ -8,61 +8,16 @@
 float pi = acos(-1.0);
 float deg2rad=pi/180.0;
 
-#define BOARD_HEIGHT 6.0
-#define BOARD_WIDTH 6.4
 
-// Positions for two lights
-float light0_pos[4] = {4, 6.0, 1.0, 1.0};
-float light1_pos[4] = {10.5, 6.0, 1.0, 1.0};
-
-float light2_pos[4] = {10.5, 6.0, 5.0, 1.0};
-float light3_pos[4] = {4, 6.0, 5.0, 1.0};
-
-// Global ambient light (do not confuse with ambient component of individual lights)
-float globalAmbientLight[4]= {0.2,0.2,0.2,1.0};
-// number of divisions
-#define BOARD_A_DIVISIONS 30
-#define BOARD_B_DIVISIONS 100
-
-// Coefficients for material A
-float ambA[3] = {0.2, 0.2, 0.2};
-float difA[3] = {0.6, 0.6, 0.6};
-float specA[3] = {0.0, 0.8, 0.8};
-float shininessA = 120.f;
-
-// Coefficients for material B
-float ambB[3] = {0.2, 0.2, 0.2};
-float difB[3] = {0.6, 0.6, 0.6};
-float specB[3] = {0.8, 0.8, 0.8};
-float shininessB = 120.f;
-
-// Coefficients for slide texture
-float ambSlides[3] = {0.2, 0.2, 0.2};
-float difSlides[3] = {0.8, 0.8, 0.8};
-float specSlides[3] = {0.1, 0.1, 0.1};
-float shininessSlides = 10.f;
-
-// Coefficients for board texture
-float ambBoard[3] = {0.2, 0.2, 0.2};
-float difBoard[3] = {0.3, 0.3, 0.3};
-float specBoard[3] = {0.6, 0.6, 0.6};
-float shininessBoard = 200.f;
-
-
-
-float ambientNull[4]={0,0,0,1};
-float yellow[4]={1,1,0,1};
 
 unsigned int lightArray[8] = {GL_LIGHT0,GL_LIGHT1,GL_LIGHT2,GL_LIGHT3,GL_LIGHT4,GL_LIGHT5,GL_LIGHT6,GL_LIGHT7};
 
 void LightingScene::init() 
 {
 
-	
-	light0On = 1;
-	light1On = 1;
-	light2On = 0;
-	light3On = 0;
+	glClearColor(pgraph.getBackground()[0], pgraph.getBackground()[1], pgraph.getBackground()[2], pgraph.getBackground()[3]);
+
+
 	// Enables lighting computations
 /*	map<string,camera *> copyCam;
 	map<string,camera *>::iterator it;
@@ -109,16 +64,27 @@ void LightingScene::init()
 	
 	if(pgraph.getDoubleSided())
 	{
-		glLightModelf(GL_LIGHT_MODEL_TWO_SIDE, GL_FALSE);  
+		glLightModelf(GL_LIGHT_MODEL_TWO_SIDE, GL_TRUE);  
+	}
+	else
+	{
+		
+		glLightModelf(GL_LIGHT_MODEL_TWO_SIDE, GL_FALSE); 
 	}
 
 	if(pgraph.getLocalLight())
+		glLightModelf(GL_LIGHT_MODEL_LOCAL_VIEWER,GL_TRUE);
+	else
+	{
 		glLightModelf(GL_LIGHT_MODEL_LOCAL_VIEWER,GL_FALSE);
+	}
 
 	// Define ambient light (do not confuse with ambient component of individual lights)
+	
+
 	float backAmbientLight[4] = {0,0,0,0};
 	for(int i = 0; i < 4;i++)
-		backAmbientLight[i] = pgraph.getBackground()[i];
+		backAmbientLight[i] = pgraph.getAmbient()[i];
 
 	glLightModelfv(GL_LIGHT_MODEL_AMBIENT, backAmbientLight);  
 
@@ -137,7 +103,7 @@ void LightingScene::init()
 	else if(pgraph.getDrawingMode() == "point")
 		glPolygonMode(GL_FRONT_AND_BACK, GL_POINT);
 
-
+	
 	for(int i = 0; i < pgraph.getLights().size();i++)
 	{
 		myLight temp = pgraph.getLights()[i];
@@ -145,12 +111,22 @@ void LightingScene::init()
 		float ambient[4] = {temp.getAmbient()[0],temp.getAmbient()[i],temp.getAmbient()[2],temp.getAmbient()[3]};
 		float diffuse[4] =  {temp.getDiffuse()[0],temp.getDiffuse()[i],temp.getDiffuse()[2],temp.getDiffuse()[3]};
 		float specular[4] =  {temp.getSpecular()[0],temp.getSpecular()[i],temp.getSpecular()[2],temp.getSpecular()[3]};
-
+	
 		CGFlight* newLight = new CGFlight(lightArray[i],pos);
 		newLight->setAmbient(ambient);
 		newLight->setDiffuse(diffuse);
 		newLight->setSpecular(specular);
 		
+		if(temp.getType() == "spot")
+		{
+			float target[3]={temp.getTarget()[0],temp.getTarget()[2],temp.getTarget()[2]};
+			glLightf(lightArray[i],GL_SPOT_EXPONENT,temp.getExponent());
+			
+			glLightfv(lightArray[i],GL_SPOT_DIRECTION,target);
+
+			newLight->setAngle(temp.getAngle());
+		}
+
 		if(temp.getEnabled())
 			newLight->enable();
 		else
@@ -209,9 +185,10 @@ void LightingScene::init()
 
 
 	//Declares materials
+	/*
 	materialA = new CGFappearance(ambientNull,difA,specA,shininessA);
 	materialB = new CGFappearance(ambientNull,difB,specB,shininessB);
-
+	*/
 }
 
 void LightingScene::display() 
@@ -270,34 +247,14 @@ void LightingScene::display()
 
 	// Apply transformations corresponding to the camera position relative to the origin
 	CGFscene::activeCamera->applyView();
-
+/*
 	for(int i = 0; i < pgraph.getLights().size();i++)
 	{
-		if(pgraph.getLights()[i].getMarker())
+		if(pgraph.getLights()[i].getMarker() && pgraph.getLights()[i].getEnabled())
 			lightsVector[i]->draw();
 	}
-	/*
-	light0->draw();
-	light0->disable();
-	if (light0On != 0)
-		light0->enable();
 
-	light1->draw();
-	light1->disable();
-	if (light1On != 0)
-		light1->enable();
-
-	light2->draw();
-	light2->disable();
-	if (light2On != 0)
-		light2->enable();
-
-	light3->draw();
-	light3->disable();
-	if (light3On != 0)
-		light3->enable();
-		*/
-
+	*/
 	// Draw axis
 	axis.draw();
 

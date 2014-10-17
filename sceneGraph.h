@@ -45,6 +45,7 @@ public:
 	void addNode(Node n);
 	string getRootID() const;
 	Node * getRootNode() const;
+	vector<float> getAmbient() const;
 	void setRootNode();
 	map<string,Node> getNodes() const;
 	void addCamera(camera * cam);

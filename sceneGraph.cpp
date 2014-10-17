@@ -145,6 +145,10 @@ void sceneGraph::addLight(myLight light)
 	lights.push_back(light);
 }
 
+vector<float> sceneGraph::getAmbient() const
+{
+	return lAmbient;
+}
 
 void sceneGraph::addAppearence(Appearence appearence){
 	appearences.push_back(appearence);	
