@@ -27,7 +27,7 @@ class sceneGraph
 	map<string,camera *> cameras;
 	vector<myLight> lights;
 	vector<Texture> textures;
-	vector<Appearence> appearences;
+	map<string ,Appearence> appearences;
 
 public:
 	
@@ -53,7 +53,7 @@ public:
 	void setCameraID(string id);
 	void addLight(myLight light);
 	void addAppearence(Appearence appearence);
-	vector <Appearence> getAppearence();
+	map<string,Appearence>  getAppearence();
 	vector<myLight> getLights()const;
 	vector<Texture>getTextures()const;
 	void setTextures(vector <Texture> textures);

@@ -20,6 +20,7 @@ public:
 	int resetClock(int call);
 	int pauseClock(int call);
 	int pauseResetClock(int call);
+	void setAppearences();
 	void setGraph(sceneGraph pgraph);
 	void drawRectangle(vector<float> coords);
 	void drawTriangle(vector<float> coords);

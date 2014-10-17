@@ -23,6 +23,22 @@ void Node:: setMatrix(float m[4][4])
 	}
 }
 
+
+void Node::setAppearenceRef(string appRef)
+{
+	this->appRef=appRef;
+}
+
+void Node::setAppearence(Appearence* app)
+{
+	this->app=app;
+
+}
+
+Appearence* Node::getAppearence(){
+return app;
+}
+
 void Node::addDescendant(string id)
 {
 	descendants.push_back(id);

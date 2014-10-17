@@ -2,7 +2,7 @@
 	<globals>
 		<drawing mode="fill" shading="gouraud" background="0 0 0 0" />
 		<culling face="back" order="ccw" />
-		<lighting doublesided="true" local="false" enabled="true" ambient="0.4 0.4 0.0 0.2" />
+		<lighting doublesided="true" local="false" enabled="true" ambient="0.0 0.0 0.0 0.2" />
 	</globals>
 
 	<cameras initial="ss">
@@ -14,21 +14,21 @@
 	<lights>
             <!-- Deve existir pelo menos uma luz declarada -->
             <!-- Atributo "marker" indica se deve ou nao desenhar-se uma esfera representativa -->
-          	 <light id="L1" type="omni" enabled="true" marker="false" pos="2 2 2" >
+          	 <light id="L1" type="omni" enabled="true" marker="true" pos="0 20 0" >
                <component type="ambient" value="0.0 0.0 0.0 0.1" />
-               <component type="diffuse" value="0.2 0.1 1.0 0.4" />
+               <component type="diffuse" value="0.0 0.0 1.0 0.4" />
                <component type="specular" value="1.0 0.8 0.0 0.4" />
 
             </light>
 
-             <light id="l2" type="omni" enabled="true" marker="false" pos="8 5 8" >
+             <light id="l2" type="omni" enabled="false" marker="false" pos="8 5 8" >
                <component type="ambient" value="0.0 0.0 0.0 0.1" />
-               <component type="diffuse" value="0.6 1.0 0.6 0.4" />
+               <component type="diffuse" value="1.0 1.0 0.0 0.4" />
                <component type="specular" value="0.0 0.8 1.0 0.4" />
 
             </light>
 
-             <light id="spotity" type="spot" enabled="true" marker="false" pos="2 2 2" target="0 5 0" angle="25" exponent="7">
+             <light id="spotity" type="spot" enabled="false" marker="false" pos="2 2 2" target="0 5 0" angle="25" exponent="7">
                <component type="ambient" value="0.0 0.0 0.0 0.1" />
                <component type="diffuse" value="1.0 0.0 0.0 1" />
                <component type="specular" value="0.0 0.0 0.0 0.4"/>

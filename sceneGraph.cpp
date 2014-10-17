@@ -151,9 +151,9 @@ vector<float> sceneGraph::getAmbient() const
 }
 
 void sceneGraph::addAppearence(Appearence appearence){
-	appearences.push_back(appearence);	
+	appearences[appearence.getID()] = appearence;	
 }
-vector <Appearence> sceneGraph::getAppearence(){
+map<string,Appearence> sceneGraph::getAppearence(){
 	return appearences;
 }
 vector<myLight> sceneGraph::getLights()const

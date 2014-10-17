@@ -18,6 +18,27 @@ Appearence::Appearence(string id, float shininess,string textureref){
 	this->textureref=textureref;
 
 }
+
+
+CGFappearance* Appearence::getAppearance() const{
+
+	return app;
+}
+	
+
+void Appearence::setAppearance(CGFappearance* app){
+
+	this->app=app;
+}
+
+
+Texture* Appearence::getTexture() const{
+	return t;
+}
+
+void Appearence::setTexture(Texture* t){
+	this->t = t;
+}
 	
 string Appearence::getID() const{
 	return id;

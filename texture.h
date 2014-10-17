@@ -9,7 +9,6 @@ class Texture
 	float texlength_T;
 
 
-
 public:
 	Texture(void);
 	Texture(string id, string file, float texlength_S, float texlength_T);

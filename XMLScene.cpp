@@ -353,6 +353,7 @@ XMLScene::XMLScene(char *filename, sceneGraph * graph)
 
 			sscanf(shininessStr,"%f",&shininess);
 
+
 			Appearence appearenceToSave = Appearence(id,shininess,textureref);
 
 
@@ -364,7 +365,9 @@ XMLScene::XMLScene(char *filename, sceneGraph * graph)
 				char * type = (char*) appearenceComponent->Attribute("type");
 				string t(type);
 				char * valString = (char*) appearenceComponent->Attribute("value");
-
+				float ambientArray[4];
+				float diffuseArray[4];
+				float specularArray[4];
 				if(sscanf(valString,"%f %f %f %f",&r,&g,&b,&a) == 4)
 				{
 					vector<float> values;
@@ -375,20 +378,36 @@ XMLScene::XMLScene(char *filename, sceneGraph * graph)
 					if(t == "ambient")
 					{
 						appearenceToSave.setAmbient(values);
+						for (int i = 0 ; i < values.size();i++)
+							ambientArray[i]=values[i];
 					}
 					else if(t == "diffuse")
 					{
 						appearenceToSave.setDiffuse(values);
+						for (int i = 0 ; i < values.size();i++)
+							diffuseArray[i]=values[i];
 					}
 					else if(t == "specular")
 					{
 						appearenceToSave.setSpecular(values);
+						for (int i = 0 ; i < values.size();i++)
+							specularArray[i]=values[i];
 					}
 
 				}
 
+				
 
+				
+				CGFappearance * app = new CGFappearance(ambientArray,diffuseArray,specularArray,shininess);
+				appearenceToSave.setAppearance(app);
+				for(int j= 0 ; j < graph->getTextures().size();j++){
+				
+					if (textureref == graph->getTextures()[j].getID())
+						appearenceToSave.setTexture(&graph->getTextures()[j]);
+				}
 				appearenceComponent = appearenceComponent->NextSiblingElement();
+				
 			}
 
 			graph->addAppearence(appearenceToSave);
@@ -477,14 +496,23 @@ XMLScene::XMLScene(char *filename, sceneGraph * graph)
 				node1.setMatrix(m);
 			}
 
-			TiXmlElement * appearance = transforms->NextSiblingElement();
-			if (appearance == NULL)
+			TiXmlElement * appearanceref = transforms->NextSiblingElement();
+			if (appearanceref == NULL)
 				printf("Appearance block not found!\n");
 			else //Definir aparencia do nó
 			{
+
+				char* id = NULL;
+
+				id = (char*) appearanceref->Attribute("id");
+				string ID(id);
+				node1.setAppearenceRef(ID);
+				if(ID != "")
+				node1.setAppearence(&graph->getAppearence().find(ID)->second);
+
 			}
 
-			TiXmlElement *primitives = appearance->NextSiblingElement();
+			TiXmlElement *primitives = appearanceref->NextSiblingElement();
 			if (primitives == NULL)
 				printf("Primitives block not found!\n");
 			else //Definir primitivas

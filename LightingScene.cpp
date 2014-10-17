@@ -19,26 +19,26 @@ void LightingScene::init()
 
 
 	// Enables lighting computations
-/*	map<string,camera *> copyCam;
+	/*	map<string,camera *> copyCam;
 	map<string,camera *>::iterator it;
 
 	copyCam = pgraph.getCameras(); // para evitar que o iterador fique a apontar para o vazio
 	it =  pgraph.getCameras().find(pgraph.getRootCamera());
 	*/
 	/*CGFcamera * firstCamera = new CGFcamera();
-	
+
 	if(it->second->getType() == "perspective")
 	{
-		//gluPerspective(
-		firstCamera->setX(((perspective *) it->second)->getPos()[0]);
-		firstCamera->setY(((perspective *) it->second)->getPos()[1]);
-		firstCamera->setZ(((perspective *) it->second)->getPos()[2]);
-		//firstCamera->
+	//gluPerspective(
+	firstCamera->setX(((perspective *) it->second)->getPos()[0]);
+	firstCamera->setY(((perspective *) it->second)->getPos()[1]);
+	firstCamera->setZ(((perspective *) it->second)->getPos()[2]);
+	//firstCamera->
 	}
 
 	*/
 	//CGFscene::activeCamera->applyView();
-		
+
 	//CGFcamera * cam = new CGFcamera(
 
 	if(pgraph.getCulFace() == "none")
@@ -61,14 +61,14 @@ void LightingScene::init()
 	glEnable(GL_NORMALIZE);
 	// Sets up some lighting parameters
 	// Computes lighting only using the front face normals and materials
-	
+
 	if(pgraph.getDoubleSided())
 	{
 		glLightModelf(GL_LIGHT_MODEL_TWO_SIDE, GL_TRUE);  
 	}
 	else
 	{
-		
+
 		glLightModelf(GL_LIGHT_MODEL_TWO_SIDE, GL_FALSE); 
 	}
 
@@ -80,7 +80,7 @@ void LightingScene::init()
 	}
 
 	// Define ambient light (do not confuse with ambient component of individual lights)
-	
+
 
 	float backAmbientLight[4] = {0,0,0,0};
 	for(int i = 0; i < 4;i++)
@@ -103,86 +103,43 @@ void LightingScene::init()
 	else if(pgraph.getDrawingMode() == "point")
 		glPolygonMode(GL_FRONT_AND_BACK, GL_POINT);
 
-	
+
 	for(int i = 0; i < pgraph.getLights().size();i++)
 	{
 		myLight temp = pgraph.getLights()[i];
-		float pos[3] = {temp.getPos()[0],temp.getPos()[i],temp.getPos()[2]};
+
+		float pos[4] = {temp.getPos()[0],temp.getPos()[1],temp.getPos()[2],1.0};
 		float ambient[4] = {temp.getAmbient()[0],temp.getAmbient()[i],temp.getAmbient()[2],temp.getAmbient()[3]};
 		float diffuse[4] =  {temp.getDiffuse()[0],temp.getDiffuse()[i],temp.getDiffuse()[2],temp.getDiffuse()[3]};
 		float specular[4] =  {temp.getSpecular()[0],temp.getSpecular()[i],temp.getSpecular()[2],temp.getSpecular()[3]};
-	
+
+
+		if( temp.getType() == "spot")
+		{
+			float angle = temp.getAngle(), exp = temp.getExponent();
+			float target[3]={temp.getTarget()[0],temp.getTarget()[1],temp.getTarget()[2]};
+			glLightf(lightArray[i],GL_SPOT_EXPONENT,exp);
+			glLightf(lightArray[i],GL_SPOT_CUTOFF ,angle);
+			glLightfv(lightArray[i],GL_SPOT_DIRECTION,target);
+			pos[3] = 0.0;
+		}
+
+
 		CGFlight* newLight = new CGFlight(lightArray[i],pos);
 		newLight->setAmbient(ambient);
 		newLight->setDiffuse(diffuse);
 		newLight->setSpecular(specular);
-		
-		if(temp.getType() == "spot")
-		{
-			float target[3]={temp.getTarget()[0],temp.getTarget()[2],temp.getTarget()[2]};
-			glLightf(lightArray[i],GL_SPOT_EXPONENT,temp.getExponent());
-			
-			glLightfv(lightArray[i],GL_SPOT_DIRECTION,target);
 
-			newLight->setAngle(temp.getAngle());
-		}
 
 		if(temp.getEnabled())
 			newLight->enable();
 		else
 			newLight->disable();
 
+		newLight->update();
+
 		lightsVector.push_back(newLight);
 	}
-
-		/*
-	light0 = new CGFlight(GL_LIGHT0, light0_pos);
-	light0->setAmbient(ambientNull);
-	light0->setSpecular(yellow);
-
-	if (light0On == 0)
-		light0->disable();
-	else
-		light0->enable();
-
-
-	light1 = new CGFlight(GL_LIGHT1, light1_pos);
-	light1->setAmbient(ambientNull);
-
-	if (light1On == 0)
-		light1->disable();
-	else
-		light1->enable();
-
-
-	light2 = new CGFlight(GL_LIGHT2, light2_pos);
-	light2->setAmbient(ambientNull);
-
-	if (light2On == 0)
-		light2->disable();
-	else
-		light2->enable();
-
-
-
-	light3 = new CGFlight(GL_LIGHT3, light3_pos);
-	light3->setAmbient(ambientNull);
-	light3->setSpecular(yellow);
-	light3->setKc(0);
-	light3->setKl(0);
-	light3->setKq(1);
-
-	if (light3On == 0)
-		light3->disable();
-	else
-		light3->enable();
-
-		*/
-
-
-	// Uncomment below to enable normalization of lighting normal vectors
-	// glEnable (GL_NORMALIZE);
-
 
 	//Declares materials
 	/*
@@ -193,48 +150,50 @@ void LightingScene::init()
 
 void LightingScene::display() 
 {
-/*
- map<string,camera *> copyCam;
- map<string,camera *>::iterator it;
- CGFcamera * firstCamera = new CGFcamera();
-
- copyCam = pgraph.getCameras(); // para evitar que o iterador fique a apontar para o vazio
- it =  copyCam.find(pgraph.getRootCamera());
-
- /* if(it->second->getType() == "perspective")
- {
- gluPerspective(
- firstCamera->setX(((perspective *) it->second)->getPos()[0]);
- firstCamera->setY(((perspective *) it->second)->getPos()[1]);
- firstCamera->setZ(((perspective *) it->second)->getPos()[2]);
- //firstCamera->
- }
- else*//* if(it->second->getType() == "ortho")
- {
-  char dir = ( (orthogonal *) it->second)->getDirection();
-  switch( dir)
-  {
-  case 'z':
-   glOrtho( ((orthogonal *) it->second)->getLeft(),((orthogonal *) it->second)->getRight(),((orthogonal *) it->second)->gotBot(),
-    ((orthogonal *) it->second)->getTop(),((orthogonal *) it->second)->getNear(),((orthogonal *) it->second)->getFar());
-   break;
-  case 'y':
-   glRotated(90,1,0,0);
-   glOrtho( ((orthogonal *) it->second)->getLeft(),((orthogonal *) it->second)->getRight(),((orthogonal *) it->second)->gotBot(),
-    ((orthogonal *) it->second)->getTop(),((orthogonal *) it->second)->getNear(),((orthogonal *) it->second)->getFar());
-   break;
-  case 'x':
-   //glRotated(90,0,1,0);
-   glOrtho( ((orthogonal *) it->second)->getLeft(),((orthogonal *) it->second)->getRight(),((orthogonal *) it->second)->gotBot(),
-    ((orthogonal *) it->second)->getTop(),((orthogonal *) it->second)->getNear(),((orthogonal *) it->second)->getFar());  
-  
-   break;
-  }
 
 
-  firstCamera->applyView();
- }
- */
+	/*
+	map<string,camera *> copyCam;
+	map<string,camera *>::iterator it;
+	CGFcamera * firstCamera = new CGFcamera();
+
+	copyCam = pgraph.getCameras(); // para evitar que o iterador fique a apontar para o vazio
+	it =  copyCam.find(pgraph.getRootCamera());
+
+	/* if(it->second->getType() == "perspective")
+	{
+	gluPerspective(
+	firstCamera->setX(((perspective *) it->second)->getPos()[0]);
+	firstCamera->setY(((perspective *) it->second)->getPos()[1]);
+	firstCamera->setZ(((perspective *) it->second)->getPos()[2]);
+	//firstCamera->
+	}
+	else*//* if(it->second->getType() == "ortho")
+	{
+	char dir = ( (orthogonal *) it->second)->getDirection();
+	switch( dir)
+	{
+	case 'z':
+	glOrtho( ((orthogonal *) it->second)->getLeft(),((orthogonal *) it->second)->getRight(),((orthogonal *) it->second)->gotBot(),
+	((orthogonal *) it->second)->getTop(),((orthogonal *) it->second)->getNear(),((orthogonal *) it->second)->getFar());
+	break;
+	case 'y':
+	glRotated(90,1,0,0);
+	glOrtho( ((orthogonal *) it->second)->getLeft(),((orthogonal *) it->second)->getRight(),((orthogonal *) it->second)->gotBot(),
+	((orthogonal *) it->second)->getTop(),((orthogonal *) it->second)->getNear(),((orthogonal *) it->second)->getFar());
+	break;
+	case 'x':
+	//glRotated(90,0,1,0);
+	glOrtho( ((orthogonal *) it->second)->getLeft(),((orthogonal *) it->second)->getRight(),((orthogonal *) it->second)->gotBot(),
+	((orthogonal *) it->second)->getTop(),((orthogonal *) it->second)->getNear(),((orthogonal *) it->second)->getFar());  
+
+	break;
+	}
+
+
+	firstCamera->applyView();
+	}
+	*/
 
 	// ---- BEGIN Background, camera and axis setup
 
@@ -247,22 +206,21 @@ void LightingScene::display()
 
 	// Apply transformations corresponding to the camera position relative to the origin
 	CGFscene::activeCamera->applyView();
-/*
+
 	for(int i = 0; i < pgraph.getLights().size();i++)
 	{
-		if(pgraph.getLights()[i].getMarker() && pgraph.getLights()[i].getEnabled())
+		if(pgraph.getLights()[i].getMarker())
 			lightsVector[i]->draw();
+		lightsVector[i]->update();
 	}
-
-	*/
 	// Draw axis
 	axis.draw();
 
 
 	drawNode(pgraph.getRootNode());
 
-	
-	
+
+
 	// ---- END Background, camera and axis setup
 
 	// ---- BEGIN Primitive drawing section
@@ -291,7 +249,7 @@ void LightingScene::setGraph(sceneGraph graph)
 
 void LightingScene::drawNode(Node *n)
 {
-	
+
 
 	float m[16] = {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0};
 
@@ -306,9 +264,14 @@ void LightingScene::drawNode(Node *n)
 
 	glPushMatrix();
 	glMultMatrixf(m);
-
+	if(n->getAppearence() != NULL){
+	
+		n->getAppearence()->getAppearance()->setTexture(n->getAppearence()->getTexture()->getFile());
+		n->getAppearence()->getAppearance()->apply();
+	}
 	for(int i = 0; i < n->getRectangle().size();i++)
 	{
+
 		drawRectangle(n->getRectangle()[i].getCoords());
 	}
 
@@ -317,7 +280,7 @@ void LightingScene::drawNode(Node *n)
 		drawTriangle(n->getTriangle()[i].getCoords());
 	}
 
-	
+
 	for(int i = 0; i < n->getCylinder().size();i++)
 	{
 		drawCylinder(n->getCylinder()[i].getCoords(),n->getCylinder()[i].getStacks(),n->getCylinder()[i].getSlices());
@@ -325,7 +288,7 @@ void LightingScene::drawNode(Node *n)
 
 	for(int i = 0; i < n->getSphere().size();i++)
 	{
-	
+
 		drawSphere( n->getSphere()[i].getRadius(),n->getSphere()[i].getStacks(),n->getSphere()[i].getSlices());
 	}
 
@@ -336,7 +299,7 @@ void LightingScene::drawNode(Node *n)
 
 
 	for(int i = 0; i < n->getDescendants().size();i++)
-	drawNode(n->getDescendantNode()[i]);
+		drawNode(n->getDescendantNode()[i]);
 
 	glPopMatrix();
 
@@ -364,7 +327,7 @@ void LightingScene::drawSphere(float radius,int stacks,int slices)
 
 	gluSphere(quad,radius,slices,stacks);
 
-	
+
 	gluDeleteQuadric(quad);
 }
 
