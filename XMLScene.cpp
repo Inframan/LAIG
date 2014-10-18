@@ -179,9 +179,32 @@ XMLScene::XMLScene(char *filename, sceneGraph * graph)
 				&& sscanf(stRight,"%f",&right) == 1 && sscanf(stTop,"%f",&top) == 1 && sscanf(stBot,"%f",&bot) == 1)
 				camr = new orthogonal(camID,direction[0],near,far,left,right,top,bot);
 
+			graph->addCamera(camr);
 			cam = cam->NextSiblingElement("ortho");
 		}
 
+			cam=camerasElement->FirstChildElement("perspective");
+			while(cam)
+		{
+			camera * camr;
+			char * camID = NULL;
+			camID = (char*)cam->Attribute("id");     
+			string ID(camID);
+			char * stNear = (char *) cam->Attribute("near");
+			char * stFar = (char *) cam->Attribute("far");
+			char * stAngle = (char *) cam->Attribute("angle");
+			char * stPos= (char *) cam->Attribute("pos");
+			char * stTarget = (char *) cam->Attribute("target");
+			float near,far,angle,posX,posY,posZ,targetX,targetY,targetZ;
+
+			if( sscanf(stNear,"%f",&near) == 1 && sscanf(stFar,"%f",&far) == 1  && sscanf(stAngle,"%f",&angle) == 1 && sscanf(stPos,"%f %f %f",&posX,&posY,&posZ) == 3
+				&& sscanf(stTarget,"%f %f %f",&targetX,&targetY,&targetZ) == 3)
+				camr = new perspective(ID,near,far,angle,posX,posY,posZ,targetX,targetY,targetZ);
+
+			
+			graph->addCamera(camr);
+			cam = cam->NextSiblingElement("perspective");
+		}
 
 	}
 
@@ -511,7 +534,7 @@ XMLScene::XMLScene(char *filename, sceneGraph * graph)
 				id = (char*) appearanceref->Attribute("id");
 				string ID(id);
 				node1.setAppearenceRef(ID);
-				if(ID != "inherited")
+				if(ID != "inherit")
 				{
 					Appearence *app = new Appearence();
 					(*app) = graph->getAppearence().find(ID)->second;

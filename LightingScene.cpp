@@ -26,13 +26,13 @@ void LightingScene::init()
 
 
 	// Enables lighting computations
-	/*	map<string,camera *> copyCam;
+	/*map<string,camera *> copyCam;
 	map<string,camera *>::iterator it;
 
 	copyCam = pgraph.getCameras(); // para evitar que o iterador fique a apontar para o vazio
 	it =  pgraph.getCameras().find(pgraph.getRootCamera());
-	*/
-	/*CGFcamera * firstCamera = new CGFcamera();
+
+	CGFcamera * firstCamera = new CGFcamera();
 
 	if(it->second->getType() == "perspective")
 	{
@@ -40,12 +40,12 @@ void LightingScene::init()
 	firstCamera->setX(((perspective *) it->second)->getPos()[0]);
 	firstCamera->setY(((perspective *) it->second)->getPos()[1]);
 	firstCamera->setZ(((perspective *) it->second)->getPos()[2]);
-	//firstCamera->
+	firstCamera->applyView();
 	}
 
-	*/
-	//CGFscene::activeCamera->applyView();
 
+	CGFscene::activeCamera->applyView();
+	*/
 	//CGFcamera * cam = new CGFcamera(
 
 	if(pgraph.getCulFace() == "none")
@@ -111,7 +111,7 @@ void LightingScene::init()
 		glPolygonMode(GL_FRONT_AND_BACK, GL_POINT);
 
 
-	for(int i = 0; i < pgraph.getLights().size();i++)
+	for(unsigned int i = 0; i < pgraph.getLights().size();i++)
 	{
 		myLight temp = pgraph.getLights()[i];
 
@@ -119,20 +119,20 @@ void LightingScene::init()
 		float ambient[4] = {temp.getAmbient()[0],temp.getAmbient()[i],temp.getAmbient()[2],temp.getAmbient()[3]};
 		float diffuse[4] =  {temp.getDiffuse()[0],temp.getDiffuse()[i],temp.getDiffuse()[2],temp.getDiffuse()[3]};
 		float specular[4] =  {temp.getSpecular()[0],temp.getSpecular()[i],temp.getSpecular()[2],temp.getSpecular()[3]};
-
+		CGFlight* newLight;
 
 		if( temp.getType() == "spot")
 		{
 			float angle = temp.getAngle(), exp = temp.getExponent();
 			float target[3]={temp.getTarget()[0],temp.getTarget()[1],temp.getTarget()[2]};
+			newLight  = new CGFlight(lightArray[i],pos, target);
 			glLightf(lightArray[i],GL_SPOT_EXPONENT,exp);
-			glLightf(lightArray[i],GL_SPOT_CUTOFF ,angle);
-			glLightfv(lightArray[i],GL_SPOT_DIRECTION,target);
-			pos[3] = 0.0;
-		}
-		
+			newLight->setAngle(angle);
 
-		CGFlight* newLight = new CGFlight(lightArray[i],pos);
+		}
+		else
+			newLight  = new CGFlight(lightArray[i],pos);
+
 		newLight->setAmbient(ambient);
 		newLight->setDiffuse(diffuse);
 		newLight->setSpecular(specular);
@@ -149,17 +149,15 @@ void LightingScene::init()
 	}
 
 	//Declares materials
-/*	
+	/*	
 	materialA = new CGFappearance(ambientNull,difA,specA,shininessA);
-/*	materialB = new CGFappearance(ambientNull,difB,specB,shininessB);
+	/*	materialB = new CGFappearance(ambientNull,difB,specB,shininessB);
 	*/
 }
 
 void LightingScene::display() 
 {
 
-
-	/*
 	map<string,camera *> copyCam;
 	map<string,camera *>::iterator it;
 	CGFcamera * firstCamera = new CGFcamera();
@@ -167,40 +165,49 @@ void LightingScene::display()
 	copyCam = pgraph.getCameras(); // para evitar que o iterador fique a apontar para o vazio
 	it =  copyCam.find(pgraph.getRootCamera());
 
-	/* if(it->second->getType() == "perspective")
+	if(it->second->getType() == "perspective")
 	{
-	gluPerspective(
-	firstCamera->setX(((perspective *) it->second)->getPos()[0]);
-	firstCamera->setY(((perspective *) it->second)->getPos()[1]);
-	firstCamera->setZ(((perspective *) it->second)->getPos()[2]);
-	//firstCamera->
+		//gluPerspective(
+		
+		gluLookAt(((perspective *) it->second)->getPos()[0],((perspective *) it->second)->getPos()[1],((perspective *) it->second)->getPos()[2],
+			((perspective *) it->second)->getTarget()[0],((perspective *) it->second)->getTarget()[1],((perspective *) it->second)->getTarget()[2],
+			0,1,0);
+	/*	firstCamera->setX(((perspective *) it->second)->getPos()[0]);
+		firstCamera->setY(((perspective *) it->second)->getPos()[1]);
+		firstCamera->setZ(((perspective *) it->second)->getPos()[2]);
+		firstCamera->setRotation(0,((perspective *) it->second)->getAngle());
+		firstCamera->updateProjectionMatrix(((perspective *) it->second)->getNear(),((perspective *) it->second)->getFar());*/
+		//firstCamera->
 	}
-	else*//* if(it->second->getType() == "ortho")
+	else if(it->second->getType() == "ortho")
 	{
-	char dir = ( (orthogonal *) it->second)->getDirection();
-	switch( dir)
-	{
-	case 'z':
-	glOrtho( ((orthogonal *) it->second)->getLeft(),((orthogonal *) it->second)->getRight(),((orthogonal *) it->second)->gotBot(),
-	((orthogonal *) it->second)->getTop(),((orthogonal *) it->second)->getNear(),((orthogonal *) it->second)->getFar());
-	break;
-	case 'y':
-	glRotated(90,1,0,0);
-	glOrtho( ((orthogonal *) it->second)->getLeft(),((orthogonal *) it->second)->getRight(),((orthogonal *) it->second)->gotBot(),
-	((orthogonal *) it->second)->getTop(),((orthogonal *) it->second)->getNear(),((orthogonal *) it->second)->getFar());
-	break;
-	case 'x':
-	//glRotated(90,0,1,0);
-	glOrtho( ((orthogonal *) it->second)->getLeft(),((orthogonal *) it->second)->getRight(),((orthogonal *) it->second)->gotBot(),
-	((orthogonal *) it->second)->getTop(),((orthogonal *) it->second)->getNear(),((orthogonal *) it->second)->getFar());  
+		char dir = ((orthogonal *) it->second)->getDirection();
+		switch( dir)
+		{
+		case 'z':
+			glOrtho( ((orthogonal *) it->second)->getLeft(),((orthogonal *) it->second)->getRight(),((orthogonal *) it->second)->gotBot(),
+				((orthogonal *) it->second)->getTop(),((orthogonal *) it->second)->getNear(),((orthogonal *) it->second)->getFar());
+			break;
+		case 'y':
+			glRotated(90,1,0,0);
+			glOrtho( ((orthogonal *) it->second)->getLeft(),((orthogonal *) it->second)->getRight(),((orthogonal *) it->second)->gotBot(),
+				((orthogonal *) it->second)->getTop(),((orthogonal *) it->second)->getNear(),((orthogonal *) it->second)->getFar());
+			break;
+		case 'x':
+			//glRotated(90,0,1,0);
+			glOrtho( ((orthogonal *) it->second)->getLeft(),((orthogonal *) it->second)->getRight(),((orthogonal *) it->second)->gotBot(),
+				((orthogonal *) it->second)->getTop(),((orthogonal *) it->second)->getNear(),((orthogonal *) it->second)->getFar());  
 
-	break;
+			break;
+		}
 	}
 
+	
 
-	firstCamera->applyView();
-	}
-	*/
+		firstCamera->applyView();
+
+
+		CGFapplication::activeApp->forceRefresh();
 
 	// ---- BEGIN Background, camera and axis setup
 
@@ -214,19 +221,20 @@ void LightingScene::display()
 	// Apply transformations corresponding to the camera position relative to the origin
 	CGFscene::activeCamera->applyView();
 
-	for(int i = 0; i < pgraph.getLights().size();i++)
+	for(unsigned int i = 0; i < pgraph.getLights().size();i++)
 	{
 		if(pgraph.getLights()[i].getMarker())
 			lightsVector[i]->draw();
+
 		lightsVector[i]->update();
 
 	}
 	// Draw axis
-	
-	
+
+
 	axis.draw();
 
-	
+
 	drawNode(pgraph.getRootNode());
 	// ---- END Background, camera and axis setup
 
@@ -271,40 +279,40 @@ void LightingScene::drawNode(Node *n)
 
 	glPushMatrix();
 	glMultMatrixf(m);
-	if(n->getAppearenceRef() != "inherited"){
+	if(n->getAppearenceRef() != "inherit"){
 		n->getAppearence()->getAppearance()->setTexture( n->getAppearence()->getTexture()->getFile().c_str());
 		n->getAppearence()->getAppearance()->apply();
 	}
-	for(int i = 0; i < n->getRectangle().size();i++)
+	for(unsigned int i = 0; i < n->getRectangle().size();i++)
 	{
 
 		drawRectangle(n->getRectangle()[i].getCoords());
 	}
 
-	for(int i = 0; i < n->getTriangle().size();i++)
+	for(unsigned int i = 0; i < n->getTriangle().size();i++)
 	{
 		drawTriangle(n->getTriangle()[i].getCoords());
 	}
 
 
-	for(int i = 0; i < n->getCylinder().size();i++)
+	for(unsigned int i = 0; i < n->getCylinder().size();i++)
 	{
 		drawCylinder(n->getCylinder()[i].getCoords(),n->getCylinder()[i].getStacks(),n->getCylinder()[i].getSlices());
 	}
 
-	for(int i = 0; i < n->getSphere().size();i++)
+	for(unsigned int i = 0; i < n->getSphere().size();i++)
 	{
 
 		drawSphere( n->getSphere()[i].getRadius(),n->getSphere()[i].getStacks(),n->getSphere()[i].getSlices());
 	}
 
-	for(int i = 0; i < n->getTorus().size();i++)
+	for(unsigned int i = 0; i < n->getTorus().size();i++)
 	{
 		drawTorus(n->getTorus()[i].getInner(),n->getTorus()[i].getOuter(),n->getTorus()[i].getLoops(),n->getTorus()[i].getSlices());
 	}
 
 
-	for(int i = 0; i < n->getDescendants().size();i++)
+	for(unsigned int i = 0; i < n->getDescendants().size();i++)
 		drawNode(n->getDescendantNode()[i]);
 
 	glPopMatrix();

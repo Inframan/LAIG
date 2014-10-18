@@ -5,8 +5,8 @@
 		<lighting doublesided="true" local="false" enabled="true" ambient="0.0 0.0 0.0 0.2" />
 	</globals>
 
-	<cameras initial="ss">
-		<perspective id="1" near="0.1" far="1" angle="45" pos="10 10 10" target="0 0 0" />
+	<cameras initial="2">
+		<perspective id="1" near="0.1" far="1" angle="45" pos="0.0 0.0 0.0" target="-1.0 10.0 -1.0" />
 		<ortho id="2" direction="x" near="0.1" far="1" left="5" right="5" top="5" bottom="5" />
 	</cameras>
 
@@ -14,7 +14,7 @@
 	<lights>
             <!-- Deve existir pelo menos uma luz declarada -->
             <!-- Atributo "marker" indica se deve ou nao desenhar-se uma esfera representativa -->
-          	 <light id="L1" type="omni" enabled="false" marker="false" pos="05 10 05" >
+          	 <light id="L1" type="omni" enabled="true" marker="false" pos="05 10 05" >
                <component type="ambient" value="0.0 0.0 0.0 0.1" />
                <component type="diffuse" value="0.5 0.5 0.8 0.4" />
                <component type="specular" value="0.0 0.8 1.0 0.4" />
@@ -28,7 +28,7 @@
 
             </light>
 
-             <light id="spotity" type="spot" enabled="true" marker="false" pos="2 2 2" target="0 5 0" angle="15" exponent="0.0">
+             <light id="spotity" type="spot" enabled="true" marker="true" pos="2 2 2" target="0 5 0" angle="10" exponent="100.0">
                <component type="ambient" value="0.0 0.0 0.0 0.1" />
                <component type="diffuse" value="1.0 0.0 0.0 1" />
                <component type="specular" value="0.0 0.0 0.0 0.4"/>
@@ -82,7 +82,7 @@
 				<transform type="scale" factor="0.1 0.1 0.1" />
 			</transforms>
 
-			<appearanceref id="inherited" />
+			<appearanceref id="inherit" />
 
 			<primitives>
 			</primitives>
@@ -98,7 +98,7 @@
 				<transform type="scale" factor="1 1 2" />
 			</transforms>
 
-			<appearanceref id="inherited" />
+			<appearanceref id="inherit" />
 
 			<primitives>
 			</primitives>
@@ -115,7 +115,7 @@
 				<transform type="rotate" axis="x" angle="180" />
 			</transforms>
 
-			<appearanceref id="inherited" />
+			<appearanceref id="inherit" />
 
 			<primitives>
 				<cylinder base="5" top="2" height="0.5" slices="20" stacks="6" />
@@ -129,7 +129,7 @@
 			<transforms>
 			</transforms>
 
-			<appearanceref id="inherited" />
+			<appearanceref id="inherit" />
 
 			<primitives>
 				<cylinder base="5" top="2" height="0.5" slices="20" stacks="6" />
@@ -145,7 +145,7 @@
 				<transform type="scale" factor="2 2 2" />
 			</transforms>
 
-			<appearanceref id="inherited" />
+			<appearanceref id="inherit" />
 
 			<primitives>
 				<sphere radius="1" slices="40" stacks="40" />
@@ -162,7 +162,7 @@
 				<transform type="scale" factor="10 10 10" />
 			</transforms>
 
-			<appearanceref id="inherited" />
+			<appearanceref id="inherit" />
 
 			<primitives>
 			</primitives>
@@ -179,7 +179,7 @@
 				<transform type="scale" factor="0.6 0.6 0.6" />
 			</transforms>
 
-			<appearanceref id="inherited" />
+			<appearanceref id="inherit" />
 
 			<primitives>
 			</primitives>
@@ -196,7 +196,7 @@
 				<transform type="scale" factor="0.8 0.8 0.8" />
 			</transforms>
 
-			<appearanceref id="inherited" />
+			<appearanceref id="inherit" />
 
 			<primitives>
 			</primitives>
@@ -213,7 +213,7 @@
 				<transform type="scale" factor="1 1 1" />
 			</transforms>
 
-			<appearanceref id="inherited" />
+			<appearanceref id="inherit" />
 
 			<primitives>
 			</primitives>
@@ -230,7 +230,7 @@
 				<transform type="scale" factor="0.9 0.9 0.9" />
 			</transforms>
 
-			<appearanceref id="inherited" />
+			<appearanceref id="inherit" />
 
 			<primitives>
 			</primitives>
@@ -247,7 +247,7 @@
 				<transform type="scale" factor="3 3 3" />
 			</transforms>
 
-			<appearanceref id="inherited" />
+			<appearanceref id="inherit" />
 
 			<primitives>
 			</primitives>
@@ -264,7 +264,7 @@
 				<transform type="scale" factor="2.5 2.5 2.5" />
 			</transforms>
 
-			<appearanceref id="inherited" />
+			<appearanceref id="inherit" />
 
 			<primitives>
 			</primitives>
@@ -282,7 +282,7 @@
 				<transform type="scale" factor="1.3 1.3 1.3" />
 			</transforms>
 
-			<appearanceref id="inherited" />
+			<appearanceref id="inherit" />
 
 			<primitives>
 			</primitives>
@@ -299,7 +299,7 @@
 				<transform type="scale" factor="1.1 1.1 1.1" />
 			</transforms>
 
-			<appearanceref id="inherited" />
+			<appearanceref id="inherit" />
 
 			<primitives>
 			</primitives>
@@ -316,7 +316,7 @@
 				<transform type="scale" factor="1 1 0.05"/>
 			</transforms> 
 
-			<appearanceref id="inherited"/> 
+			<appearanceref id="inherit"/> 
 			<primitives> 
 				<torus inner="0.2" outer="1.5" slices="25" loops="25"/> 
 			</primitives> 
@@ -326,7 +326,7 @@
 			<transforms>
 			</transforms>
 
-			<appearanceref id="inherited" />
+			<appearanceref id="inherit" />
 
 			<primitives>
 				<sphere radius="1" slices="40" stacks="40" />

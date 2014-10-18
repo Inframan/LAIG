@@ -7,6 +7,7 @@ orthogonal::orthogonal(string id, char direction,float near,float far,float left
 	this->right = right;
 	this->top = top;
 	this->bottom = bottom;
+	this->direction = direction;
 	setType("ortho");
 }
 
@@ -30,6 +31,12 @@ float orthogonal::getTop()const
 float orthogonal::gotBot()const
 {
 	return bottom;
+}
+
+
+char orthogonal::getDirection()const
+{
+	return direction;
 }
 
 orthogonal::~orthogonal(void)

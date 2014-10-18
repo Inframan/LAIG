@@ -172,7 +172,7 @@ void sceneGraph::addTexture(Texture t)
 {
 	textures.push_back(t);
 }
-/*
+
 void sceneGraph::addCamera(camera* cam)
 {
 	cameras[cam->getID()] = cam;
@@ -184,7 +184,7 @@ map<string,camera *> sceneGraph::getCameras() const
 }
 
 
-*/
+
 sceneGraph::~sceneGraph(void)
 {
 }
