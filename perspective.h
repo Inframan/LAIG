@@ -3,7 +3,7 @@
 class perspective :
 	public camera
 {
-	float near,far,angle;
+	float angle;
 	vector<float> pos,target;
 
 public:

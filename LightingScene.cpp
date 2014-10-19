@@ -145,13 +145,13 @@ void LightingScene::display()
 	glClear(GL_COLOR_BUFFER_BIT|GL_DEPTH_BUFFER_BIT);
 	map<string,camera *> copyCam;
 	map<string,camera *>::iterator it;
-	camera *cam;
+
 	copyCam = pgraph.getCameras(); // para evitar que o iterador fique a apontar para o vazio
 	it =  copyCam.find(pgraph.getRootCamera());
-	cam = it->second;
 	
-	cam->apply();
-	cam->applyView();
+	
+	it->second->apply();
+	it->second->applyView();
 	/*
 	CGFcamera *cam = it->second;
 	cam->setX(10);
@@ -166,8 +166,6 @@ void LightingScene::display()
 	
 
 	// Initialize Model-View matrix as identity (no transformation
-	glMatrixMode(GL_MODELVIEW);
-	glLoadIdentity();
 
 	// Apply transformations corresponding to the camera position relative to the origin
 	CGFscene::activeCamera->applyView();
