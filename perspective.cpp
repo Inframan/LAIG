@@ -38,6 +38,7 @@ void perspective::apply()
 {
 	float ratio = ((float) CGFapplication::width)/((float) CGFapplication::height);
 // glOrtho(left * ratio,right*ratio ,bottom,top, near, far);
+	//float unit = sqrt(  pos[0]
 	float n=getNear(), f=getFar();
 	glPushMatrix();
 	glMatrixMode(GL_PROJECTION);

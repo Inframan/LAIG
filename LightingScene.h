@@ -4,13 +4,13 @@
 #include "CGFscene.h"
 #include "CGFappearance.h"
 #include "sceneGraph.h"
-#include "myTorus.h"
 
 
 class LightingScene : public CGFscene
 {
 	sceneGraph pgraph;
 	vector<CGFlight *> lightsVector;
+	camera * activCam;
 public:
 	int light0On, light1On, light2On, light3On;
 	void init();
@@ -27,7 +27,6 @@ public:
 	void drawNode(Node *n);
 	void drawCylinder(vector<float> coords,int stacks,int slices);
 	void drawSphere(float radius,int stacks,int slices);
-	void drawTorus(float inner,float outer,int loops,int slices);
 
 
 

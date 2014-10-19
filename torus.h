@@ -1,4 +1,7 @@
 #pragma once
+#include <cmath>
+#include "CGFobject.h"
+
 class torus
 {
 	float inner;
@@ -11,6 +14,7 @@ public:
 	float getOuter()const;
 	int getSlices()const;
 	int getLoops()const;
+	void draw();
 	~torus(void);
 };
 

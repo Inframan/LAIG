@@ -55,7 +55,6 @@ void LightingScene::init()
 	}
 	else
 	{
-
 		glLightModelf(GL_LIGHT_MODEL_TWO_SIDE, GL_FALSE); 
 	}
 
@@ -100,7 +99,6 @@ void LightingScene::init()
 		float diffuse[4] =  {temp.getDiffuse()[0],temp.getDiffuse()[i],temp.getDiffuse()[2],temp.getDiffuse()[3]};
 		float specular[4] =  {temp.getSpecular()[0],temp.getSpecular()[i],temp.getSpecular()[2],temp.getSpecular()[3]};
 		CGFlight* newLight;
-		float spotDir[3]={0,0,0};
 
 		if( temp.getType() == "spot")
 		{
@@ -108,17 +106,15 @@ void LightingScene::init()
 			float angle = temp.getAngle(), exp = temp.getExponent();
 			float target[3]={temp.getTarget()[0] - pos[0],temp.getTarget()[1]- pos[1],temp.getTarget()[2]- pos[2]};
 			float unit = sqrt(target[0] * target[0] + target[1] * target[1] + target[2] * target[2]);
-			for (int i = 0; i < 3; i++) {
+			for (int i = 0; i < 3; i++) 
 				target[i] = target[i] / unit;
-				spotDir[i] = target[i];
-			}
 			glLightf(lightArray[i],GL_SPOT_EXPONENT,exp);
 			glLightf(lightArray[i],GL_SPOT_CUTOFF,angle);
-			glLightfv(lightArray[i],GL_SPOT_DIRECTION,target);
-
+			glLightfv(lightArray[i],GL_SPOT_DIRECTION,target);	
+			newLight =new CGFlight(lightArray[i],pos,target);
 		}
-
-		newLight =new CGFlight(lightArray[i],pos,spotDir);
+		else
+			newLight =new CGFlight(lightArray[i],pos);
 		newLight->setAmbient(ambient);
 		newLight->setDiffuse(diffuse);
 		newLight->setSpecular(specular);
@@ -151,14 +147,8 @@ void LightingScene::display()
 	
 	
 	it->second->apply();
-	it->second->applyView();
-	/*
-	CGFcamera *cam = it->second;
-	cam->setX(10);
-	cam->setY(10);
-	cam->setZ(10);
-	cam->applyView();
-	*/CGFapplication::activeApp->forceRefresh();
+
+	CGFapplication::activeApp->forceRefresh();
 	
 	// ---- BEGIN Background, camera and axis setup
 
@@ -168,7 +158,7 @@ void LightingScene::display()
 	// Initialize Model-View matrix as identity (no transformation
 
 	// Apply transformations corresponding to the camera position relative to the origin
-	CGFscene::activeCamera->applyView();
+	
 
 	for(unsigned int i = 0; i < pgraph.getLights().size();i++)
 	{
@@ -259,7 +249,7 @@ void LightingScene::drawNode(Node *n)
 
 	for(unsigned int i = 0; i < n->getTorus().size();i++)
 	{
-		drawTorus(n->getTorus()[i].getInner(),n->getTorus()[i].getOuter(),n->getTorus()[i].getLoops(),n->getTorus()[i].getSlices());
+		n->getTorus()[i].draw();
 	}
 
 
@@ -270,15 +260,6 @@ void LightingScene::drawNode(Node *n)
 
 
 }
-
-void LightingScene:: drawTorus(float inner,float outer,int loops,int slices)
-{
-	myTorus * torus = new myTorus(inner,outer,slices,loops);
-
-	torus->draw();
-
-}
-
 
 void LightingScene::drawSphere(float radius,int stacks,int slices)
 {
