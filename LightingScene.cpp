@@ -251,8 +251,8 @@ void LightingScene::drawNode(Node *n)
 	if(n->getAppearenceRef() != "inherit"){
 		if( n->getAppearence()->getTextureref()!= "" && n->getAppearenceRef() != "inherit")
 		{
-		n->getAppearence()->getAppearance()->setTexture( n->getAppearence()->getTexture()->getFile().c_str());
-		n->getAppearence()->getAppearance()->apply();
+			n->getAppearence()->getAppearance()->setTexture( n->getAppearence()->getTexture()->getFile().c_str());
+			n->getAppearence()->getAppearance()->apply();
 		}
 		else
 			n->getAppearence()->getAppearance()->apply();
@@ -263,10 +263,10 @@ void LightingScene::drawNode(Node *n)
 	{
 		if(n->getAppearenceRef() != "inherit")
 		{
-		if(n->getAppearence()->getTextureref() != "" )
-			drawRectangle(n->getRectangle()[i].getCoords(),n->getAppearence()->getTexture());
-		else
-			drawRectangle(n->getRectangle()[i].getCoords());
+			if(n->getAppearence()->getTextureref() != "" )
+				drawRectangle(n->getRectangle()[i].getCoords(),n->getAppearence()->getTexture());
+			else
+				drawRectangle(n->getRectangle()[i].getCoords());
 		}
 		else
 			drawRectangle(n->getRectangle()[i].getCoords());
@@ -276,10 +276,10 @@ void LightingScene::drawNode(Node *n)
 	{
 		if(n->getAppearenceRef() != "inherit")
 		{
-		if(n->getAppearence()->getTextureref() != "")
-			drawTriangle(n->getTriangle()[i].getCoords(),n->getAppearence()->getTexture());
-		else
-			drawTriangle(n->getTriangle()[i].getCoords());
+			if(n->getAppearence()->getTextureref() != "")
+				drawTriangle(n->getTriangle()[i].getCoords(),n->getAppearence()->getTexture());
+			else
+				drawTriangle(n->getTriangle()[i].getCoords());
 		}
 		else
 			drawTriangle(n->getTriangle()[i].getCoords());
@@ -362,26 +362,67 @@ void LightingScene::drawCylinder(vector<float> coords,int stacks,int slices)
 
 void LightingScene::drawRectangle(vector<float> coords,Texture* t)
 {
+	float width = t->getTexLengthS(), height = t->getTexLengthT(), lengthT = coords[2]-coords[0],heightT = coords[3]-coords[1];
+	float tX,tY;
 
-	glRectd(coords[0] ,coords[1],coords[2],coords[3]);
+	tX = lengthT/width;
+	tY = heightT/height;
+
+
+	glBegin(GL_QUADS);
+	glNormal3f(0,0,1);
+	glTexCoord2f(0,0); 
+	glVertex2f(coords[0],coords[1]);
+	
+	glTexCoord2f(0,tY);
+	glVertex2f(coords[2],coords[1]);
+
+	glTexCoord2f(tX,tY);
+	glVertex2f(coords[2],coords[3]);
+
+	
+	glTexCoord2f(tX,0);
+	glVertex2f(coords[0],coords[3]);
+	glEnd();
 }
 
 void LightingScene::drawRectangle(vector<float> coords)
 {
-
-	glRectd(coords[0] ,coords[1],coords[2],coords[3]);
+	glBegin(GL_QUADS);
+	glNormal3f(0,0,1);	
+	glTexCoord2f(0,0); 
+	glVertex2f(coords[0],coords[1]);
+	glTexCoord2f(1,0); 
+	glVertex2f(coords[2],coords[1]);
+	glTexCoord2f(1,1); 
+	glVertex2f(coords[2],coords[3]);
+	glTexCoord2f(0,1); 
+	glVertex2f(coords[0],coords[3]);
+	glEnd();
 }
 
 
 
 void LightingScene::drawTriangle(vector<float> coords, Texture* t)
 {
+	float width = t->getTexLengthS(), height = t->getTexLengthT(), lengthT = coords[0]-coords[3],heightT = coords[7]-coords[1];
+	float tX,tY;
+
+	tX = lengthT/width;
+	tY = heightT/height;
+
 	glBegin(GL_TRIANGLES);
-	//glTexCoord2f(0,0);
+
+	glNormal3f(coords[0], coords[1],1);
+	glTexCoord2f(0,0);
 	glVertex3f(coords[0],coords[1],coords[2]);
-	//glTexCoord2f(t->getTexLengthS(), t->getTexLengthT());
+
+	glNormal3f(coords[3], coords[4],1);
+	glTexCoord2f(tX,0);
 	glVertex3f(coords[3],coords[4],coords[5]);
-	//glTexCoord2f(,0);
+
+	glNormal3f(coords[6], coords[7],1);
+	glTexCoord2f(tX/2,tY);
 	glVertex3f(coords[6],coords[7],coords[8]);
 	glEnd();
 }
@@ -390,11 +431,8 @@ void LightingScene::drawTriangle(vector<float> coords, Texture* t)
 void LightingScene::drawTriangle(vector<float> coords)
 {
 	glBegin(GL_TRIANGLES);
-	//glTexCoord2f(0,0);
 	glVertex3f(coords[0],coords[1],coords[2]);
-	//glTexCoord2f(t->getTexLengthS(), t->getTexLengthT());
 	glVertex3f(coords[3],coords[4],coords[5]);
-	//glTexCoord2f(,0);
 	glVertex3f(coords[6],coords[7],coords[8]);
 	glEnd();
 }

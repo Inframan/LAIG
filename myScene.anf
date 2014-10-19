@@ -36,7 +36,7 @@
 	</lights>
 
 	<textures>
-		<texture id="metal" file="robot4.png" texlength_s="1.0" texlength_t="1.0" />
+		<texture id="metal" file="textures/robot4.png" texlength_s="1.0" texlength_t="1.0" />
 	</textures>
 
 	<appearances>
