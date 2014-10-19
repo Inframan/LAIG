@@ -183,8 +183,8 @@ XMLScene::XMLScene(char *filename, sceneGraph * graph)
 			cam = cam->NextSiblingElement("ortho");
 		}
 
-			cam=camerasElement->FirstChildElement("perspective");
-			while(cam)
+		cam=camerasElement->FirstChildElement("perspective");
+		while(cam)
 		{
 			camera * camr;
 			char * camID = NULL;
@@ -201,7 +201,7 @@ XMLScene::XMLScene(char *filename, sceneGraph * graph)
 				&& sscanf(stTarget,"%f %f %f",&targetX,&targetY,&targetZ) == 3)
 				camr = new perspective(ID,near,far,angle,posX,posY,posZ,targetX,targetY,targetZ);
 
-			
+
 			graph->addCamera(camr);
 			cam = cam->NextSiblingElement("perspective");
 		}
@@ -375,9 +375,11 @@ XMLScene::XMLScene(char *filename, sceneGraph * graph)
 
 
 			sscanf(shininessStr,"%f",&shininess);
-
-
-			Appearence appearenceToSave = Appearence(id,shininess,textureref);
+			Appearence appearenceToSave;
+			if(textureref)
+				appearenceToSave = Appearence(id,shininess,textureref);
+			else
+				appearenceToSave = Appearence(id,shininess);
 
 
 			TiXmlElement * appearenceComponent = appearances->FirstChildElement();
@@ -419,13 +421,13 @@ XMLScene::XMLScene(char *filename, sceneGraph * graph)
 
 				}
 
-				
+
 
 				
 				CGFappearance * app = new CGFappearance(ambientArray,diffuseArray,specularArray,shininess);
 				appearenceToSave.setAppearance(app);
 				for(int j= 0 ; j < graph->getTextures().size();j++){
-				
+					if(textureref)
 					if (textureref == graph->getTextures()[j].getID())
 					{
 						Texture * text = new Texture();
@@ -434,7 +436,7 @@ XMLScene::XMLScene(char *filename, sceneGraph * graph)
 					}
 				}
 				appearenceComponent = appearenceComponent->NextSiblingElement();
-				
+
 			}
 
 			graph->addAppearence(appearenceToSave);
@@ -538,7 +540,7 @@ XMLScene::XMLScene(char *filename, sceneGraph * graph)
 				{
 					Appearence *app = new Appearence();
 					(*app) = graph->getAppearence().find(ID)->second;
-				
+
 					node1.setAppearence(app);
 				}
 			}

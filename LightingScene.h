@@ -8,10 +8,12 @@
 
 class LightingScene : public CGFscene
 {
-	sceneGraph pgraph;
-	vector<CGFlight *> lightsVector;
-	camera * activCam;
+	
 public:
+	vector<CGFlight *> lightsVector;
+	sceneGraph pgraph;
+	int  activCam;
+	int wire;
 	int light0On, light1On, light2On, light3On;
 	void init();
 	void display();
@@ -23,7 +25,9 @@ public:
 	void setAppearences();
 	void setGraph(sceneGraph pgraph);
 	void drawRectangle(vector<float> coords, Texture* t);
-	void drawTriangle(vector<float> coords,Texture* t);
+	void drawRectangle(vector<float> coords);
+	void drawTriangle(vector<float> coords,Texture* t);	
+	void drawTriangle(vector<float> coords);
 	void drawNode(Node *n);
 	void drawCylinder(vector<float> coords,int stacks,int slices);
 	void drawSphere(float radius,int stacks,int slices);

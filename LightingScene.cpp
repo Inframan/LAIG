@@ -25,8 +25,16 @@ void LightingScene::init()
 	glClearColor(pgraph.getBackground()[0], pgraph.getBackground()[1], pgraph.getBackground()[2], pgraph.getBackground()[3]);
 
 
-	
-	
+	map<string,camera *> cams= pgraph.getCameras();
+	int i = 0;
+	for(map<string,camera *>::iterator it = cams.begin(); it != cams.end(); it++) 
+	{
+		if(it->first == pgraph.getRootCamera())
+			activCam = i;
+		i++;
+	}
+
+
 	glEnable(GL_NORMALIZE);
 
 	if(pgraph.getCulFace() == "none")
@@ -81,13 +89,12 @@ void LightingScene::init()
 	else if(pgraph.getShading() == "flat")
 		glShadeModel(GL_FLAT);
 
-
 	if(pgraph.getDrawingMode() == "fill")
-		glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
+		wire = 0;
 	else if(pgraph.getDrawingMode() == "line")
-		glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
+		wire = 1;
 	else if(pgraph.getDrawingMode() == "point")
-		glPolygonMode(GL_FRONT_AND_BACK, GL_POINT);
+		wire = 2;
 
 
 	for(unsigned int i = 0; i < pgraph.getLights().size();i++)
@@ -139,34 +146,57 @@ void LightingScene::init()
 void LightingScene::display() 
 {
 	glClear(GL_COLOR_BUFFER_BIT|GL_DEPTH_BUFFER_BIT);
-	map<string,camera *> copyCam;
-	map<string,camera *>::iterator it;
 
-	copyCam = pgraph.getCameras(); // para evitar que o iterador fique a apontar para o vazio
-	it =  copyCam.find(pgraph.getRootCamera());
-	
-	
-	it->second->apply();
+	switch(wire)
+	{
+	case 0:	
+		glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
+		break;
+	case 1:
+		glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
+		break;
+	case 2:		
+		glPolygonMode(GL_FRONT_AND_BACK, GL_POINT);
+		break;
+	}
+
+
+	map<string,camera *> cams = pgraph.getCameras();
+	map<string,camera *>::iterator it = cams.begin();
+	for(int i = 0; i <activCam;i++)
+		it++;
+	if(it != cams.end())
+		it->second->apply();
+	else
+	{
+		CGFscene::activeCamera->applyView();
+		glMatrixMode(GL_MODELVIEW);
+		glLoadIdentity();
+	}
+	//pgraph.getCameras()[activCam]->apply(); // para evitar que o iterador fique a apontar para o vazio
+
 
 	CGFapplication::activeApp->forceRefresh();
-	
+
 	// ---- BEGIN Background, camera and axis setup
 
 	// Clear image and depth buffer everytime we update the scene
-	
+
 
 	// Initialize Model-View matrix as identity (no transformation
 
 	// Apply transformations corresponding to the camera position relative to the origin
-	
+
 
 	for(unsigned int i = 0; i < pgraph.getLights().size();i++)
 	{
 		if(pgraph.getLights()[i].getMarker())
 			lightsVector[i]->draw();
-
+		if(pgraph.getLights()[i].getEnabled())
+			glEnable(lightArray[i]);
+		else
+			glDisable(lightArray[i]);
 		lightsVector[i]->update();
-
 	}
 	// Draw axis
 
@@ -219,20 +249,41 @@ void LightingScene::drawNode(Node *n)
 	glPushMatrix();
 	glMultMatrixf(m);
 	if(n->getAppearenceRef() != "inherit"){
+		if( n->getAppearence()->getTextureref()!= "" && n->getAppearenceRef() != "inherit")
+		{
 		n->getAppearence()->getAppearance()->setTexture( n->getAppearence()->getTexture()->getFile().c_str());
 		n->getAppearence()->getAppearance()->apply();
+		}
+		else
+			n->getAppearence()->getAppearance()->apply();
 	}
 
 
 	for(unsigned int i = 0; i < n->getRectangle().size();i++)
 	{
-
-		drawRectangle(n->getRectangle()[i].getCoords(),n->getAppearence()->getTexture());
+		if(n->getAppearenceRef() != "inherit")
+		{
+		if(n->getAppearence()->getTextureref() != "" )
+			drawRectangle(n->getRectangle()[i].getCoords(),n->getAppearence()->getTexture());
+		else
+			drawRectangle(n->getRectangle()[i].getCoords());
+		}
+		else
+			drawRectangle(n->getRectangle()[i].getCoords());
 	}
 
 	for(unsigned int i = 0; i < n->getTriangle().size();i++)
 	{
-		drawTriangle(n->getTriangle()[i].getCoords(),n->getAppearence()->getTexture());
+		if(n->getAppearenceRef() != "inherit")
+		{
+		if(n->getAppearence()->getTextureref() != "")
+			drawTriangle(n->getTriangle()[i].getCoords(),n->getAppearence()->getTexture());
+		else
+			drawTriangle(n->getTriangle()[i].getCoords());
+		}
+		else
+			drawTriangle(n->getTriangle()[i].getCoords());
+
 	}
 
 
@@ -315,8 +366,28 @@ void LightingScene::drawRectangle(vector<float> coords,Texture* t)
 	glRectd(coords[0] ,coords[1],coords[2],coords[3]);
 }
 
+void LightingScene::drawRectangle(vector<float> coords)
+{
+
+	glRectd(coords[0] ,coords[1],coords[2],coords[3]);
+}
+
+
 
 void LightingScene::drawTriangle(vector<float> coords, Texture* t)
+{
+	glBegin(GL_TRIANGLES);
+	//glTexCoord2f(0,0);
+	glVertex3f(coords[0],coords[1],coords[2]);
+	//glTexCoord2f(t->getTexLengthS(), t->getTexLengthT());
+	glVertex3f(coords[3],coords[4],coords[5]);
+	//glTexCoord2f(,0);
+	glVertex3f(coords[6],coords[7],coords[8]);
+	glEnd();
+}
+
+
+void LightingScene::drawTriangle(vector<float> coords)
 {
 	glBegin(GL_TRIANGLES);
 	//glTexCoord2f(0,0);

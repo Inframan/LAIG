@@ -5,11 +5,12 @@ using namespace std;
 
 class myLight
 {
-	string id,type;
+	string type;
 	vector<float> pos, ambient, diffuse,specular,target;
-	float angle, exponent;
-	bool enabled,marker;	
+	float angle, exponent;	
 public:
+	string id;
+	int enabled,marker;
 	myLight(void);
 	myLight(string id,string type, bool enabled,bool marker, vector<float> pos);
 	void setSpecular(vector<float> specular);

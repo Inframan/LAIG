@@ -18,6 +18,7 @@ class Appearence
 
 public:
 	Appearence(void);
+	Appearence(string id, float shininess);
 	Appearence(string id, float shininess,string textureref);
 	CGFappearance* getAppearance() const;
 	void setAppearance(CGFappearance* app);

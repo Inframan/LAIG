@@ -19,6 +19,13 @@ Appearence::Appearence(string id, float shininess,string textureref){
 
 }
 
+Appearence::Appearence(string id, float shininess){
+
+	this->id=id;
+	this->shininess=shininess;
+
+}
+
 
 CGFappearance* Appearence::getAppearance() const{
 

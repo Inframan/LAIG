@@ -9,6 +9,7 @@
 #include "CGFapplication.h"
 #include "LightingScene.h"
 #include "XMLScene.h"
+#include "TPInterface.h"
 #include "sceneGraph.h"
 
 using std::cout;
@@ -20,7 +21,7 @@ int main(int argc, char* argv[]) {
 	sceneGraph graph;
 	sceneGraph * pgraph = new sceneGraph();
 	pgraph = &graph;
-	char* filename = "myScene.anf";
+	char* filename = "finalScene.anf";
 	if (argc >1)
 		filename = argv[1];
 	CGFapplication app = CGFapplication();
@@ -31,6 +32,7 @@ int main(int argc, char* argv[]) {
 		scene->setGraph(graph);
 		app.setScene(scene);
 		app.setInterface(new CGFinterface());
+		app.setInterface(new TPinterface(pgraph));
 		
 		app.run();
 	}
