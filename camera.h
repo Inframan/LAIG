@@ -1,9 +1,11 @@
 #pragma once
 #include <string>
 #include <vector>
+#include "CGFcamera.h"
+#include "CGFapplication.h"
 
 using namespace std;
-class camera 
+class camera :public CGFcamera
 {
 	string id;
 	float near,far;
@@ -16,6 +18,8 @@ public:
 	float getFar()const;
 	void setType(string t);
 	string getType()const;
+	virtual void apply() = 0;
 	~camera(void);
+	
 };
 

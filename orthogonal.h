@@ -10,8 +10,9 @@ public:
 	float getLeft()const;
 	float getRight()const;
 	float getTop()const;
-	float gotBot()const;
+	float getBot()const;
 	char getDirection()const;
+	void apply();
 	~orthogonal(void);
 };
 

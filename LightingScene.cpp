@@ -25,28 +25,9 @@ void LightingScene::init()
 	glClearColor(pgraph.getBackground()[0], pgraph.getBackground()[1], pgraph.getBackground()[2], pgraph.getBackground()[3]);
 
 
-	// Enables lighting computations
-	/*map<string,camera *> copyCam;
-	map<string,camera *>::iterator it;
-
-	copyCam = pgraph.getCameras(); // para evitar que o iterador fique a apontar para o vazio
-	it =  pgraph.getCameras().find(pgraph.getRootCamera());
-
-	CGFcamera * firstCamera = new CGFcamera();
-
-	if(it->second->getType() == "perspective")
-	{
-	//gluPerspective(
-	firstCamera->setX(((perspective *) it->second)->getPos()[0]);
-	firstCamera->setY(((perspective *) it->second)->getPos()[1]);
-	firstCamera->setZ(((perspective *) it->second)->getPos()[2]);
-	firstCamera->applyView();
-	}
-
-
-	CGFscene::activeCamera->applyView();
-	*/
-	//CGFcamera * cam = new CGFcamera(
+	
+	
+	glEnable(GL_NORMALIZE);
 
 	if(pgraph.getCulFace() == "none")
 		glCullFace(GL_NONE);
@@ -65,7 +46,6 @@ void LightingScene::init()
 
 	if(pgraph.getLightEnable())
 		glEnable(GL_LIGHTING);
-	glEnable(GL_NORMALIZE);
 	// Sets up some lighting parameters
 	// Computes lighting only using the front face normals and materials
 
@@ -120,23 +100,28 @@ void LightingScene::init()
 		float diffuse[4] =  {temp.getDiffuse()[0],temp.getDiffuse()[i],temp.getDiffuse()[2],temp.getDiffuse()[3]};
 		float specular[4] =  {temp.getSpecular()[0],temp.getSpecular()[i],temp.getSpecular()[2],temp.getSpecular()[3]};
 		CGFlight* newLight;
+		float spotDir[3]={0,0,0};
 
 		if( temp.getType() == "spot")
 		{
+
 			float angle = temp.getAngle(), exp = temp.getExponent();
-			float target[3]={temp.getTarget()[0],temp.getTarget()[1],temp.getTarget()[2]};
-			newLight  = new CGFlight(lightArray[i],pos, target);
+			float target[3]={temp.getTarget()[0] - pos[0],temp.getTarget()[1]- pos[1],temp.getTarget()[2]- pos[2]};
+			float unit = sqrt(target[0] * target[0] + target[1] * target[1] + target[2] * target[2]);
+			for (int i = 0; i < 3; i++) {
+				target[i] = target[i] / unit;
+				spotDir[i] = target[i];
+			}
 			glLightf(lightArray[i],GL_SPOT_EXPONENT,exp);
-			newLight->setAngle(angle);
+			glLightf(lightArray[i],GL_SPOT_CUTOFF,angle);
+			glLightfv(lightArray[i],GL_SPOT_DIRECTION,target);
 
 		}
-		else
-			newLight  = new CGFlight(lightArray[i],pos);
 
+		newLight =new CGFlight(lightArray[i],pos,spotDir);
 		newLight->setAmbient(ambient);
 		newLight->setDiffuse(diffuse);
 		newLight->setSpecular(specular);
-
 
 		if(temp.getEnabled())
 			newLight->enable();
@@ -157,62 +142,28 @@ void LightingScene::init()
 
 void LightingScene::display() 
 {
-
+	glClear(GL_COLOR_BUFFER_BIT|GL_DEPTH_BUFFER_BIT);
 	map<string,camera *> copyCam;
 	map<string,camera *>::iterator it;
-	CGFcamera * firstCamera = new CGFcamera();
-
+	camera *cam;
 	copyCam = pgraph.getCameras(); // para evitar que o iterador fique a apontar para o vazio
 	it =  copyCam.find(pgraph.getRootCamera());
-
-	if(it->second->getType() == "perspective")
-	{
-		//gluPerspective(
-		
-		gluLookAt(((perspective *) it->second)->getPos()[0],((perspective *) it->second)->getPos()[1],((perspective *) it->second)->getPos()[2],
-			((perspective *) it->second)->getTarget()[0],((perspective *) it->second)->getTarget()[1],((perspective *) it->second)->getTarget()[2],
-			0,1,0);
-	/*	firstCamera->setX(((perspective *) it->second)->getPos()[0]);
-		firstCamera->setY(((perspective *) it->second)->getPos()[1]);
-		firstCamera->setZ(((perspective *) it->second)->getPos()[2]);
-		firstCamera->setRotation(0,((perspective *) it->second)->getAngle());
-		firstCamera->updateProjectionMatrix(((perspective *) it->second)->getNear(),((perspective *) it->second)->getFar());*/
-		//firstCamera->
-	}
-	else if(it->second->getType() == "ortho")
-	{
-		char dir = ((orthogonal *) it->second)->getDirection();
-		switch( dir)
-		{
-		case 'z':
-			glOrtho( ((orthogonal *) it->second)->getLeft(),((orthogonal *) it->second)->getRight(),((orthogonal *) it->second)->gotBot(),
-				((orthogonal *) it->second)->getTop(),((orthogonal *) it->second)->getNear(),((orthogonal *) it->second)->getFar());
-			break;
-		case 'y':
-			glRotated(90,1,0,0);
-			glOrtho( ((orthogonal *) it->second)->getLeft(),((orthogonal *) it->second)->getRight(),((orthogonal *) it->second)->gotBot(),
-				((orthogonal *) it->second)->getTop(),((orthogonal *) it->second)->getNear(),((orthogonal *) it->second)->getFar());
-			break;
-		case 'x':
-			//glRotated(90,0,1,0);
-			glOrtho( ((orthogonal *) it->second)->getLeft(),((orthogonal *) it->second)->getRight(),((orthogonal *) it->second)->gotBot(),
-				((orthogonal *) it->second)->getTop(),((orthogonal *) it->second)->getNear(),((orthogonal *) it->second)->getFar());  
-
-			break;
-		}
-	}
-
+	cam = it->second;
 	
-
-		firstCamera->applyView();
-
-
-		CGFapplication::activeApp->forceRefresh();
-
+	cam->apply();
+	cam->applyView();
+	/*
+	CGFcamera *cam = it->second;
+	cam->setX(10);
+	cam->setY(10);
+	cam->setZ(10);
+	cam->applyView();
+	*/CGFapplication::activeApp->forceRefresh();
+	
 	// ---- BEGIN Background, camera and axis setup
 
 	// Clear image and depth buffer everytime we update the scene
-	glClear(GL_COLOR_BUFFER_BIT|GL_DEPTH_BUFFER_BIT);
+	
 
 	// Initialize Model-View matrix as identity (no transformation
 	glMatrixMode(GL_MODELVIEW);
@@ -283,15 +234,17 @@ void LightingScene::drawNode(Node *n)
 		n->getAppearence()->getAppearance()->setTexture( n->getAppearence()->getTexture()->getFile().c_str());
 		n->getAppearence()->getAppearance()->apply();
 	}
+
+
 	for(unsigned int i = 0; i < n->getRectangle().size();i++)
 	{
 
-		drawRectangle(n->getRectangle()[i].getCoords());
+		drawRectangle(n->getRectangle()[i].getCoords(),n->getAppearence()->getTexture());
 	}
 
 	for(unsigned int i = 0; i < n->getTriangle().size();i++)
 	{
-		drawTriangle(n->getTriangle()[i].getCoords());
+		drawTriangle(n->getTriangle()[i].getCoords(),n->getAppearence()->getTexture());
 	}
 
 
@@ -377,18 +330,21 @@ void LightingScene::drawCylinder(vector<float> coords,int stacks,int slices)
 	gluDeleteQuadric(disk1);
 }
 
-void LightingScene::drawRectangle(vector<float> coords)
+void LightingScene::drawRectangle(vector<float> coords,Texture* t)
 {
 
 	glRectd(coords[0] ,coords[1],coords[2],coords[3]);
 }
 
 
-void LightingScene::drawTriangle(vector<float> coords)
+void LightingScene::drawTriangle(vector<float> coords, Texture* t)
 {
 	glBegin(GL_TRIANGLES);
+	//glTexCoord2f(0,0);
 	glVertex3f(coords[0],coords[1],coords[2]);
+	//glTexCoord2f(t->getTexLengthS(), t->getTexLengthT());
 	glVertex3f(coords[3],coords[4],coords[5]);
+	//glTexCoord2f(,0);
 	glVertex3f(coords[6],coords[7],coords[8]);
 	glEnd();
 }

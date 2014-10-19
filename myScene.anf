@@ -5,9 +5,9 @@
 		<lighting doublesided="true" local="false" enabled="true" ambient="0.0 0.0 0.0 0.2" />
 	</globals>
 
-	<cameras initial="2">
-		<perspective id="1" near="0.1" far="1" angle="45" pos="0.0 0.0 0.0" target="-1.0 10.0 -1.0" />
-		<ortho id="2" direction="x" near="0.1" far="1" left="5" right="5" top="5" bottom="5" />
+	<cameras initial="1">
+		<perspective id="1" near="0" far="50" angle="45" pos="10.0 10.0 10.0" target="0.0 5.0 0.0" />
+		<ortho id="2" direction="z" near="0" far="10" left="10" right="10" top="10" bottom="10" />
 	</cameras>
 
 
@@ -21,14 +21,14 @@
 
             </light>
 
-             <light id="l2" type="omni" enabled="false" marker="false" pos="-8 -5 -8" >
+             <light id="l2" type="omni" enabled="true" marker="true" pos="-8 -5 -8" >
                <component type="ambient" value="0.0 0.0 0.0 0.1" />
                <component type="diffuse" value="0.5 0.5 1.0 0.4" />
                <component type="specular" value="0.0 0.8 1.0 0.4" />
 
             </light>
 
-             <light id="spotity" type="spot" enabled="true" marker="true" pos="2 2 2" target="0 5 0" angle="10" exponent="100.0">
+             <light id="spot" type="spot" enabled="true" marker="true" pos="0 5 5" target="0 5 0" angle="5" exponent="100.0">
                <component type="ambient" value="0.0 0.0 0.0 0.1" />
                <component type="diffuse" value="1.0 0.0 0.0 1" />
                <component type="specular" value="0.0 0.0 0.0 0.4"/>

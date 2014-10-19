@@ -11,6 +11,7 @@ public:
 	float getAngle()const;
 	vector<float> getPos()const;
 	vector<float> getTarget()const;
+	void apply();
 	~perspective(void);
 };
 

@@ -28,7 +28,7 @@ float orthogonal::getTop()const
 }
 
 
-float orthogonal::gotBot()const
+float orthogonal::getBot()const
 {
 	return bottom;
 }
@@ -41,4 +41,25 @@ char orthogonal::getDirection()const
 
 orthogonal::~orthogonal(void)
 {
+}
+
+void orthogonal::apply(){
+	glMatrixMode(GL_PROJECTION);
+	glLoadIdentity();
+	glOrtho( left,right,bottom, top,getNear(),getFar());
+	switch(direction)
+	{
+	case 'z':
+
+		break;
+	case 'y':
+		glRotated(90,1,0,0);
+		break;
+	case 'x':
+		glRotated(-90,0,1,0);
+		break;
+	}
+
+	glMatrixMode(GL_MODELVIEW);
+	glLoadIdentity();
 }
