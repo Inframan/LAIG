@@ -3,6 +3,7 @@
 
 Appearence::Appearence(void)
 {
+	t = NULL;
 }
 
 
@@ -16,13 +17,14 @@ Appearence::Appearence(string id, float shininess,string textureref){
 	this->id=id;
 	this->shininess=shininess;
 	this->textureref=textureref;
-
+	t = NULL;
 }
 
 Appearence::Appearence(string id, float shininess){
 
 	this->id=id;
 	this->shininess=shininess;
+	t = NULL;
 
 }
 

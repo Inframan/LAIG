@@ -136,7 +136,7 @@ void LightingScene::init()
 		lightsVector.push_back(newLight);
 	}
 
-	
+
 	//Declares materials
 	/*	
 	materialA = new CGFappearance(ambientNull,difA,specA,shininessA);
@@ -161,10 +161,13 @@ void LightingScene::display()
 		break;
 	}
 
-	
+
 	it = cams.begin() + activCam;
 	if(it != cams.end())
+	{
+		(*it)->applyView();
 		(*it)->apply();
+	}
 	else
 	{
 		CGFscene::activeCamera->applyView();
@@ -203,8 +206,8 @@ void LightingScene::display()
 
 	axis.draw();
 
-
-	drawNode(pgraph.getRootNode());
+	Appearence * t = NULL;
+	drawNode(pgraph.getRootNode(),t);
 	// ---- END Background, camera and axis setup
 
 	// ---- BEGIN Primitive drawing section
@@ -231,167 +234,48 @@ void LightingScene::setGraph(sceneGraph graph)
 
 
 
-void LightingScene::drawNode(Node *n)
+void LightingScene::drawNode(Node *n,Appearence * t)
 {
 
-
-	float m[16] = {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0};
-
-
-	for(int i = 0; i < 4;i++)
-	{
-		for(int j = 0; j<4;j++)
-		{
-			m[i*4+j] = n->getMatrix()[i][j];
-		}
-	}
-
 	glPushMatrix();
-	glMultMatrixf(m);
-	
-	if(n->getAppearenceRef() != "inherit"){
-		if( n->getAppearence()->getTextureref()!= "" )
-		{
-			n->getAppearence()->getAppearance()->apply();
-		}
-		else
-			n->getAppearence()->getAppearance()->apply();
-	}
+	glMultMatrixf(n->matrix);
 
-	vector<rectangle> r = n->getRectangle();
-	
-	for(vector<rectangle>::iterator rIt = r.begin(); rIt < r.end();rIt++)
+	if(n->getAppearence())
+		t = n->getAppearence();
+	if(t)
+		t->getAppearance()->apply();
+
+	vector<primitive*> p = n->getPrimitives();
+
+	for(vector<primitive*>::iterator pIt = p.begin(); pIt < p.end();pIt++)
 	{
-		if(n->getAppearenceRef() != "inherit")
-		{
-			if(n->getAppearence()->getTextureref() != "" )
-				drawRectangle(rIt->getCoords(),n->getAppearence()->getTexture());
+		if(t)
+			if(t->getTexture())
+				if(dynamic_cast<triangle*>((*pIt)))
+				{
+					dynamic_cast<triangle*>((*pIt))->draw(t->getTexture());
+				}
+				else if(dynamic_cast<rectangle*>((*pIt)))
+				{
+					dynamic_cast<rectangle*>((*pIt))->draw(t->getTexture());
+				}
+				else
+					(*pIt)->draw();
 			else
-				drawRectangle(rIt->getCoords());
-		}
+				(*pIt)->draw();
 		else
-			drawRectangle(rIt->getCoords());
+			(*pIt)->draw();
 	}
 
-	vector<triangle> t = n->getTriangle();
-	for(vector<triangle>::iterator tIt=t.begin(); tIt < t.end();tIt++)
-	{
-		if(n->getAppearenceRef() != "inherit")
-		{
-			if(n->getAppearence()->getTextureref() != "")
-				drawTriangle(tIt->getCoords(),n->getAppearence()->getTexture());
-			else
-				drawTriangle(tIt->getCoords());
-		}
-		else
-			drawTriangle(tIt->getCoords());
-
-	}
-
-	vector<cylinder> c = n->getCylinder();
-	for(vector<cylinder>::iterator cIt=c.begin(); cIt!=c.end();cIt++)
-	{
-		cIt->draw();
-	}
-
-	vector<sphere> s = n->getSphere();
-	for(vector<sphere>::iterator sIt=s.begin(); sIt !=s.end();sIt++)
-	{
-
-		sIt->draw();
-	}
-
-	vector<torus> to = n->getTorus();
-	for(vector<torus>::iterator tIt = to.begin(); tIt != to.end();tIt++)
-	{
-		tIt->draw();
-	}
 
 	vector<Node*> nV = n->getDescendantNode();
-	
+
 	for(vector<Node*>::iterator nIt = nV.begin(); nIt != nV.end();nIt++)
-		drawNode(*nIt);
+		drawNode(*nIt,t);
 
 	glPopMatrix();
 
 
 }
 
-
-void LightingScene::drawRectangle(vector<float> coords,Texture* t)
-{
-	float width = t->getTexLengthS(), height = t->getTexLengthT(), lengthT = coords[2]-coords[0],heightT = coords[3]-coords[1];
-	float tX,tY;
-
-	tX = lengthT/width;
-	tY = heightT/height;
-
-
-	glBegin(GL_QUADS);
-	glNormal3f(0,0,1);
-	glTexCoord2f(0,0); 
-	glVertex2f(coords[0],coords[1]);
-	
-	glTexCoord2f(0,tY);
-	glVertex2f(coords[2],coords[1]);
-
-	glTexCoord2f(tX,tY);
-	glVertex2f(coords[2],coords[3]);
-
-	
-	glTexCoord2f(tX,0);
-	glVertex2f(coords[0],coords[3]);
-	glEnd();
-}
-
-void LightingScene::drawRectangle(vector<float> coords)
-{
-	glBegin(GL_QUADS);
-	glNormal3f(0,0,1);	
-	glTexCoord2f(0,0); 
-	glVertex2f(coords[0],coords[1]);
-	glTexCoord2f(1,0); 
-	glVertex2f(coords[2],coords[1]);
-	glTexCoord2f(1,1); 
-	glVertex2f(coords[2],coords[3]);
-	glTexCoord2f(0,1); 
-	glVertex2f(coords[0],coords[3]);
-	glEnd();
-}
-
-
-
-void LightingScene::drawTriangle(vector<float> coords, Texture* t)
-{
-	float width = t->getTexLengthS(), height = t->getTexLengthT(), lengthT = coords[0]-coords[3],heightT = coords[7]-coords[1];
-	float tX,tY;
-
-	tX = lengthT/width;
-	tY = heightT/height;
-
-	glBegin(GL_TRIANGLES);
-
-	glNormal3f(coords[0], coords[1],1);
-	glTexCoord2f(0,0);
-	glVertex3f(coords[0],coords[1],coords[2]);
-
-	glNormal3f(coords[3], coords[4],1);
-	glTexCoord2f(tX,0);
-	glVertex3f(coords[3],coords[4],coords[5]);
-
-	glNormal3f(coords[6], coords[7],1);
-	glTexCoord2f(tX/2,tY);
-	glVertex3f(coords[6],coords[7],coords[8]);
-	glEnd();
-}
-
-
-void LightingScene::drawTriangle(vector<float> coords)
-{
-	glBegin(GL_TRIANGLES);
-	glVertex3f(coords[0],coords[1],coords[2]);
-	glVertex3f(coords[3],coords[4],coords[5]);
-	glVertex3f(coords[6],coords[7],coords[8]);
-	glEnd();
-}
 

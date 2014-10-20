@@ -1,11 +1,10 @@
 #pragma once
-#include <cmath>
 #include "CGFobject.h"
-#include <vector>
+#include "primitive.h"
 
 using namespace std;
 
-class torus
+class torus:public primitive
 {
 	float inner;
 	float outer;

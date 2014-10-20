@@ -26,11 +26,7 @@ public:
 	int pauseResetClock(int call);
 	void setAppearences();
 	void setGraph(sceneGraph pgraph);
-	void drawRectangle(vector<float> coords, Texture* t);
-	void drawRectangle(vector<float> coords);
-	void drawTriangle(vector<float> coords,Texture* t);	
-	void drawTriangle(vector<float> coords);
-	void drawNode(Node *n);
+	void drawNode(Node *n,Appearence * t);
 
 
 

@@ -33,20 +33,19 @@ perspective::~perspective(void)
 {
 }
 
-
-void perspective::apply()
+void perspective::applyView()
 {
 	float ratio = ((float) CGFapplication::width)/((float) CGFapplication::height);
-// glOrtho(left * ratio,right*ratio ,bottom,top, near, far);
-	//float unit = sqrt(  pos[0]
 	glPushMatrix();
 	glMatrixMode(GL_PROJECTION);
 	glLoadIdentity();
 	gluPerspective(angle, ratio,getNear(), getFar());
 	glPopMatrix();
-	gluLookAt(pos[0],pos[1],pos[2],target[0],target[1],target[2],0,1,0);
-
 	glMatrixMode(GL_MODELVIEW);
 	glLoadIdentity();
+}
 
+void perspective::apply()
+{	
+	gluLookAt(pos[0],pos[1],pos[2],target[0],target[1],target[2],0,1,0);
 }

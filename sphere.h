@@ -1,6 +1,7 @@
 #pragma once
+#include "primitive.h"
 #include "CGFobject.h"
-class sphere
+class sphere:public primitive
 {
 	float radius;
 	int slices;

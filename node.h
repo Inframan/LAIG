@@ -1,6 +1,7 @@
 #pragma once
 #include <string>
 #include <vector>
+#include "primitive.h"
 #include "triangle.h"
 #include "rectangle.h"
 #include "cylinder.h"
@@ -16,15 +17,11 @@ class Node
 	string appRef;
 	vector<string> descendants;
 	vector<Node*> descendantNode;
-	vector<vector<float>> matrix;
-	vector<triangle> triangles;
-	vector<rectangle> rectangles;
-	vector<cylinder> cylinders;
-	vector<torus> torusses;
-	vector<sphere> spheres;
+	vector<primitive*> primitives;
 	Appearence * app;
 
 public:
+	float matrix[16];
 	Node();
 	Node(string id);
 	void setMatrix(float m[4][4]);
@@ -38,15 +35,11 @@ public:
 	void addCylinder(float base,float top,float height,int slices,int stacks);
 	void addSphere(float radius, int slices,int stacks);
 	void addTorus(float inner, float outer, int slices, int loops);
-	vector<rectangle> getRectangle() const{return rectangles;}
-	vector<triangle> getTriangle() const{return triangles;}
-	vector<cylinder> getCylinder() const{return cylinders;}
-	vector<torus> getTorus() const{return torusses;}
-	vector<sphere> getSphere() const{return spheres;}
+	vector<primitive*> getPrimitives()const;
 	string getID() const {return id;}
 	vector<string> getDescendants()const { return descendants;}
 	vector<Node *> getDescendantNode() const { return descendantNode;}
-	vector<vector<float>> getMatrix()const;
+	float* getMatrix()const;
 	void setDescendants(vector<Node *> descendantNode);
 
 

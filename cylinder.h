@@ -1,8 +1,8 @@
 #pragma once
-#include <vector>
+#include "primitive.h"
 #include "CGFobject.h"
 
-class cylinder
+class cylinder:public primitive 
 {
 	float base;
 	float top;

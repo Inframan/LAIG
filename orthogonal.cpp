@@ -43,10 +43,16 @@ orthogonal::~orthogonal(void)
 {
 }
 
-void orthogonal::apply(){
+void orthogonal::applyView() 
+{
 	glMatrixMode(GL_PROJECTION);
 	glLoadIdentity();
 	glOrtho( left,right,bottom, top,getNear(),getFar());
+	glMatrixMode(GL_MODELVIEW);
+	glLoadIdentity();
+}
+
+void orthogonal::apply(){
 	switch(direction)
 	{
 	case 'z':
@@ -59,7 +65,4 @@ void orthogonal::apply(){
 		glRotated(-90,0,1,0);
 		break;
 	}
-
-	glMatrixMode(GL_MODELVIEW);
-	glLoadIdentity();
 }

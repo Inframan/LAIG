@@ -13,6 +13,7 @@ public:
 	float getBot()const;
 	char getDirection()const;
 	void apply();
+	void applyView();
 	~orthogonal(void);
 };
 
