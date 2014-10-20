@@ -131,10 +131,10 @@ void sceneGraph::setDescendantNode(){
 
 	for(it = nodes.begin(); it != nodes.end(); it++) {
 		vector<Node*>tmp;
-		
-		for (int i = 0 ; i<it->second.getDescendants().size();i++)
+		vector<string> desc = it->second.getDescendants();
+		for(vector<string>::iterator it2 = desc.begin(); it2 != desc.end();it2++)
 		{
-			tmp.push_back(&nodes.find(it->second.getDescendants()[i])->second);
+			tmp.push_back(&nodes.find((*it2))->second);
 		}
 		it->second.setDescendants(tmp);
 	}
@@ -175,10 +175,10 @@ void sceneGraph::addTexture(Texture t)
 
 void sceneGraph::addCamera(camera* cam)
 {
-	cameras[cam->getID()] = cam;
+	cameras.push_back(cam);
 }
 	
-map<string,camera *> sceneGraph::getCameras() const
+vector<camera *> sceneGraph::getCameras() const
 {
 	return cameras;
 }

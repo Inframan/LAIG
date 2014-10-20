@@ -24,16 +24,16 @@ void LightingScene::init()
 
 	glClearColor(pgraph.getBackground()[0], pgraph.getBackground()[1], pgraph.getBackground()[2], pgraph.getBackground()[3]);
 
-
-	map<string,camera *> cams= pgraph.getCameras();
-	int i = 0;
-	for(map<string,camera *>::iterator it = cams.begin(); it != cams.end(); it++) 
+	cams = pgraph.getCameras();
+	it = cams.begin();
+	for(int i = 0; it != cams.end(); i++,it++) 
 	{
-		if(it->first == pgraph.getRootCamera())
+		if((*it)->getID() == pgraph.getRootCamera())
+		{
 			activCam = i;
-		i++;
+			break;
+		}
 	}
-
 
 	glEnable(GL_NORMALIZE);
 
@@ -96,22 +96,22 @@ void LightingScene::init()
 	else if(pgraph.getDrawingMode() == "point")
 		wire = 2;
 
-
-	for(unsigned int i = 0; i < pgraph.getLights().size();i++)
+	vector<myLight> mL = pgraph.getLights();
+	int i = 0;
+	for(vector<myLight>::iterator mIt = mL.begin(); mIt != mL.end();mIt++,i++)
 	{
-		myLight temp = pgraph.getLights()[i];
 
-		float pos[4] = {temp.getPos()[0],temp.getPos()[1],temp.getPos()[2],1.0};
-		float ambient[4] = {temp.getAmbient()[0],temp.getAmbient()[i],temp.getAmbient()[2],temp.getAmbient()[3]};
-		float diffuse[4] =  {temp.getDiffuse()[0],temp.getDiffuse()[i],temp.getDiffuse()[2],temp.getDiffuse()[3]};
-		float specular[4] =  {temp.getSpecular()[0],temp.getSpecular()[i],temp.getSpecular()[2],temp.getSpecular()[3]};
+		float pos[4] = {mIt->getPos()[0],mIt->getPos()[1],mIt->getPos()[2],1.0};
+		float ambient[4] = {mIt->getAmbient()[0],mIt->getAmbient()[i],mIt->getAmbient()[2],mIt->getAmbient()[3]};
+		float diffuse[4] =  {mIt->getDiffuse()[0],mIt->getDiffuse()[i],mIt->getDiffuse()[2],mIt->getDiffuse()[3]};
+		float specular[4] =  {mIt->getSpecular()[0],mIt->getSpecular()[i],mIt->getSpecular()[2],mIt->getSpecular()[3]};
 		CGFlight* newLight;
 
-		if( temp.getType() == "spot")
+		if( mIt->getType() == "spot")
 		{
 
-			float angle = temp.getAngle(), exp = temp.getExponent();
-			float target[3]={temp.getTarget()[0] - pos[0],temp.getTarget()[1]- pos[1],temp.getTarget()[2]- pos[2]};
+			float angle = mIt->getAngle(), exp = mIt->getExponent();
+			float target[3]={mIt->getTarget()[0] - pos[0],mIt->getTarget()[1]- pos[1],mIt->getTarget()[2]- pos[2]};
 			float unit = sqrt(target[0] * target[0] + target[1] * target[1] + target[2] * target[2]);
 			for (int i = 0; i < 3; i++) 
 				target[i] = target[i] / unit;
@@ -126,7 +126,7 @@ void LightingScene::init()
 		newLight->setDiffuse(diffuse);
 		newLight->setSpecular(specular);
 
-		if(temp.getEnabled())
+		if(mIt->getEnabled())
 			newLight->enable();
 		else
 			newLight->disable();
@@ -136,6 +136,7 @@ void LightingScene::init()
 		lightsVector.push_back(newLight);
 	}
 
+	
 	//Declares materials
 	/*	
 	materialA = new CGFappearance(ambientNull,difA,specA,shininessA);
@@ -160,13 +161,10 @@ void LightingScene::display()
 		break;
 	}
 
-
-	map<string,camera *> cams = pgraph.getCameras();
-	map<string,camera *>::iterator it = cams.begin();
-	for(int i = 0; i <activCam;i++)
-		it++;
+	
+	it = cams.begin() + activCam;
 	if(it != cams.end())
-		it->second->apply();
+		(*it)->apply();
 	else
 	{
 		CGFscene::activeCamera->applyView();
@@ -187,12 +185,14 @@ void LightingScene::display()
 
 	// Apply transformations corresponding to the camera position relative to the origin
 
+	vector<myLight> vl = pgraph.getLights();
+	vector<myLight>::iterator vlit = vl.begin();
 
-	for(unsigned int i = 0; i < pgraph.getLights().size();i++)
+	for(int i =0; vlit != vl.end();vlit++,i++)
 	{
-		if(pgraph.getLights()[i].getMarker())
+		if(vlit->getMarker())
 			lightsVector[i]->draw();
-		if(pgraph.getLights()[i].getEnabled())
+		if(vlit->getEnabled())
 			glEnable(lightArray[i]);
 		else
 			glDisable(lightArray[i]);
@@ -249,7 +249,7 @@ void LightingScene::drawNode(Node *n)
 	glPushMatrix();
 	glMultMatrixf(m);
 	if(n->getAppearenceRef() != "inherit"){
-		if( n->getAppearence()->getTextureref()!= "" && n->getAppearenceRef() != "inherit")
+		if( n->getAppearence()->getTextureref()!= "" )
 		{
 			n->getAppearence()->getAppearance()->setTexture( n->getAppearence()->getTexture()->getFile().c_str());
 			n->getAppearence()->getAppearance()->apply();
@@ -258,54 +258,59 @@ void LightingScene::drawNode(Node *n)
 			n->getAppearence()->getAppearance()->apply();
 	}
 
-
-	for(unsigned int i = 0; i < n->getRectangle().size();i++)
+	vector<rectangle> r = n->getRectangle();
+	
+	for(vector<rectangle>::iterator rIt = r.begin(); rIt < r.end();rIt++)
 	{
 		if(n->getAppearenceRef() != "inherit")
 		{
 			if(n->getAppearence()->getTextureref() != "" )
-				drawRectangle(n->getRectangle()[i].getCoords(),n->getAppearence()->getTexture());
+				drawRectangle(rIt->getCoords(),n->getAppearence()->getTexture());
 			else
-				drawRectangle(n->getRectangle()[i].getCoords());
+				drawRectangle(rIt->getCoords());
 		}
 		else
-			drawRectangle(n->getRectangle()[i].getCoords());
+			drawRectangle(rIt->getCoords());
 	}
 
-	for(unsigned int i = 0; i < n->getTriangle().size();i++)
+	vector<triangle> t = n->getTriangle();
+	for(vector<triangle>::iterator tIt=t.begin(); tIt < t.end();tIt++)
 	{
 		if(n->getAppearenceRef() != "inherit")
 		{
 			if(n->getAppearence()->getTextureref() != "")
-				drawTriangle(n->getTriangle()[i].getCoords(),n->getAppearence()->getTexture());
+				drawTriangle(tIt->getCoords(),n->getAppearence()->getTexture());
 			else
-				drawTriangle(n->getTriangle()[i].getCoords());
+				drawTriangle(tIt->getCoords());
 		}
 		else
-			drawTriangle(n->getTriangle()[i].getCoords());
+			drawTriangle(tIt->getCoords());
 
 	}
 
-
-	for(unsigned int i = 0; i < n->getCylinder().size();i++)
+	vector<cylinder> c = n->getCylinder();
+	for(vector<cylinder>::iterator cIt=c.begin(); cIt!=c.end();cIt++)
 	{
-		drawCylinder(n->getCylinder()[i].getCoords(),n->getCylinder()[i].getStacks(),n->getCylinder()[i].getSlices());
+		drawCylinder(cIt->getCoords(),cIt->getStacks(),cIt->getSlices());
 	}
 
-	for(unsigned int i = 0; i < n->getSphere().size();i++)
+	vector<sphere> s = n->getSphere();
+	for(vector<sphere>::iterator sIt=s.begin(); sIt !=s.end();sIt++)
 	{
 
-		drawSphere( n->getSphere()[i].getRadius(),n->getSphere()[i].getStacks(),n->getSphere()[i].getSlices());
+		drawSphere( sIt->getRadius(),sIt->getStacks(),sIt->getSlices());
 	}
 
-	for(unsigned int i = 0; i < n->getTorus().size();i++)
+	vector<torus> to = n->getTorus();
+	for(vector<torus>::iterator tIt = to.begin(); tIt != to.end();tIt++)
 	{
-		n->getTorus()[i].draw();
+		tIt->draw();
 	}
 
-
-	for(unsigned int i = 0; i < n->getDescendants().size();i++)
-		drawNode(n->getDescendantNode()[i]);
+	vector<Node*> nV = n->getDescendantNode();
+	
+	for(vector<Node*>::iterator nIt = nV.begin(); nIt != nV.end();nIt++)
+		drawNode(*nIt);
 
 	glPopMatrix();
 

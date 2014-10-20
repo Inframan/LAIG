@@ -24,7 +24,7 @@ class sceneGraph
 	vector<float> lAmbient;//array
 	map<string,Node> nodes;
 	string rootCamera;
-	map<string,camera *> cameras;
+	vector<camera *> cameras;
 	vector<myLight> lights;
 	vector<Texture> textures;
 	map<string ,Appearence> appearences;
@@ -49,7 +49,7 @@ public:
 	void setRootNode();
 	map<string,Node> getNodes() const;
 	void addCamera(camera * cam);
-	map<string,camera *> getCameras() const;
+	vector<camera *> getCameras() const;
 	void setCameraID(string id);
 	void addLight(myLight light);
 	void addAppearence(Appearence appearence);

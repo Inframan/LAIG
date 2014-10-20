@@ -9,10 +9,10 @@ TPinterface::TPinterface(sceneGraph *graph)
 
 void TPinterface::getCameraList()
 {
-	map<string,camera *> cams = pgraph->getCameras();
-	for(map<string,camera *>::iterator it = cams.begin(); it != cams.end(); it++) 
+	vector<camera *> cams = pgraph->getCameras();
+	for(vector<camera *>::iterator it = cams.begin(); it != cams.end(); it++) 
 	{
-		cameras.push_back(it->first);
+		cameras.push_back((*it)->getID());
 	}
 
 }
@@ -62,17 +62,6 @@ void TPinterface::initGUI()
 			0);
 	}
 	
-
-
-	/*	addColumnToPanel(varPanel);
-
-	GLUI_Listbox* texturesLand = addListboxToPanel(varPanel, "Landscape", landscapeSelect,8);
-
-	texturesLand->add_item(1,"Mountains");
-	texturesLand->add_item(2,"City");
-	texturesLand->add_item(3,"Riverside");
-	texturesLand->add_item(4,"City Night");
-	*/
 
 }
 

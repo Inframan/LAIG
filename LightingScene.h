@@ -10,6 +10,8 @@ class LightingScene : public CGFscene
 {
 	
 public:
+	vector<camera*> cams;
+	vector<camera*>::iterator it;
 	vector<CGFlight *> lightsVector;
 	sceneGraph pgraph;
 	int  activCam;
