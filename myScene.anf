@@ -2,41 +2,71 @@
 	<globals>
 		<drawing mode="fill" shading="gouraud" background="0 0 0 0" />
 		<culling face="back" order="ccw" />
-		<lighting doublesided="true" local="false" enabled="true" ambient="0.0 0.0 0.0 0.2" />
+		<lighting doublesided="true" local="false" enabled="true" ambient="0.2 0.2 0.2 0.2" />
 	</globals>
 
-	<cameras initial="1">
-		<perspective id="1" near="0" far="50" angle="45" pos="10.0 10.0 10.0" target="0.0 5.0 0.0" />
-		<ortho id="2" direction="x" near="10" far="20" left="-10" right="10" top="10" bottom="-10" />
-	</cameras>
+	<cameras initial="perspective">
+		<perspective id="perspective" near="-10" far="100" angle="45" pos="100.0 100.0 100.0" target="0.0 5.0 0.0" />
+		<ortho id="top" direction="y" near="-50.0" far="100.0" left="-100.0" right="100.0" top="100" bottom="-100" />
+    	<ortho id="front" direction="z" near="-50.0" far="100.0" left="-100.0" right="100.0" top="100.0" bottom="-100.0" />
+		</cameras>
 
 
 	<lights>
             <!-- Deve existir pelo menos uma luz declarada -->
             <!-- Atributo "marker" indica se deve ou nao desenhar-se uma esfera representativa -->
-          	 <light id="L1" type="omni" enabled="true" marker="false" pos="05 10 05" >
+          	 <light id="L1" type="omni" enabled="true" marker="false" pos="0 5 0" >
                <component type="ambient" value="0.0 0.0 0.0 0.1" />
-               <component type="diffuse" value="0.5 0.5 0.8 0.4" />
+               <component type="diffuse" value="1 1 1 1" />
                <component type="specular" value="0.0 0.8 1.0 0.4" />
 
             </light>
 
-             <light id="l2" type="omni" enabled="true" marker="true" pos="-8 -5 -8" >
+             <light id="l2" type="omni" enabled="false" marker="true" pos="-20 -20 -20" >
                <component type="ambient" value="0.0 0.0 0.0 0.1" />
                <component type="diffuse" value="0.5 0.5 1.0 0.4" />
                <component type="specular" value="0.0 0.8 1.0 0.4" />
 
             </light>
 
-             <light id="spot" type="spot" enabled="true" marker="true" pos="0 5 5" target="0 5 0" angle="5" exponent="100.0">
+             <light id="spot" type="spot" enabled="false" marker="true" pos="0 5 5" target="0 5 0" angle="5" exponent="100.0">
                <component type="ambient" value="0.0 0.0 0.0 0.1" />
                <component type="diffuse" value="1.0 0.0 0.0 1" />
                <component type="specular" value="0.0 0.0 0.0 0.4"/>
            </light>
-	</lights>
+
+
+			<light id="sunR" type="spot" enabled="true" marker="false" pos="0 -500 0" target="0 5 0" angle="4" exponent="100.0">
+               <component type="ambient" value="0.0 0.0 0.0 0.1" />
+               <component type="diffuse" value="1.0 1.0 1.0 1.0" />
+               <component type="specular" value="0.0 0.0 0.0 0.4"/>
+           </light>
+
+           <light id="sunL" type="spot" enabled="true" marker="false" pos="0 500 0" target="0 5 0" angle="4" exponent="100.0">
+               <component type="ambient" value="0.0 0.0 0.0 0.1" />
+               <component type="diffuse" value="1.0 1.0 1.0 1.0" />
+               <component type="specular" value="0.0 0.0 0.0 0.4"/>
+           </light>
+           <light id="ovniLight" type="spot" enabled="true" marker="false" pos="42 10 0" target="42 5 0" angle="45" exponent="100.0">
+               <component type="ambient" value="0.0 0.0 0.0 0.1" />
+               <component type="diffuse" value="1.0 0.0 1.0 1.0" />
+               <component type="specular" value="0.0 0.0 0.0 0.4"/>
+           </light>
+       </lights>
 
 	<textures>
-		<texture id="metal" file="textures/robot4.png" texlength_s="1.0" texlength_t="1.0" />
+		<texture id="metal" file="textures/metal.jpg" texlength_s="1.0" texlength_t="1.0" />
+		<texture id="sun" file="textures/sun.png" texlength_s="1.0" texlength_t="1.0"/>
+		<texture id="mercury" file="textures/mercury.jpg" texlength_s="1.0" texlength_t="2.0"/>
+		<texture id="venus" file="textures/venus.jpg" texlength_s="1.0" texlength_t="2.0"/>
+		<texture id="earth" file="textures/earth.jpg" texlength_s="1.0" texlength_t="2.0"/>
+		<texture id="mars" file="textures/mars.jpg" texlength_s="1.0" texlength_t="2.0"/>
+		<texture id="jupiter" file="textures/jupiter.png" texlength_s="1.0" texlength_t="2.0"/>
+		<texture id="saturn" file="textures/saturn.png" texlength_s="1.0" texlength_t="2.0"/>
+		<texture id="rings" file="textures/rings.jpg" texlength_s="1.0" texlength_t="2.0"/>
+		<texture id="uranus" file="textures/uranus.jpg" texlength_s="1.0" texlength_t="2.0"/>
+		<texture id="neptune" file="textures/neptune.jpg" texlength_s="1.0" texlength_t="2.0"/>
+		
 	</textures>
 
 	<appearances>
@@ -45,6 +75,69 @@
 			<component type="diffuse" value="1.0 1.0 1.0 1.0" />
 			<component type="specular" value="1.0 1.0 1.0 1.0" />
 		</appearance>
+		<appearance id="sun" shininess="1.0" textureref="sun">
+			<component type="ambient" value="1.0 1.0 1.0 1.0" />
+			<component type="diffuse" value="1.0 1.0 1.0 1.0" />
+			<component type="specular" value="1.0 1.0 1.0 1.0" />
+		</appearance>
+
+		<appearance id="mercury" shininess="0.6" textureref="mercury">
+			<component type="ambient" value="0.2 0.2 0.2 1.0" />
+			<component type="diffuse" value="1.0 1.0 1.0 1.0" />
+			<component type="specular" value="0.0 0.0 0.0 1.0" />
+		</appearance>
+
+		<appearance id="venus" shininess="0.5" textureref="venus">
+			<component type="ambient" value="0.2 0.2 0.2 1.0" />
+			<component type="diffuse" value="1.0 1.0 1.0 1.0" />
+			<component type="specular" value="0.0 0.0 0.0 1.0" />
+		</appearance>
+		
+		<appearance id="earth" shininess="0.6" textureref="earth">
+			<component type="ambient" value="0.2 0.2 0.2 1.0" />
+			<component type="diffuse" value="1.0 1.0 1.0 1.0" />
+			<component type="specular" value="0.0 0.0 0.0 1.0" />
+		</appearance>
+
+		<appearance id="mars" shininess="0.6" textureref="mars">
+			<component type="ambient" value="0.2 0.2 0.2 1.0" />
+			<component type="diffuse" value="0.7 0.7 0.7 1.0" />
+			<component type="specular" value="0.2 0.2 0.2 1.0" />
+		</appearance>
+		
+		<appearance id="jupiter" shininess="0.6" textureref="jupiter">
+			<component type="ambient" value="0.2 0.2 0.2 1.0" />
+			<component type="diffuse" value="1.0 1.0 1.0 1.0" />
+			<component type="specular" value="0.4 0.4 0.4 1.0" />
+		</appearance>
+		
+		<appearance id="saturn" shininess="0.6" textureref="saturn">
+			<component type="ambient" value="0.2 0.2 0.2 1.0" />
+			<component type="diffuse" value="1.0 1.0 1.0 1.0" />
+			<component type="specular" value="0.0 0.0 0.0 1.0" />
+		</appearance>
+
+		<appearance id="rings" shininess="0.6" textureref="rings">
+			<component type="ambient" value="0.2 0.2 0.2 1.0" />
+			<component type="diffuse" value="1.0 1.0 1.0 1.0" />
+			<component type="specular" value="0.8 0.8 0.8 1.0" />
+		</appearance>
+
+
+		<appearance id="neptune" shininess="0.6" textureref="neptune">
+			<component type="ambient" value="0.2 0.2 0.2 1.0" />
+			<component type="diffuse" value="1.0 1.0 1.0 1.0" />
+			<component type="specular" value="0.3 0.3 0.3 1.0" />
+		</appearance>
+
+
+		<appearance id="uranus" shininess="0.6" textureref="uranus">
+			<component type="ambient" value="0.2 0.2 0.2 1.0" />
+			<component type="diffuse" value="1.0 1.0 1.0 1.0" />
+			<component type="specular" value="0.3 0.3 0.3 1.0" />
+		</appearance>
+
+
 	</appearances>
 
 
@@ -77,7 +170,7 @@
 
 		<node id="ovni">
 			<transforms>
-				<transform type="translate" to="5 5 0" />
+				<transform type="translate" to="42 10 0" />
 				<transform type="rotate" axis="x" angle="75" />
 				<transform type="scale" factor="0.1 0.1 0.1" />
 			</transforms>
@@ -158,11 +251,11 @@
 		
 		<node id="sol">
 			<transforms>
-				<transform type="translate" to="-15 5 0" />
-				<transform type="scale" factor="10 10 10" />
+				<transform type="translate" to="0 5 0" />
+				<transform type="scale" factor="25 25 25" />
 			</transforms>
 
-			<appearanceref id="inherit" />
+			<appearanceref id="sun"/>
 
 			<primitives>
 			</primitives>
@@ -175,11 +268,14 @@
 		<node id="mercurio">
 
 			<transforms>
-				<transform type="translate" to="0 5 0" />
-				<transform type="scale" factor="0.6 0.6 0.6" />
+
+				<transform type="rotate" axis="y" angle="180" />
+				<transform type="rotate" axis="z" angle="10" />
+				<transform type="translate" to="30 5 0"/>
+				<transform type="scale" factor="0.6 0.6 0.6"/>
 			</transforms>
 
-			<appearanceref id="inherit" />
+			<appearanceref id="mercury" />
 
 			<primitives>
 			</primitives>
@@ -192,11 +288,14 @@
 		<node id="venus">
 
 			<transforms>
-				<transform type="translate" to="2.6 5 0" />
+
+				<transform type="rotate" axis="y" angle="47" />
+				<transform type="rotate" axis="z" angle="-5" />
+				<transform type="translate" to="34.6 5 0" />
 				<transform type="scale" factor="0.8 0.8 0.8" />
 			</transforms>
 
-			<appearanceref id="inherit" />
+			<appearanceref id="venus" />
 
 			<primitives>
 			</primitives>
@@ -209,11 +308,13 @@
 		<node id="terra">
 
 			<transforms>
-				<transform type="translate" to="7 5 0" />
+
+				<transform type="translate" to="42 5 0" />
 				<transform type="scale" factor="1 1 1" />
+				<transform type="rotate" axis="x" angle="-90"/>
 			</transforms>
 
-			<appearanceref id="inherit" />
+			<appearanceref id="earth" />
 
 			<primitives>
 			</primitives>
@@ -226,11 +327,16 @@
 		<node id="marte">
 
 			<transforms>
-				<transform type="translate" to="10 5 0" />
+
+				<transform type="rotate" axis="y" angle="279" />
+				
+				<transform type="rotate" axis="z" angle="-15" />
+				<transform type="translate" to="47 5 0" />
 				<transform type="scale" factor="0.9 0.9 0.9" />
+				<transform type="rotate" axis="x" angle="-90"/>
 			</transforms>
 
-			<appearanceref id="inherit" />
+			<appearanceref id="mars" />
 
 			<primitives>
 			</primitives>
@@ -243,12 +349,15 @@
 		<node id="jupiter">
 
 			<transforms>
-				<transform type="translate" to="20 5 0" />
-				<transform type="scale" factor="3 3 3" />
+
+				<transform type="rotate" axis="y" angle="320" />
+				<transform type="rotate" axis="z" angle="17" />
+				<transform type="translate" to="60 5 0" />
+				<transform type="scale" factor="4 4 4" />
+				<transform type="rotate" axis="x" angle="-40"/>
 			</transforms>
 
-			<appearanceref id="inherit" />
-
+			<appearanceref id="jupiter" />
 			<primitives>
 			</primitives>
 
@@ -260,11 +369,15 @@
 		<node id="saturno">
 
 			<transforms>
-				<transform type="translate" to="28 5 0" />
-				<transform type="scale" factor="2.5 2.5 2.5" />
+
+				<transform type="rotate" axis="y" angle="20" />
+				<transform type="rotate" axis="z" angle="-12" />
+				<transform type="translate" to="72 5 0" />
+				<transform type="scale" factor="3 3 3" />
+				<transform type="rotate" axis="x" angle="-90"/>
 			</transforms>
 
-			<appearanceref id="inherit" />
+			<appearanceref id="saturn" />
 
 			<primitives>
 			</primitives>
@@ -278,11 +391,14 @@
 		<node id="urano">
 
 			<transforms>
-				<transform type="translate" to="34 5 0" />
-				<transform type="scale" factor="1.3 1.3 1.3" />
+
+				<transform type="rotate" axis="y" angle="130" />
+				<transform type="rotate" axis="z" angle="5" />
+				<transform type="translate" to="80 5 0" />
+				<transform type="scale" factor="1.8 1.8 1.8" />
 			</transforms>
 
-			<appearanceref id="inherit" />
+			<appearanceref id="uranus" />
 
 			<primitives>
 			</primitives>
@@ -295,11 +411,14 @@
 		<node id="neptuno">
 
 			<transforms>
-				<transform type="translate" to="39 5 0" />
-				<transform type="scale" factor="1.1 1.1 1.1" />
+
+				<transform type="rotate" axis="y" angle="69" />
+				<transform type="rotate" axis="z" angle="-3" />
+				<transform type="translate" to="86 5 0" />
+				<transform type="scale" factor="1.5 1.5 1.5" />
 			</transforms>
 
-			<appearanceref id="inherit" />
+			<appearanceref id="neptune" />
 
 			<primitives>
 			</primitives>
@@ -312,11 +431,10 @@
 		
 		<node id="anel"> 
 			<transforms> 
-				<transform type="rotate" axis="x" angle="20" />
 				<transform type="scale" factor="1 1 0.05"/>
 			</transforms> 
 
-			<appearanceref id="inherit"/> 
+			<appearanceref id="rings"/> 
 			<primitives> 
 				<torus inner="0.2" outer="1.5" slices="25" loops="25"/> 
 			</primitives> 

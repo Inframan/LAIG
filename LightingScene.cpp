@@ -102,9 +102,9 @@ void LightingScene::init()
 	{
 
 		float pos[4] = {mIt->getPos()[0],mIt->getPos()[1],mIt->getPos()[2],1.0};
-		float ambient[4] = {mIt->getAmbient()[0],mIt->getAmbient()[i],mIt->getAmbient()[2],mIt->getAmbient()[3]};
-		float diffuse[4] =  {mIt->getDiffuse()[0],mIt->getDiffuse()[i],mIt->getDiffuse()[2],mIt->getDiffuse()[3]};
-		float specular[4] =  {mIt->getSpecular()[0],mIt->getSpecular()[i],mIt->getSpecular()[2],mIt->getSpecular()[3]};
+		float ambient[4] = {mIt->getAmbient()[0],mIt->getAmbient()[1],mIt->getAmbient()[2],mIt->getAmbient()[3]};
+		float diffuse[4] =  {mIt->getDiffuse()[0],mIt->getDiffuse()[1],mIt->getDiffuse()[2],mIt->getDiffuse()[3]};
+		float specular[4] =  {mIt->getSpecular()[0],mIt->getSpecular()[1],mIt->getSpecular()[2],mIt->getSpecular()[3]};
 		CGFlight* newLight;
 
 		if( mIt->getType() == "spot")
@@ -248,10 +248,10 @@ void LightingScene::drawNode(Node *n)
 
 	glPushMatrix();
 	glMultMatrixf(m);
+	
 	if(n->getAppearenceRef() != "inherit"){
 		if( n->getAppearence()->getTextureref()!= "" )
 		{
-			n->getAppearence()->getAppearance()->setTexture( n->getAppearence()->getTexture()->getFile().c_str());
 			n->getAppearence()->getAppearance()->apply();
 		}
 		else
@@ -291,14 +291,14 @@ void LightingScene::drawNode(Node *n)
 	vector<cylinder> c = n->getCylinder();
 	for(vector<cylinder>::iterator cIt=c.begin(); cIt!=c.end();cIt++)
 	{
-		drawCylinder(cIt->getCoords(),cIt->getStacks(),cIt->getSlices());
+		cIt->draw();
 	}
 
 	vector<sphere> s = n->getSphere();
 	for(vector<sphere>::iterator sIt=s.begin(); sIt !=s.end();sIt++)
 	{
 
-		drawSphere( sIt->getRadius(),sIt->getStacks(),sIt->getSlices());
+		sIt->draw();
 	}
 
 	vector<torus> to = n->getTorus();
@@ -317,53 +317,6 @@ void LightingScene::drawNode(Node *n)
 
 }
 
-void LightingScene::drawSphere(float radius,int stacks,int slices)
-{
-	GLUquadric * quad;
-
-	quad = gluNewQuadric();
-	gluQuadricTexture(quad,GL_TRUE);
-	gluQuadricDrawStyle(quad,GLU_FILL);
-	gluQuadricNormals(quad,GLU_SMOOTH);
-	gluQuadricOrientation(quad,GLU_OUTSIDE);
-
-	gluSphere(quad,radius,slices,stacks);
-
-
-	gluDeleteQuadric(quad);
-}
-
-void LightingScene::drawCylinder(vector<float> coords,int stacks,int slices)
-{
-	GLUquadric * quad,*disk1,*disk2;
-
-	quad = gluNewQuadric();
-	disk1 = gluNewQuadric();
-	disk2 = gluNewQuadric();
-
-	gluQuadricTexture(quad,GL_TRUE);
-	gluQuadricTexture(disk1,GL_TRUE);
-	gluQuadricTexture(disk2,GL_TRUE);
-
-	gluQuadricDrawStyle(quad,GLU_FILL);
-	gluQuadricNormals(quad,GLU_SMOOTH);
-	gluQuadricOrientation(quad,GLU_OUTSIDE);
-
-	gluCylinder(quad,coords[0],coords[1],coords[2],slices,stacks);
-
-	glPushMatrix();
-	glTranslated(0,0,coords[2]);
-	gluDisk(disk1,0,coords[1],slices,stacks);
-	glPopMatrix();
-
-	glPushMatrix();
-	glRotated(180,0,1,0);
-	gluDisk(disk2,0,coords[0],slices,stacks);
-	glPopMatrix();
-
-	gluDeleteQuadric(quad);
-	gluDeleteQuadric(disk1);
-}
 
 void LightingScene::drawRectangle(vector<float> coords,Texture* t)
 {

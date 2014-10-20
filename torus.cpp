@@ -7,6 +7,27 @@ torus::torus(float inner, float outer, int slices, int loops)
 	this->outer = outer;
 	this->slices= slices;
 	this->loops = loops;
+
+	pi = acos(-1.0);
+	majorStep = 2.0f*pi / slices;   
+	minorStep = 2.0f*pi / loops; 
+
+	for (int i=0; i<slices; i++)    
+	{   
+		double a0 = i * majorStep;   
+		x.push_back(cos(a0));
+		y.push_back(sin(a0));   
+		for (int j=0; j<=loops; ++j)    
+		{   
+			double b = j * minorStep;   
+			c.push_back(cos(b));
+			r.push_back(inner * c[j] + outer);   
+			z.push_back(inner *sin(b));	
+		}   
+		glEnd();   
+	}   
+
+
 }
 
 float torus::getInner()const
@@ -32,40 +53,40 @@ void torus::draw()
 	float vNormal[3];   
 	double majorStep = 2.0f*pi / slices;   
 	double minorStep = 2.0f*pi / loops;   
-	int i, j;   
 
-	for (i=0; i<slices; ++i)    
+	for (int i=0; i<slices; ++i)    
 	{   
-		double a0 = i * majorStep;   
-		double a1 = a0 + majorStep;   
-		GLfloat x0 = (GLfloat) cos(a0);   
-		GLfloat y0 = (GLfloat) sin(a0);   
-		GLfloat x1 = (GLfloat) cos(a1);   
-		GLfloat y1 = (GLfloat) sin(a1);   
 
 		glBegin(GL_TRIANGLE_STRIP);   
-		for (j=0; j<=loops; ++j)    
+		for (int j=0; j<=loops; ++j)    
 		{   
-			double b = j * minorStep;   
-			GLfloat c = (GLfloat) cos(b);   
-			GLfloat r = inner * c + outer;   
-			GLfloat z = inner * (GLfloat) sin(b);   
 
 			// First point   
 			glTexCoord2f((float)(i)/(float)(loops), (float)(j)/(float)(slices));   
-			vNormal[0] = x0*c;   
-			vNormal[1] = y0*c;   
-			vNormal[2] = z/inner;   
+			vNormal[0] = x[i]*c[j];   
+			vNormal[1] = y[i]*c[j];   
+			vNormal[2] = z[j]/inner;   
 			//gltNormalizeVector(vNormal);   
 			glNormal3fv(vNormal);   
-			glVertex3f(x0*r, y0*r, z);   
+			glVertex3f(x[i]*r[j], y[i]*r[j], z[j]);   
 
 			glTexCoord2f((float)(i+1)/(float)(loops), (float)(j)/(float)(slices));   
-			vNormal[0] = x1*c;   
-			vNormal[1] = y1*c;   
-			vNormal[2] = z/inner;   
+			if(i+1 < slices)
+			{
+			vNormal[0] = x[i+1]*c[j];   
+			vNormal[1] = y[i+1]*c[j];
+			vNormal[2] = z[j]/inner;   
 			glNormal3f(vNormal[0],vNormal[1],vNormal[2]);   
-			glVertex3f(x1*r, y1*r, z);   
+			glVertex3f(x[i+1]*r[j], y[i+1]*r[j], z[j]);   
+			}
+			else
+			{
+			vNormal[0] = x[0]*c[j];   
+			vNormal[1] = y[0]*c[j];
+			vNormal[2] = z[j]/inner;   
+			glNormal3f(vNormal[0],vNormal[1],vNormal[2]);   
+			glVertex3f(x[0]*r[j], y[0]*r[j], z[j]);   
+			}
 		}   
 		glEnd();   
 	}   

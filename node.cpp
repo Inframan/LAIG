@@ -27,12 +27,13 @@ void Node:: setMatrix(float m[4][4])
 void Node::setAppearenceRef(string appRef)
 {
 	this->appRef=appRef;
+
 }
 
 void Node::setAppearence(Appearence* app)
 {
 	this->app=app;
-
+	app->getAppearance()->setTexture(getAppearence()->getTexture()->getFile().c_str());
 }
 
 Appearence* Node::getAppearence()const{

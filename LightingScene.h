@@ -31,8 +31,6 @@ public:
 	void drawTriangle(vector<float> coords,Texture* t);	
 	void drawTriangle(vector<float> coords);
 	void drawNode(Node *n);
-	void drawCylinder(vector<float> coords,int stacks,int slices);
-	void drawSphere(float radius,int stacks,int slices);
 
 
 
