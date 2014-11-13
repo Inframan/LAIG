@@ -22,19 +22,6 @@
 
             </light>
 
-             <light id="l2" type="omni" enabled="false" marker="true" pos="-20 -20 -20" >
-               <component type="ambient" value="0.0 0.0 0.0 0.1" />
-               <component type="diffuse" value="0.5 0.5 1.0 0.4" />
-               <component type="specular" value="0.0 0.8 1.0 0.4" />
-
-            </light>
-
-             <light id="spot" type="spot" enabled="false" marker="true" pos="0 5 5" target="0 5 0" angle="5" exponent="100.0">
-               <component type="ambient" value="0.0 0.0 0.0 0.1" />
-               <component type="diffuse" value="1.0 0.0 0.0 1" />
-               <component type="specular" value="0.0 0.0 0.0 0.4"/>
-           </light>
-
 
 			<light id="sunR" type="spot" enabled="true" marker="false" pos="0 -500 0" target="0 5 0" angle="4" exponent="100.0">
                <component type="ambient" value="0.0 0.0 0.0 0.1" />
@@ -374,7 +361,7 @@
 				<transform type="rotate" axis="z" angle="-12" />
 				<transform type="translate" to="72 5 0" />
 				<transform type="scale" factor="3 3 3" />
-				<transform type="rotate" axis="x" angle="-90"/>
+				<transform type="rotate" axis="x" angle="90"/>
 			</transforms>
 
 			<appearanceref id="saturn" />
