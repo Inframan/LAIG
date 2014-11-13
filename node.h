@@ -15,6 +15,8 @@ class Node
 {
 	string id;
 	string appRef;
+	bool displayList;
+	GLuint theList;//the one and only DISPLAYLIST
 	vector<string> descendants;
 	vector<Node*> descendantNode;
 	vector<primitive*> primitives;
@@ -24,6 +26,7 @@ public:
 	float matrix[16];
 	Node();
 	Node(string id);
+	Node(string id,bool dL);
 	void setMatrix(float m[4][4]);
 	void setAppearenceRef(string appRef);
 	void setAppearence(Appearence* app);
@@ -41,7 +44,10 @@ public:
 	vector<Node *> getDescendantNode() const { return descendantNode;}
 	float* getMatrix()const;
 	void setDescendants(vector<Node *> descendantNode);
-
+	void setIsDisplayList(bool d){displayList = d;}
+	bool isDisplayList()const{return displayList;}
+	GLuint getDisplayList()const{return theList;}
+	void setDisplayList(GLuint list){theList = list;}
 
 	~Node(void);
 };

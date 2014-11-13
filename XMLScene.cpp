@@ -461,7 +461,21 @@ XMLScene::XMLScene(char *filename, sceneGraph * graph)
 
 		while (node)
 		{
-			Node node1 = Node(node->Attribute("id"));
+			
+			char * displayList = NULL;
+			bool dL;
+			displayList = (char*) node->Attribute("displaylist");
+
+			if(displayList)
+			{
+				if(strcmp(displayList,"true")==0)
+					dL = true;
+				else
+					dL = false;
+				Node node1 = Node(node->Attribute("id"),dL);
+			}
+			else
+				Node node1 = Node(node->Attribute("id"));
 
 			printf("Node id '%s' - Descendants:\n",node->Attribute("id"));
 			TiXmlElement * transforms = node->FirstChildElement();

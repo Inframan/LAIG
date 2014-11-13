@@ -21,6 +21,8 @@ unsigned int lightArray[8] = {GL_LIGHT0,GL_LIGHT1,GL_LIGHT2,GL_LIGHT3,GL_LIGHT4,
 
 void LightingScene::init() 
 {
+	Appearence * t = NULL;
+	createDisplayLists(pgraph.getRootNode(),t);
 
 	glClearColor(pgraph.getBackground()[0], pgraph.getBackground()[1], pgraph.getBackground()[2], pgraph.getBackground()[3]);
 
@@ -236,46 +238,76 @@ void LightingScene::setGraph(sceneGraph graph)
 
 void LightingScene::drawNode(Node *n,Appearence * t)
 {
-
-	glPushMatrix();
-	glMultMatrixf(n->matrix);
-
-	if(n->getAppearence())
-		t = n->getAppearence();
-	if(t)
-		t->getAppearance()->apply();
-
-	vector<primitive*> p = n->getPrimitives();
-
-	for(vector<primitive*>::iterator pIt = p.begin(); pIt < p.end();pIt++)
+	if(n->isDisplayList())
+		glCallList(n->getDisplayList());
+	else
 	{
+		glPushMatrix();
+		glMultMatrixf(n->matrix);
+
+		if(n->getAppearence())
+			t = n->getAppearence();
 		if(t)
-			if(t->getTexture())
-				if(dynamic_cast<triangle*>((*pIt)))
-				{
-					dynamic_cast<triangle*>((*pIt))->draw(t->getTexture());
-				}
-				else if(dynamic_cast<rectangle*>((*pIt)))
-				{
-					dynamic_cast<rectangle*>((*pIt))->draw(t->getTexture());
-				}
+			t->getAppearance()->apply();
+
+		vector<primitive*> p = n->getPrimitives();
+
+		for(vector<primitive*>::iterator pIt = p.begin(); pIt < p.end();pIt++)
+		{
+			if(t)
+				if(t->getTexture())
+					if(dynamic_cast<triangle*>((*pIt)))
+					{
+						dynamic_cast<triangle*>((*pIt))->draw(t->getTexture());
+					}
+					else if(dynamic_cast<rectangle*>((*pIt)))
+					{
+						dynamic_cast<rectangle*>((*pIt))->draw(t->getTexture());
+					}
+					else
+						(*pIt)->draw();
 				else
 					(*pIt)->draw();
 			else
 				(*pIt)->draw();
-		else
-			(*pIt)->draw();
+		}
+
+
+		vector<Node*> nV = n->getDescendantNode();
+
+		for(vector<Node*>::iterator nIt = nV.begin(); nIt != nV.end();nIt++)
+			drawNode(*nIt,t);
+
+		glPopMatrix();
 	}
-
-
-	vector<Node*> nV = n->getDescendantNode();
-
-	for(vector<Node*>::iterator nIt = nV.begin(); nIt != nV.end();nIt++)
-		drawNode(*nIt,t);
-
-	glPopMatrix();
-
 
 }
 
 
+void LightingScene::createDisplayLists(Node * node,Appearence *t)
+{
+
+	GLuint theList;
+
+	if(node->getAppearence())
+		t = node->getAppearence();
+	if(t)
+		t->getAppearance()->apply();
+
+	for(int i = 0; i < node->getDescendants.size();i++)
+	{
+		createDisplayLists(node->getDescendants[i],t);
+	}
+
+	if(node->isDisplayList())
+	{
+		theList = glGenLists(1);
+		node->setIsDisplayList(false);
+		glNewList(theList,GL_COMPILE);
+		drawNode(node,t);
+		glEndList();
+		node->setIsDisplayList(true);
+		node->setDisplayList(theList);
+	}
+
+}

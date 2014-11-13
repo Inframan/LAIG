@@ -27,7 +27,7 @@ public:
 	void setAppearences();
 	void setGraph(sceneGraph pgraph);
 	void drawNode(Node *n,Appearence * t);
-
+	void createDisplayLists(Node * node,Appearence * t);
 
 
 	CGFappearance* materialA;

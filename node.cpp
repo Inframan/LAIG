@@ -4,14 +4,22 @@
 Node::Node()
 {
 	app = NULL;
+	displayList = false;
 }
 
 Node::Node(string id)
 {
 	this->id = id;
 	app = NULL;
+	displayList = false;
 }
 
+Node::Node(string id,bool dL)
+{
+	this->id = id;
+	app = NULL;
+	displayList = dL;
+}
 void Node:: setMatrix(float m[4][4])
 {
 	for(int i = 0; i < 4;i++)
