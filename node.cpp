@@ -86,6 +86,12 @@ void Node::addPlane(int parts)
 	primitives.push_back(new plane(parts));
 }
 
+
+void Node::addPatch(int order,int partsU,int partsV,string compute,float ** controlPoints)
+{
+	primitives.push_back(new patch(order,partsU,partsV,compute,controlPoints));
+}
+
 float* Node::getMatrix() const
  {
 	 return (float*) matrix;

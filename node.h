@@ -10,6 +10,7 @@
 #include "camera.h"
 #include "Appearence.h"
 #include "plane.h"
+#include "patch.h"
 
 using namespace std;
 
@@ -41,6 +42,7 @@ public:
 	void addSphere(float radius, int slices,int stacks);
 	void addTorus(float inner, float outer, int slices, int loops);
 	void addPlane(int parts);
+	void addPatch(int order,int partsU,int partsV,string compute,float ** controlPoints);
 	vector<primitive*> getPrimitives()const;
 	string getID() const {return id;}
 	vector<string> getDescendants()const { return descendants;}

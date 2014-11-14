@@ -21,7 +21,7 @@ int main(int argc, char* argv[]) {
 	sceneGraph graph;
 	sceneGraph * pgraph = new sceneGraph();
 	pgraph = &graph;
-	char* filename = "myScene.anf";
+	char* filename = "myTest.anf";
 	if (argc >1)
 		filename = argv[1];
 	CGFapplication app = CGFapplication();

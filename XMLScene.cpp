@@ -674,14 +674,65 @@ XMLScene::XMLScene(char *filename, sceneGraph * graph)
 					int parts;
 					char * partsS =NULL;
 					partsS = (char*)primitivesDef->Attribute("parts");
-					printf("  - Type id: '%s'\n", parts);
+					printf("  - Type id: '%s'\n", partsS);
 							
-					if(sscanf(partsS,"%s",&parts) ==1)
+					if(sscanf(partsS,"%d",&parts) ==1)
 						node1.addPlane(parts);
 
 					primitivesDef = primitivesDef->NextSiblingElement("plane");
 				}
+			//	<patch order=”ii” partsU=”ii” partsV=”ii” compute=”ss”>
+            //<controlpoint x=”ff” y=”ff” z=”ff” />
 
+				
+				primitivesDef = primitives->FirstChildElement("patch");
+
+				while(primitivesDef)
+				{
+					int pU,pV,od;
+					char * partsU =NULL;					
+					char * partsV =NULL;										
+					char * order =NULL;
+					char * compute =NULL;
+
+					order = (char*)primitivesDef->Attribute("order");
+					partsU = (char*)primitivesDef->Attribute("partsU");
+					partsV = (char*)primitivesDef->Attribute("partsV");
+							
+					TiXmlElement * controlPoint = primitivesDef->FirstChildElement();
+					if(sscanf(partsU,"%d",&pU) ==1 && sscanf(partsV,"%d",&pV) ==1 && sscanf(order,"%d",&od) ==1)
+					{
+						float cx,cy,cz;
+						char * sY = NULL,*sX = NULL,*sZ = NULL;
+						int ctrlPtsN = (od+1)*(od+1);
+						float ** controlPoints = (float**) malloc(ctrlPtsN);
+						for(int i = 0; i < ctrlPtsN;i++)
+						{
+							if(controlPoint)
+							{
+							controlPoints[i] = (float*)malloc(3);
+							sZ = (char *) controlPoint->Attribute("z");							
+							sY = (char *) controlPoint->Attribute("y");
+							sX = (char *) controlPoint->Attribute("x");
+							if(sscanf(sX,"%f",&cx) ==1 && sscanf(sY,"%f",&cy) ==1 && sscanf(sZ,"%f",&cz) ==1)
+							{
+								controlPoints[i][0] = cx;
+								controlPoints[i][1] = cy;
+								controlPoints[i][2] = cz;
+							}
+							controlPoint = controlPoint->NextSiblingElement();
+							}
+							else
+							{
+								exit(1);
+							}
+						}
+						
+						node1.addPatch(od,pU,pV,compute,controlPoints);
+					}
+
+					primitivesDef = primitivesDef->NextSiblingElement("patch");
+				}
 
 			}
 
