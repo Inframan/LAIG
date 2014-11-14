@@ -256,16 +256,7 @@ void LightingScene::drawNode(Node *n,Appearence * t)
 		{
 			if(t)
 				if(t->getTexture())
-					if(dynamic_cast<triangle*>((*pIt)))
-					{
-						dynamic_cast<triangle*>((*pIt))->draw(t->getTexture());
-					}
-					else if(dynamic_cast<rectangle*>((*pIt)))
-					{
-						dynamic_cast<rectangle*>((*pIt))->draw(t->getTexture());
-					}
-					else
-						(*pIt)->draw();
+					(*pIt)->draw(t->getTexture());					
 				else
 					(*pIt)->draw();
 			else
@@ -294,10 +285,12 @@ void LightingScene::createDisplayLists(Node * node,Appearence *t)
 	if(t)
 		t->getAppearance()->apply();
 
-	for(int i = 0; i < node->getDescendants.size();i++)
-	{
-		createDisplayLists(node->getDescendants[i],t);
-	}
+	
+	vector<Node*> nV = node->getDescendantNode();
+
+	for(vector<Node*>::iterator nIt = nV.begin(); nIt != nV.end();nIt++)
+			createDisplayLists(*nIt,t);
+
 
 	if(node->isDisplayList())
 	{

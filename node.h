@@ -9,6 +9,8 @@
 #include "sphere.h"
 #include "camera.h"
 #include "Appearence.h"
+#include "plane.h"
+
 using namespace std;
 
 class Node
@@ -38,6 +40,7 @@ public:
 	void addCylinder(float base,float top,float height,int slices,int stacks);
 	void addSphere(float radius, int slices,int stacks);
 	void addTorus(float inner, float outer, int slices, int loops);
+	void addPlane(int parts);
 	vector<primitive*> getPrimitives()const;
 	string getID() const {return id;}
 	vector<string> getDescendants()const { return descendants;}

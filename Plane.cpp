@@ -1,47 +1,68 @@
-#include "Plane.h"
-#include <GL/glu.h>
+#include "plane.h"
 
 
-Plane::Plane(void)
-{
-	_numDivisions = 1;
-}
-
-Plane::Plane(int n)
-{
-	_numDivisions = n;
-}
 
 
-Plane::~Plane(void)
+plane::plane(void)
 {
 }
 
-void Plane::draw()
+plane::plane(int p)
 {
-	glPushMatrix();
-		glRotatef(180.0,1,0,0);
-		glTranslatef(-0.5,0.0,-0.5);
-		glScalef(1.0/(double) _numDivisions, 1 ,1.0/(double) _numDivisions);
-		glNormal3f(0,-1,0);
 
-		for (int bx = 0; bx<_numDivisions; bx++)
+	parts = p;
+	ctrlpoints = (float***) malloc(parts);
+
+	float coords = 1/parts;
+
+	for(int i = 0; i < parts;i++)
+	{
+		ctrlpoints[i] = (float**) malloc(parts);
+		for(int j = 0;j < parts;j++)
 		{
-			glBegin(GL_TRIANGLE_STRIP);
-			glTexCoord2d(bx/(_numDivisions*1.0) ,0);
-			glVertex3f(bx, 0, 0);
-				for (int bz = 0; bz<_numDivisions; bz++)
-				{
-					glTexCoord2d((bx+1)/(_numDivisions*1.0)  ,bz/(_numDivisions*1.0));
-					glVertex3f(bx + 1, 0, bz);
-					glTexCoord2d(bx/(_numDivisions*1.0)  ,(bz+1)/(_numDivisions*1.0));
-					glVertex3f(bx, 0, bz + 1);
-				}
-				glTexCoord2d((bx+1)/(_numDivisions*1.0)  , 1);
-				glVertex3d(bx+ 1, 0, _numDivisions);
-
-			glEnd();
+			ctrlpoints[i][j] = (float *) malloc(3);
+			ctrlpoints[i][j][0] = i*coords;
+			ctrlpoints[i][j][1] = 0;
+			ctrlpoints[i][j][2] = j*coords;
 		}
-	glPopMatrix();
 
+	}
+
+	nrmcomponents = (float ***)malloc(parts);
+	for(int i = 0; i < parts;i++)
+	{
+		nrmcomponents[i] = (float**) malloc(parts);
+		for(int j = 0;j < parts;j++)
+		{
+			nrmcomponents[i][j] = (float *) malloc(3);
+			nrmcomponents[i][j][0] = 0.0;
+			nrmcomponents[i][j][1] = 1.0;
+			nrmcomponents[i][j][2] = 0.0;
+		}
+
+	}
+
+	for(int i = 0; i < parts;i++)
+	{
+		texpoints[i] = (float**) malloc(parts);
+		for(int j = 0;j < parts;j++)
+		{
+			texpoints[i][j] = (float *) malloc(3);
+			texpoints[i][j][0] = i*coords;
+			texpoints[i][j][1] = j*coords;
+		}
+
+	}
+
+
+}
+
+
+void plane::draw()
+{
+
+}
+
+plane::~plane(void)
+{
 }

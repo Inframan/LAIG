@@ -1,19 +1,17 @@
 #pragma once
-
-#include "CGFobject.h"
-#include "CGFappearance.h"
-//há uma função para calcular as distancias
-
-class Plane
+#include "primitive.h"
+class plane :
+	public primitive
 {
-public:
-	Plane(void);
-	Plane(int);
-	~Plane(void);
-	void draw();
+	int parts;
+	float ***ctrlpoints;
+	float ***nrmcomponents;
+	float ***texpoints;
 
-	//glTextlevelparameter
-private:
-	int _numDivisions; // Number of triangles that constitute rows/columns
+public:
+	plane(void);
+	plane(int p);
+	void draw();
+	~plane(void);
 };
 

@@ -461,7 +461,7 @@ XMLScene::XMLScene(char *filename, sceneGraph * graph)
 
 		while (node)
 		{
-			
+			Node node1;
 			char * displayList = NULL;
 			bool dL;
 			displayList = (char*) node->Attribute("displaylist");
@@ -472,10 +472,10 @@ XMLScene::XMLScene(char *filename, sceneGraph * graph)
 					dL = true;
 				else
 					dL = false;
-				Node node1 = Node(node->Attribute("id"),dL);
+				node1 = Node(node->Attribute("id"),dL);
 			}
 			else
-				Node node1 = Node(node->Attribute("id"));
+				node1 = Node(node->Attribute("id"));
 
 			printf("Node id '%s' - Descendants:\n",node->Attribute("id"));
 			TiXmlElement * transforms = node->FirstChildElement();
@@ -663,6 +663,23 @@ XMLScene::XMLScene(char *filename, sceneGraph * graph)
 						node1.addTorus(inner,outer,slices,loops);
 
 					primitivesDef = primitivesDef->NextSiblingElement("torus");
+				}
+
+
+
+				primitivesDef = primitives->FirstChildElement("plane");
+
+				while(primitivesDef)
+				{
+					int parts;
+					char * partsS =NULL;
+					partsS = (char*)primitivesDef->Attribute("parts");
+					printf("  - Type id: '%s'\n", parts);
+							
+					if(sscanf(partsS,"%s",&parts) ==1)
+						node1.addPlane(parts);
+
+					primitivesDef = primitivesDef->NextSiblingElement("plane");
 				}
 
 

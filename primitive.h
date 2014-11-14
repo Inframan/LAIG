@@ -12,6 +12,7 @@ class primitive
 public:
 	primitive(void);
 	virtual void draw() =0;
+	virtual void draw(Texture * t){draw();}
 	~primitive(void);
 };
 

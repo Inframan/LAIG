@@ -81,6 +81,11 @@ void Node::addTorus(float inner, float outer, int slices, int loops)
 	primitives.push_back(new torus(inner,outer,slices,loops));
 }
 
+void Node::addPlane(int parts)
+{
+	primitives.push_back(new plane(parts));
+}
+
 float* Node::getMatrix() const
  {
 	 return (float*) matrix;
