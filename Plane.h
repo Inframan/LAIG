@@ -4,9 +4,6 @@ class plane :
 	public primitive
 {
 	int parts;
-	float ***ctrlpoints;
-	float ***nrmcomponents;
-	float ***texpoints;
 
 public:
 	plane(void);
