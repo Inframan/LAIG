@@ -150,6 +150,22 @@ vector<float> sceneGraph::getAmbient() const
 	return lAmbient;
 }
 
+
+void sceneGraph::addAnimation(animation* anime)
+{
+	animations[anime->getId()] = anime;
+}
+
+map<string,animation*> sceneGraph::getAnimations()const
+{
+	return animations;
+}
+
+animation* sceneGraph::getAnimation(string id)
+{
+	return animations[id];
+}
+
 void sceneGraph::addAppearence(Appearence appearence){
 	appearences[appearence.getID()] = appearence;	
 }

@@ -130,7 +130,7 @@
 
 	<graph rootid="1">
 
-		<node id="1">
+		<node id="1" >
 
 			<transforms>
 			</transforms>
@@ -173,7 +173,7 @@
 			</descendants>
 		</node>
 
-		<node id="disc">
+		<node id="disc" >
 			<transforms>
 				<transform type="scale" factor="1 1 2" />
 			</transforms>

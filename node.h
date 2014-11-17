@@ -11,6 +11,7 @@
 #include "Appearence.h"
 #include "plane.h"
 #include "patch.h"
+#include "animation.h"
 
 using namespace std;
 
@@ -24,7 +25,7 @@ class Node
 	vector<Node*> descendantNode;
 	vector<primitive*> primitives;
 	Appearence * app;
-
+	vector<animation *> animations;
 public:
 	float matrix[16];
 	Node();
@@ -53,7 +54,7 @@ public:
 	bool isDisplayList()const{return displayList;}
 	GLuint getDisplayList()const{return theList;}
 	void setDisplayList(GLuint list){theList = list;}
-
+	void addAnimation(animation* anime);
 	~Node(void);
 };
 

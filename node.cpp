@@ -107,6 +107,11 @@ void Node::setDescendants(vector<Node*> descendantNode){
 	this->descendantNode=descendantNode;
 }
 
+void Node::addAnimation(animation* anime)
+{
+	animations.push_back(anime);
+}
+
 Node::~Node(void)
 {
 }

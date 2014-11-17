@@ -6,6 +6,7 @@
 #include "tinyxml.h"
 #include "orthogonal.h"
 #include "perspective.h"
+#include "linearAnimation.h"
 
 class XMLScene
 {
@@ -18,7 +19,8 @@ public:
 protected:
 
 	TiXmlDocument* doc;
-
+	
+	TiXmlElement* animeElement;
 	TiXmlElement* globElement; 
 	TiXmlElement* lightsElement;
 	TiXmlElement* textsElement;

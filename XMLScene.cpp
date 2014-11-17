@@ -24,7 +24,7 @@ XMLScene::XMLScene(char *filename, sceneGraph * graph)
 	}
 
 
-
+	animeElement = anfElement->FirstChildElement( "animations" );
 	globElement = anfElement->FirstChildElement( "globals" );
 	camerasElement = anfElement->FirstChildElement( "cameras" );
 	lightsElement = anfElement->FirstChildElement( "lights" );
@@ -36,6 +36,58 @@ XMLScene::XMLScene(char *filename, sceneGraph * graph)
 	// Init
 	// An example of well-known, required nodes
 
+
+
+	if(animeElement)
+	{
+		TiXmlElement* anime = animeElement->FirstChildElement();
+
+		while(anime)
+		{
+			char* type = (char*) anime->Attribute("type");
+			char * id = NULL;
+			char * stringVal = NULL;
+			float span;
+
+			id = (char *) anime->Attribute("id");
+			stringVal =  (char *) anime->Attribute("span	");
+			if(sscanf(stringVal,"%f",&span) == 1)
+			{
+				if(strcmp(type,"linear") == 0)
+				{
+					linearAnimation * lAnime = new linearAnimation(id,span);
+					TiXmlElement* outOfControl = anime->FirstChildElement();
+					while(outOfControl)
+					{
+						float x,y,z;
+						char* cX = NULL,*cY = NULL,*cZ = NULL;
+						cX = (char*) outOfControl->Attribute("xx");
+						cY = (char*) outOfControl->Attribute("yy");
+						cZ = (char*) outOfControl->Attribute("zz");
+
+						if(sscanf(cX,"%f",&x) == 1 && sscanf(cY,"%f",&y) == 1 && sscanf(cZ,"%f",&z) == 1)	
+							lAnime->addPoint(x,y,z);
+						else
+						{
+							printf("ERROR WITH ANIMATION\N");
+							exit(1);
+						}
+							
+						outOfControl = outOfControl->NextSiblingElement();
+					}
+					lAnime->calculateTotalDistance();
+					graph->addAnimation(lAnime);
+
+				}
+				else if(strcmp(type,"circular") == 0)
+				{
+				}
+			}
+
+		}
+
+
+	}
 
 	/////////GLOBAL VARIABLES
 	if (globElement == NULL)
@@ -423,17 +475,17 @@ XMLScene::XMLScene(char *filename, sceneGraph * graph)
 
 
 
-				
+
 				CGFappearance * app = new CGFappearance(ambientArray,diffuseArray,specularArray,shininess);
 				appearenceToSave.setAppearance(app);
 				for(int j= 0 ; j < graph->getTextures().size();j++){
 					if(textureref)
-					if (textureref == graph->getTextures()[j].getID())
-					{
-						Texture * text = new Texture();
-						(*text) = graph->getTextures()[j];
-						appearenceToSave.setTexture(text);
-					}
+						if (textureref == graph->getTextures()[j].getID())
+						{
+							Texture * text = new Texture();
+							(*text) = graph->getTextures()[j];
+							appearenceToSave.setTexture(text);
+						}
 				}
 				appearenceComponent = appearenceComponent->NextSiblingElement();
 
@@ -465,6 +517,18 @@ XMLScene::XMLScene(char *filename, sceneGraph * graph)
 			char * displayList = NULL;
 			bool dL;
 			displayList = (char*) node->Attribute("displaylist");
+			
+			TiXmlElement* animationRef = node->FirstChildElement("animationref");
+
+			while(animationRef)
+			{
+				char * aniRef = NULL;
+				aniRef = (char*) animationRef->Attribute("id");
+				node1.addAnimation(graph->getAnimation(aniRef));
+
+				animationRef = animationRef->NextSiblingElement("animationref");
+			}
+
 
 			if(displayList)
 			{
@@ -675,16 +739,16 @@ XMLScene::XMLScene(char *filename, sceneGraph * graph)
 					char * partsS =NULL;
 					partsS = (char*)primitivesDef->Attribute("parts");
 					printf("  - Type id: '%s'\n", partsS);
-							
+
 					if(sscanf(partsS,"%d",&parts) ==1)
 						node1.addPlane(parts);
 
 					primitivesDef = primitivesDef->NextSiblingElement("plane");
 				}
-			//	<patch order=”ii” partsU=”ii” partsV=”ii” compute=”ss”>
-            //<controlpoint x=”ff” y=”ff” z=”ff” />
+				//	<patch order=”ii” partsU=”ii” partsV=”ii” compute=”ss”>
+				//<controlpoint x=”ff” y=”ff” z=”ff” />
 
-				
+
 				primitivesDef = primitives->FirstChildElement("patch");
 
 				while(primitivesDef)
@@ -699,7 +763,7 @@ XMLScene::XMLScene(char *filename, sceneGraph * graph)
 					partsU = (char*)primitivesDef->Attribute("partsU");
 					partsV = (char*)primitivesDef->Attribute("partsV");
 					compute = (char*)primitivesDef->Attribute("compute");
-							
+
 					TiXmlElement * controlPoint = primitivesDef->FirstChildElement();
 					if(sscanf(partsU,"%d",&pU) ==1 && sscanf(partsV,"%d",&pV) ==1 && sscanf(order,"%d",&od) ==1)
 					{
@@ -707,29 +771,29 @@ XMLScene::XMLScene(char *filename, sceneGraph * graph)
 						char * sY = NULL,*sX = NULL,*sZ = NULL;
 						int ctrlPtsN = (od+1)*(od+1);
 						GLfloat ** controlPoints = (GLfloat**) malloc(ctrlPtsN *sizeof(float));
-						
+
 						for(int i = 0; i < ctrlPtsN;i++)
 						{
 							if(controlPoint)
 							{
-							controlPoints[i] = (GLfloat*)malloc(3*sizeof(float));
-							sZ = (char *) controlPoint->Attribute("z");							
-							sY = (char *) controlPoint->Attribute("y");
-							sX = (char *) controlPoint->Attribute("x");
-							if(sscanf(sX,"%f",&cx) ==1 && sscanf(sY,"%f",&cy) ==1 && sscanf(sZ,"%f",&cz) ==1)
-							{
-								controlPoints[i][0] = cx;
-								controlPoints[i][1] = cy;
-								controlPoints[i][2] = cz;
-							}
-							controlPoint = controlPoint->NextSiblingElement();
+								controlPoints[i] = (GLfloat*)malloc(3*sizeof(float));
+								sZ = (char *) controlPoint->Attribute("z");							
+								sY = (char *) controlPoint->Attribute("y");
+								sX = (char *) controlPoint->Attribute("x");
+								if(sscanf(sX,"%f",&cx) ==1 && sscanf(sY,"%f",&cy) ==1 && sscanf(sZ,"%f",&cz) ==1)
+								{
+									controlPoints[i][0] = cx;
+									controlPoints[i][1] = cy;
+									controlPoints[i][2] = cz;
+								}
+								controlPoint = controlPoint->NextSiblingElement();
 							}
 							else
 							{
 								exit(1);
 							}
 						}
-						
+
 						node1.addPatch(od,pU,pV,compute,controlPoints);
 					}
 
