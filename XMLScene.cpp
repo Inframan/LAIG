@@ -698,6 +698,7 @@ XMLScene::XMLScene(char *filename, sceneGraph * graph)
 					order = (char*)primitivesDef->Attribute("order");
 					partsU = (char*)primitivesDef->Attribute("partsU");
 					partsV = (char*)primitivesDef->Attribute("partsV");
+					compute = (char*)primitivesDef->Attribute("compute");
 							
 					TiXmlElement * controlPoint = primitivesDef->FirstChildElement();
 					if(sscanf(partsU,"%d",&pU) ==1 && sscanf(partsV,"%d",&pV) ==1 && sscanf(order,"%d",&od) ==1)
@@ -705,12 +706,13 @@ XMLScene::XMLScene(char *filename, sceneGraph * graph)
 						float cx,cy,cz;
 						char * sY = NULL,*sX = NULL,*sZ = NULL;
 						int ctrlPtsN = (od+1)*(od+1);
-						float ** controlPoints = (float**) malloc(ctrlPtsN);
+						GLfloat ** controlPoints = (GLfloat**) malloc(ctrlPtsN *sizeof(float));
+						
 						for(int i = 0; i < ctrlPtsN;i++)
 						{
 							if(controlPoint)
 							{
-							controlPoints[i] = (float*)malloc(3);
+							controlPoints[i] = (GLfloat*)malloc(3*sizeof(float));
 							sZ = (char *) controlPoint->Attribute("z");							
 							sY = (char *) controlPoint->Attribute("y");
 							sX = (char *) controlPoint->Attribute("x");
