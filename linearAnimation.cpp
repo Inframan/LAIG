@@ -15,10 +15,12 @@ linearAnimation::linearAnimation(void)
 	current_point = -1;
 	firstTime = true;
 	setFinish(false);
+	angle = 0.0;
 }
 
 linearAnimation::linearAnimation(string id,float span):animation(id,span)
 {
+	angle = 0.0;
 	dx = 0;
 	dy = 0;
 	dz = 0;
@@ -77,6 +79,7 @@ void linearAnimation::update(unsigned long t)
 void linearAnimation::transform()
 {
 	glTranslated(x,y,z);
+	glRotated(angle,0,1,0);
 }
 
 
@@ -121,6 +124,7 @@ bool linearAnimation::checkControlPoint()
 
 void linearAnimation::changeControlPoint()
 {
+	float odx = dx,ody =dy,odz = dz;
 	
 	current_point++;
 	int nextPoint = current_point+1;
@@ -139,6 +143,8 @@ void linearAnimation::changeControlPoint()
 		dy /= pointDistance;
 		dz /= pointDistance;
 
+		angle += acos(dx*odx+dy*ody+dz*odz) *(180/acos(-1.0));
+		
 		x = controlPoints[current_point][0];
 		y = controlPoints[current_point][1];
 		z = controlPoints[current_point][2];
