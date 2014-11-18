@@ -1,4 +1,18 @@
 <anf>
+
+<animations>
+<!-- pode não existir qualquer nó “animation” se a cena não tiver animações -->
+<!-- span é o tempo, em segundos, que a animação deve demorar *
+<!-- nesta versão do formato ANF, type pode ter o valor “linear” ou "circular" -->
+      <animation id="ss" span="100" type="linear">
+            <controlpoint xx="0" yy="0" zz="0" />
+            <controlpoint xx="10" yy="10" zz="10" />
+            <controlpoint xx="0" yy="0" zz="10" />
+      </animation>
+      <!--<animation id=”ss” span=”ff” type=”circular” center="ff ff ff" radius="ff" startang="ff" rotang="ff" /> -->
+</animations>
+
+
 	<globals>
 		<drawing mode="fill" shading="gouraud" background="0 0 0 0" />
 		<culling face="back" order="ccw" />
@@ -59,6 +73,8 @@
 	<graph rootid="1">
 
 		<node id="1">
+    
+      <animationref id="ss" />
 
 			<transforms>
 			</transforms>
@@ -66,7 +82,7 @@
 			<appearanceref id="FoguetaoAp" />
 
 			<primitives>
-				<!-- <plane parts="10" />-->
+				 <plane parts="10" />
 		<!--		--><patch order="3" partsU="5" partsV="5" compute="fill">
             		<controlpoint x="0" y="0" z="0" />
             		<controlpoint x="1" y="1" z="0" />

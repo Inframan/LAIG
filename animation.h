@@ -1,6 +1,7 @@
 #pragma once
 #include <string>
 #include <vector>
+#include "GL/glu.h"
 
 class animation
 {
@@ -18,6 +19,7 @@ public:
 	float getSpan()const;
 	void setFinish(bool f);
 	bool isFinished()const;
+	virtual void transform() =0;
 	~animation(void);
 };
 

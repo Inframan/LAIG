@@ -140,6 +140,11 @@ void sceneGraph::setDescendantNode(){
 	}
 }
 
+
+void sceneGraph::update(unsigned long millis)
+{
+	rootNode->update(millis);
+}
 void sceneGraph::addLight(myLight light)
 {
 	lights.push_back(light);

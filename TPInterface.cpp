@@ -61,6 +61,7 @@ void TPinterface::initGUI()
 			(char*)pgraph->getLights()[i].id.c_str(), NULL, i)->set_int_val(
 			0);
 	}
+
 	
 
 }

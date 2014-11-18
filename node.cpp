@@ -112,6 +112,20 @@ void Node::addAnimation(animation* anime)
 	animations.push_back(anime);
 }
 
+void Node::update(unsigned long millis)
+{
+	for(vector<animation *>::iterator it = animations.begin();it != animations.end();it++)
+	{
+		(*it)->update(millis);
+	}
+
+	for(vector<Node *>::iterator it = descendantNode.begin();it != descendantNode.end();it++)
+	{
+		(*it)->update(millis);
+	}
+
+}
+
 Node::~Node(void)
 {
 }

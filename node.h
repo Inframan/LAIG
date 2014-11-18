@@ -12,6 +12,7 @@
 #include "plane.h"
 #include "patch.h"
 #include "animation.h"
+#include "linearAnimation.h"
 
 using namespace std;
 
@@ -54,7 +55,9 @@ public:
 	bool isDisplayList()const{return displayList;}
 	GLuint getDisplayList()const{return theList;}
 	void setDisplayList(GLuint list){theList = list;}
+	vector<animation *> getAnimations()const{return animations;}
 	void addAnimation(animation* anime);
+	void update(unsigned long millis);
 	~Node(void);
 };
 

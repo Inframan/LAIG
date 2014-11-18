@@ -144,6 +144,8 @@ void LightingScene::init()
 	materialA = new CGFappearance(ambientNull,difA,specA,shininessA);
 	/*	materialB = new CGFappearance(ambientNull,difB,specB,shininessB);
 	*/
+
+	setUpdatePeriod(100);
 }
 
 void LightingScene::display() 
@@ -221,7 +223,7 @@ void LightingScene::display()
 
 void LightingScene::update(unsigned long millis)
 {
-
+	pgraph.update(millis);
 }
 
 LightingScene::~LightingScene() 
@@ -242,9 +244,14 @@ void LightingScene::drawNode(Node *n,Appearence * t)
 		glCallList(n->getDisplayList());
 	else
 	{
+		vector<animation*> temp = n->getAnimations();
 		glPushMatrix();
 		glMultMatrixf(n->matrix);
-
+		
+		for(vector<animation *>::iterator it = temp.begin();it != temp.end();it++)
+		{
+			(*it)->transform();
+		}
 		if(n->getAppearence())
 			t = n->getAppearence();
 		if(t)
@@ -262,7 +269,6 @@ void LightingScene::drawNode(Node *n,Appearence * t)
 			else
 				(*pIt)->draw();
 		}
-
 
 		vector<Node*> nV = n->getDescendantNode();
 

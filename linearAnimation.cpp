@@ -4,14 +4,30 @@ using namespace std;
 
 linearAnimation::linearAnimation(void)
 {
-	current_point = 0;
+	dx = 0;
+	dy = 0;
+	dz = 0;
+	x = 0;
+	y = 0;
+	z = 0;
+	totalDistance = 0;
+	speed = 0;
+	current_point = -1;
 	firstTime = true;
 	setFinish(false);
 }
 
 linearAnimation::linearAnimation(string id,float span):animation(id,span)
 {
-	current_point = 0;
+	dx = 0;
+	dy = 0;
+	dz = 0;
+	x = 0;
+	y = 0;
+	z = 0;
+	totalDistance = 0;
+	speed = 0;
+	current_point = -1;
 	firstTime = true;
 	setFinish(false);
 }
@@ -27,6 +43,8 @@ void linearAnimation::addPoint(float x,float y,float z)
 
 void linearAnimation::update(unsigned long t)
 {
+	
+
 	if(!isFinished())
 	{
 		if(firstTime)
@@ -37,16 +55,90 @@ void linearAnimation::update(unsigned long t)
 		}
 		else
 		{
-			unsigned long delta = t - firstTime;
-			float thisSpan = (float) (t - getStartTime())*1000;
+			unsigned long delta = t - getStartTime();
+			float thisSpan = (float) (t - getStartTime())/1000;
 			if(thisSpan > getSpan())
 			{
 				setFinish(true);
 			}
 
+			x += dx*speed*delta/1000;
+			y +=dy*speed*delta/1000;
+			z +=dz*speed*delta/1000;
+			if(checkControlPoint())
+				changeControlPoint();
 
 			previousTime = t;
 		}
+	}
+}
+
+void linearAnimation::transform()
+{
+	glTranslated(x,y,z);
+}
+
+
+bool linearAnimation::checkControlPoint()
+{
+	if(dx > 0)
+	{
+		if(x > controlPoints[current_point+1][0])
+			return true;
+	}
+	else	if(dx > 0)
+	{
+		if(x < controlPoints[current_point+1][0])
+			return true;
+	}
+
+	if(dy > 0)
+	{
+		if(y > controlPoints[current_point+1][1])
+			return true;
+	}
+	else if(dy > 0)
+	{
+		if(y < controlPoints[current_point+1][1])
+			return true;
+	}
+
+	if(dz > 0)
+	{
+		if(z > controlPoints[current_point+1][2])
+			return true;
+	}
+	else if(dz > 0)
+	{
+		if(z < controlPoints[current_point+1][2])
+			return true;
+	}
+
+	return false;
+}
+
+
+void linearAnimation::changeControlPoint()
+{
+	current_point++;
+	if(current_point == controlPoints.size()-1)
+		setFinish(true);
+	else
+	{
+		float pointDistance;
+		dx = controlPoints[current_point+1][0] - controlPoints[current_point][0];
+		dy = controlPoints[current_point+1][1] - controlPoints[current_point][1];
+		dz = controlPoints[current_point+1][2] - controlPoints[current_point][2];
+
+		pointDistance = sqrt(dx*dx + dy*dy+dz*dz);
+
+		dx /= pointDistance;
+		dy /= pointDistance;
+		dz /= pointDistance;
+
+		x = controlPoints[current_point][0];
+		y = controlPoints[current_point][1];
+		z = controlPoints[current_point][2];
 	}
 }
 
@@ -67,6 +159,10 @@ void linearAnimation::calculateTotalDistance()
 	}
 
 	speed = totalDistance / getSpan();
+
+	x = controlPoints[0][0];
+	y = controlPoints[0][1];
+	z = controlPoints[0][2];
 
 }
 

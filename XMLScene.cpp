@@ -50,7 +50,7 @@ XMLScene::XMLScene(char *filename, sceneGraph * graph)
 			float span;
 
 			id = (char *) anime->Attribute("id");
-			stringVal =  (char *) anime->Attribute("span	");
+			stringVal =  (char *) anime->Attribute("span");
 			if(sscanf(stringVal,"%f",&span) == 1)
 			{
 				if(strcmp(type,"linear") == 0)
@@ -75,7 +75,9 @@ XMLScene::XMLScene(char *filename, sceneGraph * graph)
 							
 						outOfControl = outOfControl->NextSiblingElement();
 					}
+					lAnime->changeControlPoint();
 					lAnime->calculateTotalDistance();
+					
 					graph->addAnimation(lAnime);
 
 				}
@@ -83,10 +85,10 @@ XMLScene::XMLScene(char *filename, sceneGraph * graph)
 				{
 				}
 			}
-
+			anime = anime->NextSiblingElement();
 		}
 
-
+		
 	}
 
 	/////////GLOBAL VARIABLES
@@ -520,16 +522,6 @@ XMLScene::XMLScene(char *filename, sceneGraph * graph)
 			
 			TiXmlElement* animationRef = node->FirstChildElement("animationref");
 
-			while(animationRef)
-			{
-				char * aniRef = NULL;
-				aniRef = (char*) animationRef->Attribute("id");
-				node1.addAnimation(graph->getAnimation(aniRef));
-
-				animationRef = animationRef->NextSiblingElement("animationref");
-			}
-
-
 			if(displayList)
 			{
 				if(strcmp(displayList,"true")==0)
@@ -541,8 +533,20 @@ XMLScene::XMLScene(char *filename, sceneGraph * graph)
 			else
 				node1 = Node(node->Attribute("id"));
 
+			while(animationRef)
+			{
+				char * aniRef = NULL;
+				aniRef = (char*) animationRef->Attribute("id");
+				node1.addAnimation(graph->animations.find(aniRef)->second);
+
+				animationRef = animationRef->NextSiblingElement("animationref");
+			}
+
+
+			
+
 			printf("Node id '%s' - Descendants:\n",node->Attribute("id"));
-			TiXmlElement * transforms = node->FirstChildElement();
+			TiXmlElement * transforms = node->FirstChildElement("transforms");
 			if (transforms == NULL)
 				printf("Transforms block not found!\n");
 			else //TRANSFORMACOES MATRICIAIS

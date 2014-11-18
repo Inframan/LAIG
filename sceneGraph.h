@@ -27,12 +27,12 @@ class sceneGraph
 	string rootCamera;
 	vector<camera *> cameras;
 	vector<myLight> lights;
-	map<string,animation *> animations;
 	vector<Texture> textures;
 	map<string ,Appearence> appearences;
 
 public:
 	
+	map<string,animation *> animations;
 	sceneGraph(void);
 	void setRootID(string id){rootId = id;}
 	void setDrawingMode(string mode);
@@ -73,6 +73,7 @@ public:
 	string getShading();
 	vector<float> getBackground()const;
 	void setDescendantNode();
+	void update(unsigned long millis);
 	~sceneGraph(void);
 };
 
