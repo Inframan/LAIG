@@ -1,7 +1,8 @@
 #pragma once
 #include <string>
+#include "CGFtexture.h"
 using namespace std;
-class Texture
+class Texture: public CGFtexture
 {
 	string id;
 	string file;

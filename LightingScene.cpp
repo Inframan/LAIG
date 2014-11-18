@@ -216,6 +216,10 @@ void LightingScene::display()
 
 	// ---- BEGIN Primitive drawing section
 
+	Flag f = Flag(new Appearence("foguetaoAp",0.8,"metal"));
+
+	f.draw();
+
 
 	glutSwapBuffers();
 }

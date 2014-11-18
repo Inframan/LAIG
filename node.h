@@ -13,6 +13,7 @@
 #include "patch.h"
 #include "animation.h"
 #include "linearAnimation.h"
+#include "Flag.h"
 
 using namespace std;
 
