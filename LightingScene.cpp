@@ -145,7 +145,7 @@ void LightingScene::init()
 	/*	materialB = new CGFappearance(ambientNull,difB,specB,shininessB);
 	*/
 
-	setUpdatePeriod(100);
+	setUpdatePeriod(1);
 }
 
 void LightingScene::display() 
@@ -216,10 +216,10 @@ void LightingScene::display()
 
 	// ---- BEGIN Primitive drawing section
 
-	Flag f = Flag(new Appearence("foguetaoAp",0.8,"metal"));
+	/*Flag f = Flag(new Appearence("foguetaoAp",0.8,"metal"));
 
 	f.draw();
-
+	*/
 
 	glutSwapBuffers();
 }
@@ -248,13 +248,17 @@ void LightingScene::drawNode(Node *n,Appearence * t)
 		glCallList(n->getDisplayList());
 	else
 	{
-		vector<animation*> temp = n->getAnimations();
+		
 		glPushMatrix();
 		glMultMatrixf(n->matrix);
 		
-		for(vector<animation *>::iterator it = temp.begin();it != temp.end();it++)
+		for(vector<animation *>::iterator it = n->animations.begin();it != n->animations.end();it++)
 		{
-			(*it)->transform();
+			if(!(*it)->isFinished())
+			{
+				(*it)->transform();
+				break;
+			}
 		}
 		if(n->getAppearence())
 			t = n->getAppearence();

@@ -116,7 +116,11 @@ void Node::update(unsigned long millis)
 {
 	for(vector<animation *>::iterator it = animations.begin();it != animations.end();it++)
 	{
-		(*it)->update(millis);
+		if(!(*it)->isFinished())
+		{
+			(*it)->update(millis);
+			break;
+		}
 	}
 
 	for(vector<Node *>::iterator it = descendantNode.begin();it != descendantNode.end();it++)

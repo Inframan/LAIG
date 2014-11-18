@@ -55,16 +55,17 @@ void linearAnimation::update(unsigned long t)
 		}
 		else
 		{
-			unsigned long delta = t - getStartTime();
+			float delta = (t - previousTime)/1000.0;
 			float thisSpan = (float) (t - getStartTime())/1000;
-			if(thisSpan > getSpan())
+			float span = getSpan();
+			if(thisSpan > span)
 			{
 				setFinish(true);
 			}
 
-			x += dx*speed*delta/1000;
-			y +=dy*speed*delta/1000;
-			z +=dz*speed*delta/1000;
+			x += dx*speed*delta;
+			y +=dy*speed*delta;
+			z +=dz*speed*delta;
 			if(checkControlPoint())
 				changeControlPoint();
 
@@ -86,7 +87,7 @@ bool linearAnimation::checkControlPoint()
 		if(x > controlPoints[current_point+1][0])
 			return true;
 	}
-	else	if(dx > 0)
+	else	if(dx < 0)
 	{
 		if(x < controlPoints[current_point+1][0])
 			return true;
@@ -97,7 +98,7 @@ bool linearAnimation::checkControlPoint()
 		if(y > controlPoints[current_point+1][1])
 			return true;
 	}
-	else if(dy > 0)
+	else if(dy < 0)
 	{
 		if(y < controlPoints[current_point+1][1])
 			return true;
@@ -108,7 +109,7 @@ bool linearAnimation::checkControlPoint()
 		if(z > controlPoints[current_point+1][2])
 			return true;
 	}
-	else if(dz > 0)
+	else if(dz < 0)
 	{
 		if(z < controlPoints[current_point+1][2])
 			return true;
@@ -120,15 +121,17 @@ bool linearAnimation::checkControlPoint()
 
 void linearAnimation::changeControlPoint()
 {
+	
 	current_point++;
-	if(current_point == controlPoints.size()-1)
+	int nextPoint = current_point+1;
+	if(nextPoint == controlPoints.size())
 		setFinish(true);
 	else
 	{
 		float pointDistance;
-		dx = controlPoints[current_point+1][0] - controlPoints[current_point][0];
-		dy = controlPoints[current_point+1][1] - controlPoints[current_point][1];
-		dz = controlPoints[current_point+1][2] - controlPoints[current_point][2];
+		dx = controlPoints[nextPoint][0] - controlPoints[current_point][0];
+		dy = controlPoints[nextPoint][1] - controlPoints[current_point][1];
+		dz = controlPoints[nextPoint][2] - controlPoints[current_point][2];
 
 		pointDistance = sqrt(dx*dx + dy*dy+dz*dz);
 
@@ -151,13 +154,13 @@ void linearAnimation::calculateTotalDistance()
 	{
 		p1 = controlPoints[i];
 		p2 = controlPoints[i+1];
-		float x = p1[0]-p2[0];
-		float y = p1[1]-p2[1];
-		float z = p1[2]-p2[2];
+		float d1 = p1[0]-p2[0];
+		float d2 = p1[1]-p2[1];
+		float d3 = p1[2]-p2[2];
 
-		totalDistance += sqrt(x*x + y*y+z*z);
+		totalDistance += sqrt(d1*d1 + d2*d2+d3*d3);
 	}
-
+	float span = getSpan();
 	speed = totalDistance / getSpan();
 
 	x = controlPoints[0][0];

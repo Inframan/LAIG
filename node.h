@@ -27,8 +27,8 @@ class Node
 	vector<Node*> descendantNode;
 	vector<primitive*> primitives;
 	Appearence * app;
-	vector<animation *> animations;
 public:
+	vector<animation *> animations;
 	float matrix[16];
 	Node();
 	Node(string id);
