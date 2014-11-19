@@ -7,6 +7,7 @@
 #include "orthogonal.h"
 #include "perspective.h"
 #include "linearAnimation.h"
+#include "circularAnimation.h"
 
 class XMLScene
 {

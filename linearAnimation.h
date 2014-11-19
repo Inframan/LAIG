@@ -11,9 +11,11 @@ class linearAnimation :
 	float speed;
 	float dx,dy,dz;//increments
 	float x,y,z;//current position
+	float angle;
 public:
 	linearAnimation(void);
 	linearAnimation(std::string id,float span );
+	linearAnimation(std::string id,float span,bool loop );
 	void addPoint(float x,float y,float z);
 	void update(unsigned long t);
 	void calculateTotalDistance();
