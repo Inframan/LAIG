@@ -1,18 +1,27 @@
-// Getting values from application
-
-uniform float normScale;
 varying vec4 coords;
 
+uniform float delta;
+uniform float wind;
+
+const float PI = 3.14159265358979;
+
+const float heightMultiplier = 0.04;
+const float offsetMultiplier = 0.4;
+
 void main() {
+	
+	float angle = gl_MultiTexCoord0.s * wind;
+	float offset = offsetMultiplier * wind * delta;
 
-	// Displace a vertex in the direction of its normal, with a scale factor)
-	gl_Position = gl_ModelViewProjectionMatrix * (gl_Vertex+vec4(gl_Normal*normScale*0.1,0.0));
-
+	vec4 newCoord = vec4(gl_Vertex.x, gl_Vertex.y + (sin((angle + offset) * PI) * heightMultiplier), gl_Vertex.z, 1.0);
+	
+	gl_Position = gl_ModelViewProjectionMatrix * newCoord;
+	
 	// set the RGB components of "gl_FrontColor" (built-in varying) to the XYZ components of the normal (and alpha=1)
 	// these values will be received interpolated in the fragment shader as "gl_Color"
-	gl_FrontColor = vec4(gl_Normal,1.0);
+	gl_FrontColor = vec4(1.0, 1.0, 1.0 ,1.0);
 	
-	// set the custom varying "coords" to the original vertex coordinates
-	// these will be interpolated in the fragment shader
-	coords=gl_Vertex;
+	gl_TexCoord[0] = gl_MultiTexCoord0;
+	
+	coords = newCoord * 4.0;
 }
