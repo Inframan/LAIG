@@ -618,7 +618,7 @@ XMLScene::XMLScene(char *filename, sceneGraph * graph)
 				id = (char*) appearanceref->Attribute("id");
 				string ID(id);
 				node1.setAppearenceRef(ID);
-				if(ID != "inherit" && ID!= "")
+				if(ID != "inherit")
 				{
 					Appearence *app = new Appearence();
 					(*app) = graph->getAppearence().find(ID)->second;
