@@ -86,9 +86,9 @@ void Node::addPlane(int parts)
 	primitives.push_back(new plane(parts));
 }
 
-void Node::addFlag(Texture* text){
+void Node::addFlag(CGFtexture* texture){
 
-	primitives.push_back(new Flag(text));
+	primitives.push_back(new Flag(texture));
 }
 
 void Node::addPatch(int order,int partsU,int partsV,string compute,float ** controlPoints)

@@ -16,7 +16,8 @@ class FlagShader : public CGFshader{
 
 	friend class Flag;
 
-	Texture * text;
+	
+	CGFtexture * text;
 	int textLoc;
 
 	int wind;
@@ -28,7 +29,7 @@ class FlagShader : public CGFshader{
 	float startTime;
 
 public:
-	FlagShader(Texture * text);
+	FlagShader(CGFtexture * text);
 
 	virtual void bind();
 	virtual void unbind();
@@ -47,7 +48,7 @@ class Flag: public plane
 
 public:
 
-	Flag(Texture * text);
+	Flag(CGFtexture* text);
 	void draw();
 	void update(unsigned long t);
 	void setWind(int wind);

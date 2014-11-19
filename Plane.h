@@ -8,7 +8,7 @@ class plane :
 public:
 	plane(void);
 	plane(int p);
-	void draw();
+	virtual void draw();
 	~plane(void);
 	void setWind(int wind){}
 };

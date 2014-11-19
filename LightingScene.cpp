@@ -264,18 +264,18 @@ void LightingScene::drawNode(Node *n,Appearence * t)
 		}
 		if(n->getAppearence())
 			t = n->getAppearence();
-		if(t)
-			t->getAppearance()->apply();
 
 		vector<primitive*> p = n->getPrimitives();
 
 		for(vector<primitive*>::iterator pIt = p.begin(); pIt < p.end();pIt++)
 		{
-			if(t)
+			if(t){
+				t->getAppearance()->apply();
 				if(t->getTexture())
 					(*pIt)->draw(t->getTexture());					
 				else
 					(*pIt)->draw();
+			}
 			else
 				(*pIt)->draw();
 		}

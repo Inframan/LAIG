@@ -47,7 +47,7 @@ public:
 	void addTorus(float inner, float outer, int slices, int loops);
 	void addPlane(int parts);
 	void addPatch(int order,int partsU,int partsV,string compute,float ** controlPoints);
-	void addFlag(Texture* text);
+	void addFlag(CGFtexture* texture);
 	vector<primitive*> getPrimitives()const;
 	string getID() const {return id;}
 	vector<string> getDescendants()const { return descendants;}

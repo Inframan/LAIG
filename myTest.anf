@@ -94,7 +94,7 @@
 			<appearanceref id="FoguetaoAp" />
 
 			<primitives>
-				<flag texture="textures/metal.jpg" />
+				<flag texture="textures/flag.jpg" />
 			</primitives>
 
 			<descendants>

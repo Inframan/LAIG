@@ -5,7 +5,7 @@
 #include <GL/glut.h>
 #include "Flag.h"
 
-FlagShader::FlagShader(Texture * text)
+FlagShader::FlagShader(CGFtexture * text)
 {
 
 	this->text = text;
@@ -38,10 +38,9 @@ FlagShader::FlagShader(Texture * text)
 
 
 
-Flag::Flag(Texture * text): plane(30)
+Flag::Flag(CGFtexture* texture): plane(30)
 {
-	
-	this->fshader = new FlagShader(text);
+	fshader = new FlagShader(texture);
 
 }
 
@@ -50,16 +49,15 @@ void FlagShader::bind()
 {
 	CGFshader::bind();
 
-	
 	glUniform1f(windLoc, wind);
 	glUniform1f(deltaLoc, delta);
 
 	// make sure the correct texture unit is active
 	glActiveTexture(GL_TEXTURE0);
-
+	text->apply();
 	// apply/activate the texture you want, so that it is bound to GL_TEXTURE0
 	//((CGFtexture*) text)->apply();
-	text->apply();
+	
 }
 
 void FlagShader::unbind()

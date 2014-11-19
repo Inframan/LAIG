@@ -72,12 +72,12 @@ XMLScene::XMLScene(char *filename, sceneGraph * graph)
 							printf("ERROR WITH ANIMATION\N");
 							exit(1);
 						}
-							
+
 						outOfControl = outOfControl->NextSiblingElement();
 					}
 					lAnime->changeControlPoint();
 					lAnime->calculateTotalDistance();
-					
+
 					graph->addAnimation(lAnime);
 
 				}
@@ -88,7 +88,7 @@ XMLScene::XMLScene(char *filename, sceneGraph * graph)
 			anime = anime->NextSiblingElement();
 		}
 
-		
+
 	}
 
 	/////////GLOBAL VARIABLES
@@ -519,7 +519,7 @@ XMLScene::XMLScene(char *filename, sceneGraph * graph)
 			char * displayList = NULL;
 			bool dL;
 			displayList = (char*) node->Attribute("displaylist");
-			
+
 			TiXmlElement* animationRef = node->FirstChildElement("animationref");
 
 			if(displayList)
@@ -543,7 +543,7 @@ XMLScene::XMLScene(char *filename, sceneGraph * graph)
 			}
 
 
-			
+
 
 			printf("Node id '%s' - Descendants:\n",node->Attribute("id"));
 			TiXmlElement * transforms = node->FirstChildElement("transforms");
@@ -607,7 +607,7 @@ XMLScene::XMLScene(char *filename, sceneGraph * graph)
 				node1.setMatrix(m);
 			}
 
-			TiXmlElement * appearanceref = transforms->NextSiblingElement();
+			TiXmlElement * appearanceref = transforms->NextSiblingElement("appearanceref");
 			if (appearanceref == NULL)
 				printf("Appearance block not found!\n");
 			else //Definir aparencia do nó
@@ -616,9 +616,13 @@ XMLScene::XMLScene(char *filename, sceneGraph * graph)
 				char* id = NULL;
 
 				id = (char*) appearanceref->Attribute("id");
+				if(!id)
+				{
+					id = "";
+				}
 				string ID(id);
 				node1.setAppearenceRef(ID);
-				if(ID != "inherit")
+				if(ID != "inherit" && ID!="")
 				{
 					Appearence *app = new Appearence();
 					(*app) = graph->getAppearence().find(ID)->second;
@@ -627,7 +631,7 @@ XMLScene::XMLScene(char *filename, sceneGraph * graph)
 				}
 			}
 
-			TiXmlElement *primitives = appearanceref->NextSiblingElement();
+			TiXmlElement *primitives = transforms->NextSiblingElement("primitives");
 			if (primitives == NULL)
 				printf("Primitives block not found!\n");
 			else //Definir primitivas
@@ -813,12 +817,8 @@ XMLScene::XMLScene(char *filename, sceneGraph * graph)
 					printf("  - filepath: '%s'\n", primitivesDef->Attribute("texture"));
 
 					text = (char *) primitivesDef->Attribute("texture");
-					id = (char *) primitivesDef->Attribute("texture");
 					string texture(text);
-					string ID(id);
-					Texture *t = new Texture(id,texture,1,1);
-					if(t!=NULL)
-						node1.addFlag(t);
+					node1.addFlag(new CGFtexture(texture));
 
 					primitivesDef = primitivesDef->NextSiblingElement("flag");
 				}
