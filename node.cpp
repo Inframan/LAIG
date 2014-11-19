@@ -86,6 +86,10 @@ void Node::addPlane(int parts)
 	primitives.push_back(new plane(parts));
 }
 
+void Node::addFlag(Texture* text){
+
+	primitives.push_back(new Flag(text));
+}
 
 void Node::addPatch(int order,int partsU,int partsV,string compute,float ** controlPoints)
 {
@@ -114,6 +118,8 @@ void Node::addAnimation(animation* anime)
 
 void Node::update(unsigned long millis)
 {
+
+
 	for(vector<animation *>::iterator it = animations.begin();it != animations.end();it++)
 	{
 		if(!(*it)->isFinished())
@@ -121,6 +127,11 @@ void Node::update(unsigned long millis)
 			(*it)->update(millis);
 			break;
 		}
+	}
+
+	for (vector<primitive*>::iterator it = primitives.begin();it !=primitives.end(); it++)
+	{
+		(*it)->update(millis);
 	}
 
 	for(vector<Node *>::iterator it = descendantNode.begin();it != descendantNode.end();it++)

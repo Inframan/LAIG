@@ -804,6 +804,25 @@ XMLScene::XMLScene(char *filename, sceneGraph * graph)
 					primitivesDef = primitivesDef->NextSiblingElement("patch");
 				}
 
+				primitivesDef = primitives->FirstChildElement("flag");
+
+				while(primitivesDef)
+				{
+					char * text=NULL;
+					char * id=NULL;
+					printf("  - filepath: '%s'\n", primitivesDef->Attribute("texture"));
+
+					text = (char *) primitivesDef->Attribute("texture");
+					id = (char *) primitivesDef->Attribute("texture");
+					string texture(text);
+					string ID(id);
+					Texture *t = new Texture(id,texture,1,1);
+					if(t!=NULL)
+						node1.addFlag(t);
+
+					primitivesDef = primitivesDef->NextSiblingElement("flag");
+				}
+
 			}
 
 

@@ -101,12 +101,12 @@ GLfloat textpoints[4][2] = {	{ 0.0, 0.0},
 
 
 	glColor3f(1.0, 1.0, 0.0);
-	for (int i = 0; i < 4; i++)
+	/*for (int i = 0; i < 4; i++)
 	{
-		glRasterPos3f(ctrlpoints[i][0],ctrlpoints[i][1],ctrlpoints[i][2]+0.5);
+		//glRasterPos3f(ctrlpoints[i][0],ctrlpoints[i][1],ctrlpoints[i][2]+0.5);
 		//glutBitmapCharacter(GLUT_BITMAP_TIMES_ROMAN_24, '0'+i);
 	}
-
+	*/
 	glDisable(GL_TEXTURE_2D);
 	glDisable(GL_COLOR_MATERIAL);
 	
