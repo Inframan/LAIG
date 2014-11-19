@@ -119,7 +119,6 @@ void Node::update(unsigned long millis)
 		if(!(*it)->isFinished())
 		{
 			(*it)->update(millis);
-			if(!(*it)->getLoop())
 			break;
 		}
 	}

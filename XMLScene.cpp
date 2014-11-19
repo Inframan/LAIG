@@ -47,19 +47,7 @@ XMLScene::XMLScene(char *filename, sceneGraph * graph)
 			char* type = (char*) anime->Attribute("type");
 			char * id = NULL;
 			char * stringVal = NULL;
-			char * loopVal = NULL;
 			float span;
-			bool loop = false;
-
-			loopVal = (char*) anime->Attribute("loop");
-
-			if(loopVal)
-			{
-				if(strcmp(loopVal,"true")==0)
-					loop = true;
-				else
-					loop = false;				
-			}
 
 			id = (char *) anime->Attribute("id");
 			stringVal =  (char *) anime->Attribute("span");
@@ -67,9 +55,7 @@ XMLScene::XMLScene(char *filename, sceneGraph * graph)
 			{
 				if(strcmp(type,"linear") == 0)
 				{
-					
-					linearAnimation * lAnime= new linearAnimation(id,span,loop);
-
+					linearAnimation * lAnime = new linearAnimation(id,span);
 					TiXmlElement* outOfControl = anime->FirstChildElement();
 					while(outOfControl)
 					{
@@ -95,25 +81,8 @@ XMLScene::XMLScene(char *filename, sceneGraph * graph)
 					graph->addAnimation(lAnime);
 
 				}
-				//<animation id=”ss” span=”ff” type=”circular” center="ff ff ff" radius="ff" startang="ff" rotang="ff" />
 				else if(strcmp(type,"circular") == 0)
 				{
-					char * valCentre = NULL;
-					char * valRadius = NULL;
-					char * valRotAng = NULL;
-					char * valStAng = NULL;
-					float cx,cy,cz,rotAng,startAng,radius;
-					valCentre = (char *) anime->Attribute("center");
-					valRadius = (char *)anime->Attribute("radius");
-					valRotAng =(char *) anime->Attribute("rotang");
-					valStAng = (char *)anime->Attribute("startang");
-					if(sscanf(valCentre,"%f %f %f",&cx,&cy,&cz) == 3 && sscanf(valRadius,"%f",&radius) == 1 && sscanf(valRotAng,"%f",&rotAng) == 1  && sscanf(valStAng,"%f",&startAng) == 1)	
-					{
-
-					circularAnimation * cAnime = new circularAnimation(id,span,cx,cy,cz,rotAng,startAng,radius,loop);
-						
-					graph->addAnimation(cAnime);
-					}
 				}
 			}
 			anime = anime->NextSiblingElement();
