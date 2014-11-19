@@ -11,7 +11,6 @@ class linearAnimation :
 	float speed;
 	float dx,dy,dz;//increments
 	float x,y,z;//current position
-	float angle;
 public:
 	linearAnimation(void);
 	linearAnimation(std::string id,float span );
