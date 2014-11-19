@@ -15,6 +15,7 @@ class linearAnimation :
 public:
 	linearAnimation(void);
 	linearAnimation(std::string id,float span );
+	linearAnimation(std::string id,float span,bool loop );
 	void addPoint(float x,float y,float z);
 	void update(unsigned long t);
 	void calculateTotalDistance();

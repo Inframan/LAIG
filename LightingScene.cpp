@@ -257,7 +257,8 @@ void LightingScene::drawNode(Node *n,Appearence * t)
 			if(!(*it)->isFinished())
 			{
 				(*it)->transform();
-				break;
+				if(!(*it)->getLoop())
+					break;
 			}
 		}
 		if(n->getAppearence())
