@@ -91,10 +91,10 @@
          <transform type="rotate" axis="z" angle="90" />
 			</transforms>
 
-			<appearanceref id="FoguetaoAp" />
+			<appearanceref id="" />
 
 			<primitives>
-				<flag texture="textures/metal.jpg" />
+				<flag texture="textures/flag.jpg" />
 			</primitives>
 
 			<descendants>

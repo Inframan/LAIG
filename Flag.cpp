@@ -56,10 +56,10 @@ void FlagShader::bind()
 
 	// make sure the correct texture unit is active
 	glActiveTexture(GL_TEXTURE0);
-
+	text->apply();
 	// apply/activate the texture you want, so that it is bound to GL_TEXTURE0
 	//((CGFtexture*) text)->apply();
-	text->apply();
+	
 }
 
 void FlagShader::unbind()
@@ -108,7 +108,7 @@ void Flag::draw()
 {
 	fshader->bind();
 		
-	plane::draw();
+	draw();
 
 	fshader->unbind();
 
