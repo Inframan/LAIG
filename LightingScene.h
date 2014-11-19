@@ -16,6 +16,7 @@ public:
 	sceneGraph pgraph;
 	int  activCam;
 	int wire;
+	int wind;
 	int light0On, light1On, light2On, light3On;
 	void init();
 	void display();

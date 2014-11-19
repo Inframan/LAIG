@@ -204,7 +204,13 @@ vector<camera *> sceneGraph::getCameras() const
 	return cameras;
 }
 
+void sceneGraph::updateWind(int wind){
 
+	Node * n = getRootNode();
+
+
+	n->updateWind(wind);
+}
 
 sceneGraph::~sceneGraph(void)
 {

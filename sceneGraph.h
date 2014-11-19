@@ -74,6 +74,8 @@ public:
 	vector<float> getBackground()const;
 	void setDescendantNode();
 	void update(unsigned long millis);
+	void updateWind(int wind);
+	
 	~sceneGraph(void);
 };
 

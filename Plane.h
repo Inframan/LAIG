@@ -10,5 +10,6 @@ public:
 	plane(int p);
 	void draw();
 	~plane(void);
+	void setWind(int wind){}
 };
 

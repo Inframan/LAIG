@@ -86,6 +86,9 @@
 		<node id="1">
     
 			<transforms>
+         <transform type="translate" to="0 5 0" />
+         <transform type="rotate" axis="y" angle="90" />
+         <transform type="rotate" axis="z" angle="90" />
 			</transforms>
 
 			<appearanceref id="FoguetaoAp" />

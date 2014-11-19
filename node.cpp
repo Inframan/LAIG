@@ -40,11 +40,11 @@ void Node::setAppearence(Appearence* app)
 {
 	this->app=app;
 	if(app->getTextureref() != "")
-	app->getAppearance()->setTexture(getAppearence()->getTexture()->getFile().c_str());
+		app->getAppearance()->setTexture(getAppearence()->getTexture()->getFile().c_str());
 }
 
 Appearence* Node::getAppearence()const{
-return app;
+	return app;
 }
 
 string Node::getAppearenceRef()const
@@ -97,9 +97,9 @@ void Node::addPatch(int order,int partsU,int partsV,string compute,float ** cont
 }
 
 float* Node::getMatrix() const
- {
-	 return (float*) matrix;
- }
+{
+	return (float*) matrix;
+}
 
 vector<primitive*> Node::getPrimitives()const
 {
@@ -111,10 +111,12 @@ void Node::setDescendants(vector<Node*> descendantNode){
 	this->descendantNode=descendantNode;
 }
 
+
 void Node::addAnimation(animation* anime)
 {
 	animations.push_back(anime);
 }
+
 
 void Node::update(unsigned long millis)
 {
@@ -137,6 +139,19 @@ void Node::update(unsigned long millis)
 	for(vector<Node *>::iterator it = descendantNode.begin();it != descendantNode.end();it++)
 	{
 		(*it)->update(millis);
+	}
+
+}
+
+void Node::updateWind(int wind)
+{
+	for(vector<primitive*>::iterator it = primitives.begin();it!=primitives.end();it++)
+	{
+		(*it)->setWind(wind);
+	}
+	for(vector<Node*>::iterator it = descendantNode.begin();it!=descendantNode.end();it++)
+	{
+		(*it)->updateWind(wind);
 	}
 
 }

@@ -226,7 +226,10 @@ void LightingScene::display()
 
 void LightingScene::update(unsigned long millis)
 {
+	pgraph.updateWind(wind);
 	pgraph.update(millis);
+	
+	
 }
 
 LightingScene::~LightingScene() 

@@ -28,6 +28,7 @@ class Node
 	vector<primitive*> primitives;
 	Appearence * app;
 public:
+	
 	vector<animation *> animations;
 	float matrix[16];
 	Node();
@@ -60,6 +61,7 @@ public:
 	vector<animation *> getAnimations()const{return animations;}
 	void addAnimation(animation* anime);
 	void update(unsigned long millis);
+	void updateWind(int wind);
 	~Node(void);
 };
 

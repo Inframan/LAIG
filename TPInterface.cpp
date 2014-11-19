@@ -25,6 +25,8 @@ void TPinterface::initGUI()
 
 	int* wire = &(((LightingScene*) scene)->wire);
 
+	int* wind = &(((LightingScene*) scene)->wind);
+
 	int * cam = &(((LightingScene*) scene)->activCam);
 
 	// Check CGFinterface.h and GLUI documentation for the types of controls available
@@ -62,7 +64,11 @@ void TPinterface::initGUI()
 			0);
 	}
 
-	
+	addColumnToPanel(varPanel);
+	GLUI_Panel *windpanel = addPanelToPanel(varPanel, "Wind", 1);
+	GLUI_Spinner *spin=   addSpinnerToPanel(windpanel,"wind",GLUI_SPINNER_INT,wind,11);
+
+	spin->set_int_limits(0,11,GLUI_LIMIT_WRAP);	
 
 }
 
@@ -70,7 +76,7 @@ void TPinterface::initGUI()
 void TPinterface::processGUI(GLUI_Control *ctrl)
 {
 
-	if (ctrl->user_id >= 0)
+	if (ctrl->user_id >= 0 && ctrl->user_id <11)
 		if (ctrl->get_int_val() == 1) {
 			pgraph->getLights()[ctrl->user_id].enabled = true;
 			((LightingScene *) scene)->lightsVector[ctrl->user_id]->enable();
