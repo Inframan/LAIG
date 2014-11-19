@@ -8,8 +8,23 @@ animation::animation(void)
 
 animation::animation(string id,float span)
 {
+	this->finished = false;
 	this->id = id;
 	this->span = span;
+	this->loop = false;
+}
+
+animation::animation(string id,float span,bool loop)
+{
+	this->finished = false;
+	this->id = id;
+	this->span = span;
+	this->loop = loop;
+}
+
+bool animation::getLoop()const
+{
+	return loop;
 }
 
 string animation::getId()const
