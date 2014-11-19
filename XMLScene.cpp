@@ -809,21 +809,20 @@ XMLScene::XMLScene(char *filename, sceneGraph * graph)
 						float cx,cy,cz;
 						char * sY = NULL,*sX = NULL,*sZ = NULL;
 						int ctrlPtsN = (od+1)*(od+1);
-						GLfloat ** controlPoints = (GLfloat**) malloc(ctrlPtsN *sizeof(float));
-
+					//	GLfloat ** controlPoints = (GLfloat**) malloc(ctrlPtsN *sizeof(float));
+						vector<float> controlPoints;
 						for(int i = 0; i < ctrlPtsN;i++)
 						{
 							if(controlPoint)
 							{
-								controlPoints[i] = (GLfloat*)malloc(3*sizeof(float));
 								sZ = (char *) controlPoint->Attribute("z");							
 								sY = (char *) controlPoint->Attribute("y");
 								sX = (char *) controlPoint->Attribute("x");
 								if(sscanf(sX,"%f",&cx) ==1 && sscanf(sY,"%f",&cy) ==1 && sscanf(sZ,"%f",&cz) ==1)
 								{
-									controlPoints[i][0] = cx;
-									controlPoints[i][1] = cy;
-									controlPoints[i][2] = cz;
+									controlPoints.push_back(cx);
+									controlPoints.push_back(cy);
+									controlPoints.push_back(cz);
 								}
 								controlPoint = controlPoint->NextSiblingElement();
 							}
@@ -850,6 +849,16 @@ XMLScene::XMLScene(char *filename, sceneGraph * graph)
 					text = (char *) primitivesDef->Attribute("texture");
 					string texture(text);
 					node1.addFlag(new CGFtexture(texture));
+
+					primitivesDef = primitivesDef->NextSiblingElement("flag");
+				}
+
+				
+				primitivesDef = primitives->FirstChildElement("vehicle");
+
+				while(primitivesDef)
+				{
+					node1.addOvni();
 
 					primitivesDef = primitivesDef->NextSiblingElement("flag");
 				}

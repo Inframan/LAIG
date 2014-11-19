@@ -91,9 +91,14 @@ void Node::addFlag(CGFtexture* texture){
 	primitives.push_back(new Flag(texture));
 }
 
-void Node::addPatch(int order,int partsU,int partsV,string compute,float ** controlPoints)
+void Node::addPatch(int order,int partsU,int partsV,string compute,vector<float> controlPoints)
 {
 	primitives.push_back(new patch(order,partsU,partsV,compute,controlPoints));
+}
+
+void Node::addOvni()
+{
+	primitives.push_back(new ovni());
 }
 
 float* Node::getMatrix() const

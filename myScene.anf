@@ -1,4 +1,35 @@
 <anf>
+	
+	<animations>
+<!-- pode não existir qualquer nó “animation” se a cena não tiver animações -->
+<!-- span é o tempo, em segundos, que a animação deve demorar *
+<!-- nesta versão do formato ANF, type pode ter o valor “linear” ou "circular" -->
+      <!--<animation id="ss" span="10" type="linear">
+            <controlpoint xx="0" yy="0" zz="0" />
+            <controlpoint xx="10" yy="10" zz="10" />
+            <controlpoint xx="0" yy="0" zz="0" />
+            <controlpoint xx="7" yy="0" zz="7" />
+            <controlpoint xx="7" yy="0" zz="0" />
+            <controlpoint xx="0" yy="5" zz="3" />
+      </animation> -->
+      <animation id="AniMercurio" span="30" type="circular" center="-45 5 0" radius="37" startang="0" rotang="360" loop="true"/>
+      <animation id="Anivenus" span="37" type="circular" center="-49 5 0" radius="44.6" startang="0" rotang="360" loop="true"/>
+      <animation id="Aniterra" span="40" type="circular" center="-57 5 0" radius="52" startang="0" rotang="360" loop="true"/>
+      <animation id="Animarte" span="45" type="circular" center="-62 5 0" radius="57" startang="0" rotang="360" loop="true"/>
+      <animation id="Anijupiter" span="50" type="circular" center="-75 5 0" radius="70" startang="0" rotang="360" loop="true"/>
+      <animation id="Anisaturno" span="70" type="circular" center="-87 5 0" radius="82" startang="0" rotang="360" loop="true"/>
+      <animation id="Aniurano" span="89" type="circular" center="-95 5 0" radius="90" startang="0" rotang="360" loop="true"/>
+      <animation id="Anineptuno" span="100" type="circular" center="-101 5 0" radius="96" startang="0" rotang="360" loop="true"/>
+ 
+   <animation id="Aniovni" span="3" type="linear" loop="true">
+            <controlpoint xx="0" yy="0" zz="0" />
+            <controlpoint xx="2000" yy="0" zz="0" />
+    </animation>
+	</animations>	
+
+
+
+
 	<globals>
 		<drawing mode="fill" shading="gouraud" background="0 0 0 0" />
 		<culling face="back" order="ccw" />
@@ -32,11 +63,6 @@
            <light id="sunL" type="spot" enabled="true" marker="false" pos="0 500 0" target="0 5 0" angle="4" exponent="100.0">
                <component type="ambient" value="0.0 0.0 0.0 0.1" />
                <component type="diffuse" value="1.0 1.0 1.0 1.0" />
-               <component type="specular" value="0.0 0.0 0.0 0.4"/>
-           </light>
-           <light id="ovniLight" type="spot" enabled="true" marker="false" pos="42 10 0" target="42 5 0" angle="45" exponent="100.0">
-               <component type="ambient" value="0.0 0.0 0.0 0.1" />
-               <component type="diffuse" value="1.0 0.0 1.0 1.0" />
                <component type="specular" value="0.0 0.0 0.0 0.4"/>
            </light>
        </lights>
@@ -141,11 +167,10 @@
 			</primitives>
 
 			<descendants>
-				<noderef id="ovni" />
 				<noderef id="sol" />
 				<noderef id="mercurio" />
-				<noderef id="venus" />
-				<noderef id="terra" />
+				<noderef id="venus" />				
+				<noderef id="terra e ovni" />
 				<noderef id="marte" />
 				<noderef id="jupiter" />
 				<noderef id="saturno" />
@@ -155,87 +180,45 @@
 
 		</node>
 
+		<node id="terra e ovni">
+
+			<animationref id="Aniterra"/>
+
+			<transforms>
+				<transform type="translate" to="42 5 0" />
+			</transforms>
+
+			<appearanceref id="inherit" />
+
+			<primitives>
+			</primitives>
+
+			<descendants>				
+				<noderef id="terra" />
+				<noderef id="ovni" />
+			</descendants>
+		</node>
+
 		<node id="ovni">
+
+			<animationref id="Aniovni"/>
+
 			<transforms>
-				<transform type="translate" to="42 10 0" />
-				<transform type="rotate" axis="x" angle="75" />
-				<transform type="scale" factor="0.1 0.1 0.1" />
+				<transform type="translate" to="3 0 0" />
+				<transform type="scale" factor="0.1 0.1 0.1" />				
+				<transform type="rotate" axis="z" angle="-90" />
 			</transforms>
 
 			<appearanceref id="inherit" />
 
 			<primitives>
-			</primitives>
-
-			<descendants>
-				<noderef id="disc" />
-				<noderef id="chamber" />
-			</descendants>
-		</node>
-
-		<node id="disc" >
-			<transforms>
-				<transform type="scale" factor="1 1 2" />
-			</transforms>
-
-			<appearanceref id="inherit" />
-
-			<primitives>
-			</primitives>
-
-			<descendants>
-				<noderef id= "upperdisc" />
-				<noderef id= "bottomdisc" />
-			</descendants>
-		</node>
-
-		<node id="bottomdisc">
-			<transforms>
-
-				<transform type="rotate" axis="x" angle="180" />
-			</transforms>
-
-			<appearanceref id="inherit" />
-
-			<primitives>
-				<cylinder base="5" top="2" height="0.5" slices="20" stacks="6" />
+				<vehicle />
 			</primitives>
 
 			<descendants>
 			</descendants>
 		</node>
-
-		<node id="upperdisc">
-			<transforms>
-			</transforms>
-
-			<appearanceref id="inherit" />
-
-			<primitives>
-				<cylinder base="5" top="2" height="0.5" slices="20" stacks="6" />
-			</primitives>
-
-			<descendants>
-			</descendants>
-		</node>
-
-		<node id="chamber">
-
-			<transforms>
-				<transform type="scale" factor="2 2 2" />
-			</transforms>
-
-			<appearanceref id="inherit" />
-
-			<primitives>
-				<sphere radius="1" slices="40" stacks="40" />
-			</primitives>
-
-			<descendants>
-
-			</descendants>
-		</node>
-		
+	
 		<node id="sol">
 			<transforms>
 				<transform type="translate" to="0 5 0" />
@@ -254,10 +237,10 @@
 
 		<node id="mercurio">
 
+			<animationref id="AniMercurio"/>
+
 			<transforms>
 
-				<transform type="rotate" axis="y" angle="180" />
-				<transform type="rotate" axis="z" angle="10" />
 				<transform type="translate" to="30 5 0"/>
 				<transform type="scale" factor="0.6 0.6 0.6"/>
 			</transforms>
@@ -274,10 +257,9 @@
 
 		<node id="venus">
 
+			<animationref id="Anivenus"/>
 			<transforms>
 
-				<transform type="rotate" axis="y" angle="47" />
-				<transform type="rotate" axis="z" angle="-5" />
 				<transform type="translate" to="34.6 5 0" />
 				<transform type="scale" factor="0.8 0.8 0.8" />
 			</transforms>
@@ -293,12 +275,9 @@
 		</node>
 
 		<node id="terra">
-
 			<transforms>
 
-				<transform type="translate" to="42 5 0" />
 				<transform type="scale" factor="1 1 1" />
-				<transform type="rotate" axis="x" angle="-90"/>
 			</transforms>
 
 			<appearanceref id="earth" />
@@ -312,15 +291,11 @@
 		</node>
 
 		<node id="marte">
+			<animationref id="Animarte"/>
 
 			<transforms>
-
-				<transform type="rotate" axis="y" angle="279" />
-				
-				<transform type="rotate" axis="z" angle="-15" />
 				<transform type="translate" to="47 5 0" />
 				<transform type="scale" factor="0.9 0.9 0.9" />
-				<transform type="rotate" axis="x" angle="-90"/>
 			</transforms>
 
 			<appearanceref id="mars" />
@@ -335,13 +310,12 @@
 
 		<node id="jupiter">
 
+		<animationref id="Anijupiter"/>
+
 			<transforms>
 
-				<transform type="rotate" axis="y" angle="320" />
-				<transform type="rotate" axis="z" angle="17" />
 				<transform type="translate" to="60 5 0" />
 				<transform type="scale" factor="4 4 4" />
-				<transform type="rotate" axis="x" angle="-40"/>
 			</transforms>
 
 			<appearanceref id="jupiter" />
@@ -355,13 +329,11 @@
 
 		<node id="saturno">
 
+			<animationref id="Anisaturno"/>
 			<transforms>
 
-				<transform type="rotate" axis="y" angle="20" />
-				<transform type="rotate" axis="z" angle="-12" />
 				<transform type="translate" to="72 5 0" />
 				<transform type="scale" factor="3 3 3" />
-				<transform type="rotate" axis="x" angle="90"/>
 			</transforms>
 
 			<appearanceref id="saturn" />
@@ -377,10 +349,10 @@
 
 		<node id="urano">
 
+			<animationref id="Aniurano"/>
+
 			<transforms>
 
-				<transform type="rotate" axis="y" angle="130" />
-				<transform type="rotate" axis="z" angle="5" />
 				<transform type="translate" to="80 5 0" />
 				<transform type="scale" factor="1.8 1.8 1.8" />
 			</transforms>
@@ -397,10 +369,11 @@
 
 		<node id="neptuno">
 
+			<animationref id="Anineptuno"/>
+
 			<transforms>
 
-				<transform type="rotate" axis="y" angle="69" />
-				<transform type="rotate" axis="z" angle="-3" />
+				<!--<transform type="rotate" axis="z" angle="-3" />-->
 				<transform type="translate" to="86 5 0" />
 				<transform type="scale" factor="1.5 1.5 1.5" />
 			</transforms>
@@ -416,7 +389,7 @@
 		</node>
 
 		
-		<node id="anel"> 
+		<node id="anel" displaylist="true"> 
 			<transforms> 
 				<transform type="scale" factor="1 1 0.05"/>
 			</transforms> 

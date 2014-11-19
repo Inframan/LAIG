@@ -268,6 +268,7 @@ void LightingScene::drawNode(Node *n,Appearence * t)
 
 		vector<primitive*> p = n->getPrimitives();
 
+
 		for(vector<primitive*>::iterator pIt = p.begin(); pIt < p.end();pIt++)
 		{
 			if(t){

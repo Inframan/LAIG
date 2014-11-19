@@ -5,7 +5,7 @@ patch::patch(void)
 {
 }
 
-patch::patch(int order,int partsU,int partsV,string compute,float ** controlPoints):controlPoints(controlPoints)
+patch::patch(int order,int partsU,int partsV,string compute,vector<float> controlPoints):controlPoints(controlPoints)
 {
 	this->order = order;
 	this->partsU = partsU;
@@ -21,7 +21,7 @@ patch::patch(int order,int partsU,int partsV,string compute,float ** controlPoin
 
 	int nPoints =  (order+1)*(order+1);
 
-	textPoints = (float **) malloc( (order+1)*(order+1)*sizeof(float));
+	
 
 	float incS = 1.0/(order);
 	float incT = 1.0/(order);
@@ -34,9 +34,9 @@ patch::patch(int order,int partsU,int partsV,string compute,float ** controlPoin
 			xS = 0;
 			yT += incT;
 		}
-		textPoints[i] = (float*)malloc(2*sizeof(float));
-		textPoints[i][0] = xS;
-		textPoints[i][1] = yT;
+		
+		textPoints.push_back(xS);
+		textPoints.push_back(yT);
 
 		xS += incS;
 	}
@@ -240,86 +240,15 @@ void patch::draw()
 	break;
 	}*/
 
-	if(order == 1)
-	{GLfloat colorpoints[4][4] = {	{ 0.7, 0.7, 0.7, 0},	{ 0.7, 0.7, 0.7, 0}, 
-	{ 0.7, 0.7, 0.7, 0},	{ 0.7, 0.7, 0.7, 0} };
-		GLfloat ctrlpoint[4][3];
-		GLfloat textpoints[4][2];
-		for(int i = 0; i < (order+1)*(order+1);i++)
-		{
-			for(int j = 0; j < 3;j++)
-			{
-				ctrlpoint[i][j] = controlPoints[i][j];
-
-			}
-
-			for(int j = 0; j < 2;j++)
-			{
-				textpoints[i][j] = textPoints[i][j];
-			}
-
-		}
+	
 		glColor3f(1.0,1.0,1.0);
-		glMap2f(GL_MAP2_VERTEX_3, 0.0, 1.0, 3, (order+1),  0.0, 1.0, 3*(order+1), (order+1),  &ctrlpoint[0][0]);
+		glMap2f(GL_MAP2_VERTEX_3, 0.0, 1.0, 3, (order+1),  0.0, 1.0, 3*(order+1), (order+1),  &controlPoints[0]);
 		//glMap2f(GL_MAP2_NORMAL,   0.0, 1.0, 3, 2                     ,  0.0, 1.0, 6, 2,  &nrmlcompon[0][0]);
-		glMap2f(GL_MAP2_COLOR_4,  0.0, 1.0, 4, order+1,  0.0, 1.0,4*(order+1),order+1,  &colorpoints[0][0]);
-		glMap2f(GL_MAP2_TEXTURE_COORD_2,  0.0, 1.0, 2, (order+1),  0.0, 1.0, 2 * (order+1), (order+1), &textpoints[0][0]);
-
-	}
-	else if(order == 2)
-	{GLfloat colorpoints[9][4] = {	{ 0.7, 0.7, 0.7, 0},	{ 0.7, 0.7, 0.7, 0}, 	{ 0.7, 0.7, 0.7, 0},
-	{ 0.7, 0.7, 0.7, 0},	{ 0.7, 0.7, 0.7, 0},	{ 0.7, 0.7, 0.7, 0},
-	{ 0.7, 0.7, 0.7, 0},	{ 0.7, 0.7, 0.7, 0},	{ 0.7, 0.7, 0.7, 0} };
-		GLfloat ctrlpoint[9][3];
-		GLfloat textpoints[9][2];
-		for(int i = 0; i < (order+1)*(order+1);i++)
-		{
-			for(int j = 0; j < 3;j++)
-			{
-				ctrlpoint[i][j] = controlPoints[i][j];
-
-			}
-
-			for(int j = 0; j < 2;j++)
-			{
-				textpoints[i][j] = textPoints[i][j];
-			}
-
-		}
-		glColor3f(1.0,1.0,1.0);
-		glMap2f(GL_MAP2_VERTEX_3, 0.0, 1.0, 3, (order+1),  0.0, 1.0, 3*(order+1), (order+1),  &ctrlpoint[0][0]);
-		//glMap2f(GL_MAP2_NORMAL,   0.0, 1.0, 3, 2                     ,  0.0, 1.0, 6, 2,  &nrmlcompon[0][0]);
-		glMap2f(GL_MAP2_COLOR_4,  0.0, 1.0, 4, order+1,  0.0, 1.0,4*(order+1),order+1,  &colorpoints[0][0]);
-		glMap2f(GL_MAP2_TEXTURE_COORD_2,  0.0, 1.0, 2, (order+1),  0.0, 1.0, 2 * (order+1), (order+1), &textpoints[0][0]);
+		//glMap2f(GL_MAP2_COLOR_4,  0.0, 1.0, 4, order+1,  0.0, 1.0,4*(order+1),order+1,  &colorpoints[0][0]);
+		glMap2f(GL_MAP2_TEXTURE_COORD_2,  0.0, 1.0, 2, (order+1),  0.0, 1.0, 2 * (order+1), (order+1), &textPoints[0]);
 
 	
-	}
-	else if(order == 3)
-	{
-		GLfloat colorpoints[16][4] = {	{ 0.7, 0.7, 0.7, 0},	{ 0.7, 0.7, 0.7, 0}, 	{ 0.7, 0.7, 0.7, 0},	{ 0.7, 0.7, 0.7, 0},	{ 0.7, 0.7, 0.7, 0},	{ 0.7, 0.7, 0.7, 0},	{ 0.7, 0.7, 0.7, 0},
-	{ 0.7, 0.7, 0.7, 0},	{ 0.7, 0.7, 0.7, 0},	{ 0.7, 0.7, 0.7, 0},	{ 0.7, 0.7, 0.7, 0},	{ 0.7, 0.7, 0.7, 0},	{ 0.7, 0.7, 0.7, 0},
-	{ 0.7, 0.7, 0.7, 0},	{ 0.7, 0.7, 0.7, 0},	{ 0.7, 0.7, 0.7, 0} };
-		GLfloat ctrlpoint[16][3];
-		GLfloat textpoints[16][2];
-		for(int i = 0; i < (order+1)*(order+1);i++)
-		{
-			for(int j = 0; j < 3;j++)
-			{
-				ctrlpoint[i][j] = controlPoints[i][j];
-			}
-			for(int j = 0; j < 2;j++)
-			{
-				textpoints[i][j] = textPoints[i][j];
-			}
-		}
-
-		glColor3f(1.0,1.0,1.0);
-		glMap2f(GL_MAP2_VERTEX_3, 0.0, 1.0, 3, (order+1),  0.0, 1.0, 3*(order+1), (order+1),  &ctrlpoint[0][0]);
-		//glMap2f(GL_MAP2_NORMAL,   0.0, 1.0, 3, 2                     ,  0.0, 1.0, 6, 2,  &nrmlcompon[0][0]);
-		glMap2f(GL_MAP2_COLOR_4,  0.0, 1.0, 4, order+1,  0.0, 1.0,4*(order+1),order+1,  &colorpoints[0][0]);
-		glMap2f(GL_MAP2_TEXTURE_COORD_2,  0.0, 1.0, 2, (order+1),  0.0, 1.0, 2 * (order+1), (order+1), &textpoints[0][0]);
 	
-	}
 	
 		glFrontFace(GL_CW);
 		glEnable(GL_MAP2_VERTEX_3);
