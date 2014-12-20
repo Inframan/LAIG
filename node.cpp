@@ -91,6 +91,11 @@ void Node::addFlag(CGFtexture* texture){
 	primitives.push_back(new Flag(texture));
 }
 
+void Node::addTabuleiro()
+{
+	primitives.push_back(new tabuleiro());
+}
+
 void Node::addPatch(int order,int partsU,int partsV,string compute,vector<float> controlPoints)
 {
 	primitives.push_back(new patch(order,partsU,partsV,compute,controlPoints));

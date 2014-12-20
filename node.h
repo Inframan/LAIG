@@ -15,6 +15,7 @@
 #include "linearAnimation.h"
 #include "Flag.h"
 #include "ovni.h"
+#include "tabuleiro.h"
 
 using namespace std;
 
@@ -50,6 +51,7 @@ public:
 	void addPatch(int order,int partsU,int partsV,string compute,vector<float> controlPoints);
 	void addOvni();
 	void addFlag(CGFtexture* texture);
+	void addTabuleiro();
 	vector<primitive*> getPrimitives()const;
 	string getID() const {return id;}
 	vector<string> getDescendants()const { return descendants;}
