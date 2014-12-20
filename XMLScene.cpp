@@ -863,7 +863,21 @@ XMLScene::XMLScene(char *filename, sceneGraph * graph)
 					primitivesDef = primitivesDef->NextSiblingElement("flag");
 				}
 
+
+				primitivesDef = primitives->FirstChildElement("tabuleiro");
+
+				while(primitivesDef)
+				{
+
+					node1.addTabuleiro();
+
+					primitivesDef = primitivesDef->NextSiblingElement("tabuleiro");
+				}
+
 			}
+
+
+
 
 
 			TiXmlElement *descendants=primitives->NextSiblingElement();
