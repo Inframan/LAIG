@@ -29,3 +29,7 @@ void Peca::draw(){
 	outerCylinder->draw();
 
 }
+
+void Peca::setCoords(int x, int y){
+	
+}
