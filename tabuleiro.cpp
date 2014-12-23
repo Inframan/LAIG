@@ -33,23 +33,14 @@ void tabuleiro::draw()
 				glBegin(GL_QUADS);
 				glNormal3f(0,-1,0); 
 				glVertex3f(x,y,z);
-
-
 				glVertex3f(x+1,y,z);
-
-
 				glVertex3f(x+1,y,z+1);
-
-
 				glVertex3f(x,y,z+1);
 				glEnd();			
 
 				glBegin(GL_QUADS);
 				glNormal3f(0,1,0); 
-
-
 				glVertex3f(x,y,z+1);
-
 				glVertex3f(x+1,y,z+1);			
 				glVertex3f(x+1,y,z);			
 				glVertex3f(x,y,z);
