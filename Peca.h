@@ -12,6 +12,10 @@ public:
 	void draw();
 	~Peca(void);
 	void setCoords(int x, int y);
-	int* getCoords();
+	vector<int> getCoords()const;
+	void move(int dx, int dy);
+	void exit(int dx,int dy);
+	void merge(int coordx,int coordy);	
+	void update(long millis);
 };
 

@@ -31,5 +31,14 @@ void Peca::draw(){
 }
 
 void Peca::setCoords(int x, int y){
-	
+	this->x = x;
+	this->y = y;
+}
+
+vector<int> Peca::getCoords() const
+{
+	vector<int> ret;
+	ret.push_back(x);
+	ret.push_back(y);	
+	return ret;
 }
