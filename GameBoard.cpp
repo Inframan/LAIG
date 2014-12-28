@@ -4,18 +4,20 @@
 GameBoard::GameBoard(void)
 {
 	tab = new tabuleiro();
-	bool cor = 0;//começa com uma peça preta
+	pecas.resize(5);
+	for(int i = 0; i < pecas.size();i++)
+		pecas[i].resize(7);
+	bool cor = 1;//começa com uma peça preta
+	
 	for(int i = 0; i < 7;i++)
 	{
 
-		vector <pilha*> temp;
-
-		for(int j = 0; j < 5;j++)
+		for(int j = 0; j < 5;j++)	
 		{	
 
 
 			pilha * p = new pilha();
-			if(!(i == 0  || i == 6 || j == 0 || j == 4))//não é uma das bordas
+			if(!(i == 0  || i == 6 || j == 0 || j == 4 || (i == 3 && j == 2)))//não é uma das bordas
 			{
 				if(i == 3)//é na coluna do meio
 				{
@@ -27,25 +29,24 @@ GameBoard::GameBoard(void)
 					{
 						cor = 1;
 					}
-					else//não desenha
-						continue;
 				}
 
 
-				for(int k = 0; k < 3;i++)
+				for(int k = 0; k < 3;k++)
 				{
 					Peca t(cor);
 					t.setCoords(i,j);
+					p->setCoords(i,j,1);
+					p->setCor(cor);
 					p->addPiece(t);
 				}
-
 				if(i != 3)
-					cor = !cor;
+				cor = !cor;
 			}
-
-			temp.push_back(p);
+			else
+				p->setCoords(i,j,0);
+			pecas[j][i] = p;
 		}
-		pecas.push_back(temp);
 	}
 }
 
@@ -64,9 +65,10 @@ string GameBoard::transformMatrixToPrologList(){
 		}
 
 		res+="]";
-
+		if (i+1 != pecas.size())
+				res+=",";
 	}
-	res += "])";
+	res += "]).\n";
 
 	return res;
 }
