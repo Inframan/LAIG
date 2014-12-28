@@ -13,6 +13,7 @@ public:
 	void draw();
 	Peca removePiece();
 	void addPiece(Peca peca);
+
 	string toString();
 	void emptyStack();
 	~pilha(void);

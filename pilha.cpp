@@ -3,6 +3,8 @@
 
 pilha::pilha(void)
 {
+	size = 0;
+	cor = -1;
 
 }
 

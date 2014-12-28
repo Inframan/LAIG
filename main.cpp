@@ -12,14 +12,16 @@
 #include "TPInterface.h"
 #include "sceneGraph.h"
 #include "connectProlog.h"
+#include "GameBoard.h"
 
 using std::cout;
 using std::exception;
 
 
 int main(int argc, char* argv[]) {
-
-	startConnection();
+	
+	GameBoard board = GameBoard();
+	board.sendBoard();
 	/*
 	sceneGraph graph;
 	sceneGraph * pgraph = new sceneGraph();

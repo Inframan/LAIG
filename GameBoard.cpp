@@ -2,13 +2,18 @@
 
 
 GameBoard::GameBoard(void)
-{/*
+{
 	tab = new tabuleiro();
 	bool cor = 0;//começa com uma peça preta
 	for(int i = 0; i < 7;i++)
 	{
+
+		vector <pilha*> temp;
+
 		for(int j = 0; j < 5;j++)
-		{
+		{	
+
+
 			pilha * p = new pilha();
 			if(!(i == 0  || i == 6 || j == 0 || j == 4))//não é uma das bordas
 			{
@@ -37,9 +42,11 @@ GameBoard::GameBoard(void)
 				if(i != 3)
 					cor = !cor;
 			}
-			pecas[i].push_back(p);
+
+			temp.push_back(p);
 		}
-	}*/
+		pecas.push_back(temp);
+	}
 }
 
 
@@ -65,18 +72,19 @@ string GameBoard::transformMatrixToPrologList(){
 }
 
 void GameBoard::sendBoard()
-{/*
+{ 
 	socketConnect();
 
 	char *boardToSend = new char[transformMatrixToPrologList().length() + 1];
 	strcpy(boardToSend, transformMatrixToPrologList().c_str());
 	envia(boardToSend, strlen(boardToSend));
 	/*
-	 * TO DO
-	 * Enviar uma jogada aqui
-	 *
+	* TO DO
+	* Enviar uma jogada aqui
+	*/
+
 	char ans[128];
-	recebe(ans);*/
+	recebe(ans);
 }
 
 GameBoard::~GameBoard(void)

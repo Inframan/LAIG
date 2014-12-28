@@ -1,7 +1,7 @@
 #pragma once
 #include "tabuleiro.h"
 #include "pilha.h"
-//#include "connectProlog.h"
+#include "connectProlog.h"
 #include <vector>
 #include <string>
 
