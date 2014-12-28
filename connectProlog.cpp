@@ -1,6 +1,6 @@
 #include"connectProlog.h"
 
-
+SOCKET m_socket;
 
 bool socketConnect() {// Initialize Winsock.
     WSADATA wsaData;
@@ -71,7 +71,7 @@ void quit() {
 
 int startConnection() {
 	socketConnect();
-	char *s = "comando(1, 2).\n";
+	char *s = "boardgame([[[0,v],[0,v],[0,v],[0,v],[0,v],[0,v],[0,v]],[[0,v],[1,p],[1,b],[0,v],[0,v],[0,v],[0,v]],[[0,v],[1,b],[1,p],[0,v],[0,v],[0,v],[0,v]],[[0,v],[0,v],[0,v],[0,v],[0,v],[0,v],[0,v]],[[0,v],[0,v],[0,v],[0,v],[0,v],[0,v],[0,v]]]).\n";
 	envia(s, strlen(s));
 	char ans[128];
 	recebe(ans);

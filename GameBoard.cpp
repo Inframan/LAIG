@@ -2,7 +2,7 @@
 
 
 GameBoard::GameBoard(void)
-{
+{/*
 	tab = new tabuleiro();
 	bool cor = 0;//começa com uma peça preta
 	for(int i = 0; i < 7;i++)
@@ -37,13 +37,47 @@ GameBoard::GameBoard(void)
 				if(i != 3)
 					cor = !cor;
 			}
-			pecas.push_back(p);
+			pecas[i].push_back(p);
 		}
-	}
+	}*/
 }
 
 
+string GameBoard::transformMatrixToPrologList(){
+	string res = "boardgame([";
 
+	for (unsigned int i = 0 ; i < pecas.size() ; i++)
+	{
+		res+="[";
+		for(unsigned int j = 0; j < pecas[i].size() ; j++)
+		{
+			res+=pecas[i][j]->toString();
+			if (j+1 != pecas[i].size())
+				res+=",";
+		}
+
+		res+="]";
+
+	}
+	res += "])";
+
+	return res;
+}
+
+void GameBoard::sendBoard()
+{/*
+	socketConnect();
+
+	char *boardToSend = new char[transformMatrixToPrologList().length() + 1];
+	strcpy(boardToSend, transformMatrixToPrologList().c_str());
+	envia(boardToSend, strlen(boardToSend));
+	/*
+	 * TO DO
+	 * Enviar uma jogada aqui
+	 *
+	char ans[128];
+	recebe(ans);*/
+}
 
 GameBoard::~GameBoard(void)
 {

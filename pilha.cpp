@@ -36,6 +36,20 @@ void pilha::emptyStack()
 	pecas.clear();
 }
 
+
+string pilha::toString(){
+
+	string res = "[" + size;
+	if(cor== 0)
+		res += ",b]";
+	else if(cor ==1)
+		res += ",p]";
+	else
+		res += ",v]";
+
+
+	return res;
+}
 pilha::~pilha(void)
 {
 }

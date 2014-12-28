@@ -7,7 +7,7 @@
 
 using namespace std;
 
-SOCKET m_socket;
+
 
 
 bool socketConnect();

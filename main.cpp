@@ -11,6 +11,7 @@
 #include "XMLScene.h"
 #include "TPInterface.h"
 #include "sceneGraph.h"
+#include "connectProlog.h"
 
 using std::cout;
 using std::exception;
@@ -18,6 +19,8 @@ using std::exception;
 
 int main(int argc, char* argv[]) {
 
+	startConnection();
+	/*
 	sceneGraph graph;
 	sceneGraph * pgraph = new sceneGraph();
 	pgraph = &graph;
@@ -45,5 +48,5 @@ int main(int argc, char* argv[]) {
 		return -1;
 	}
 
-	return 0;
+	return 0;*/
 }
