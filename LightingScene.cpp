@@ -219,9 +219,6 @@ void LightingScene::display()
 	GameBoard board = GameBoard();
 
 	board.draw();
-
-	
-
 	glutSwapBuffers();
 }
 

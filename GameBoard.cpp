@@ -90,15 +90,33 @@ void GameBoard::sendBoard()
 }
 void GameBoard::draw(){
 	tab->draw();
+
+	
+
+	glPushMatrix();
+	glPushName(-1);
 	
 	for (int i = 0 ; i < pecas.size(); i++){
+		
 
 		for(int j = 0 ; j < pecas[i].size(); j++){
 			pecas[i][j]->draw();
 		}
 	}
 
+	glPopMatrix();
 
+
+}
+
+
+vector<vector <pilha *>> GameBoard::getPecas(){
+	return pecas;
+}
+
+tabuleiro* GameBoard::getTab(){
+
+	return tab;
 }
 
 GameBoard::~GameBoard(void)

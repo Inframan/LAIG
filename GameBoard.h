@@ -13,6 +13,8 @@ public:
 	GameBoard(void);
 	string transformMatrixToPrologList();
 	void sendBoard();
+	vector<vector <pilha *>> getPecas();
+	tabuleiro* getTab();
 	~GameBoard(void);
 	void draw();
 

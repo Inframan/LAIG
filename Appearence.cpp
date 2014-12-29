@@ -6,11 +6,9 @@ Appearence::Appearence(void)
 	t = NULL;
 }
 
-
 Appearence::~Appearence(void)
 {
 }
-
 
 Appearence::Appearence(string id, float shininess,string textureref){
 
@@ -28,13 +26,11 @@ Appearence::Appearence(string id, float shininess){
 
 }
 
-
 CGFappearance* Appearence::getAppearance() const{
 
 	return app;
 }
 	
-
 void Appearence::setAppearance(CGFappearance* app){
 
 	this->app=app;
@@ -61,6 +57,7 @@ void Appearence::setID(string id)
 float Appearence::getShininess() const{
 	return shininess;
 }
+
 void Appearence::setShininess(float shininess){
 	this->shininess=shininess;
 }
@@ -72,9 +69,11 @@ string Appearence::getTextureref() const{
 void Appearence::setTextureref(string textureref){
 	this->textureref=textureref;
 }
+
 vector<float>  Appearence::getAmbient() const{
 	return ambient_comp;
 }
+
 vector<float>  Appearence::getDiffuse() const{
 	return diffuse_comp;
 }
@@ -82,6 +81,7 @@ vector<float>  Appearence::getDiffuse() const{
 vector<float> Appearence::getSpecular() const{
 	return specular_comp;
 }
+
 void Appearence::setAmbient(vector<float>  ambient_comp){
 	this->ambient_comp=ambient_comp;
 }

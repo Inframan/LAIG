@@ -100,7 +100,6 @@
 			<appearanceref id="FoguetaoAp" />
 
 			<primitives>
-				<tabuleiro />
 			</primitives>
 
 			<descendants>

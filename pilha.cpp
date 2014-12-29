@@ -30,11 +30,12 @@ void pilha::draw()
 {
 	glPushMatrix();
 	glTranslated(x+0.5,z,y+0.5);
-
+	glLoadName(x);
 	glPushMatrix();
 	for(vector<Peca>::iterator it = pecas.begin();it != pecas.end();it++)
 	{
-
+		
+		glPushName(y);
 		it->draw();
 		glTranslated(0,0.1,0);
 	}

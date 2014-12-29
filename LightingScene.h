@@ -3,13 +3,14 @@
 
 #include "CGFscene.h"
 #include "CGFappearance.h"
+#include "PickInterface.h"
 #include "sceneGraph.h"
 #include "GameBoard.h"
 
 
 class LightingScene : public CGFscene
 {
-	
+	friend PickInterface;
 public:
 	vector<camera*> cams;
 	vector<camera*>::iterator it;
