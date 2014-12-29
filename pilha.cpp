@@ -37,6 +37,7 @@ void pilha::draw()
 		
 		glPushName(y);
 		it->draw();
+		glPopName();
 		glTranslated(0,0.1,0);
 	}
 	glPopMatrix();
