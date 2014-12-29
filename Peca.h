@@ -7,8 +7,8 @@ class Peca
 	int cor;
 	int x,y;
 	cylinder *innerCylinder, *outerCylinder;
-	CGFAppearence* corPeca;
-
+	CGFappearance *corPeca;
+	
 public:
 	Peca(int cor);
 	Peca(void);
