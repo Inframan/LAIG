@@ -20,9 +20,6 @@ using std::exception;
 
 int main(int argc, char* argv[]) {
 	
-	GameBoard board = GameBoard();
-	board.sendBoard();
-	/*
 	sceneGraph graph;
 	sceneGraph * pgraph = new sceneGraph();
 	pgraph = &graph;
@@ -50,5 +47,5 @@ int main(int argc, char* argv[]) {
 		return -1;
 	}
 
-	return 0;*/
+	return 0;
 }

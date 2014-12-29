@@ -17,7 +17,6 @@
 #include "ovni.h"
 #include "tabuleiro.h"
 
-
 using namespace std;
 
 class Node

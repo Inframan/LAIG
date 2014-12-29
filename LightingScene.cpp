@@ -215,8 +215,10 @@ void LightingScene::display()
 	// ---- END Background, camera and axis setup
 
 	// ---- BEGIN Primitive drawing section
+	
+	GameBoard board = GameBoard();
 
-
+	board.draw();
 
 	
 

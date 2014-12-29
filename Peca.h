@@ -1,11 +1,14 @@
 #pragma once
 #include "cylinder.h"
+#include "CGFappearance.h"
 
 class Peca
 {
 	int cor;
 	int x,y;
 	cylinder *innerCylinder, *outerCylinder;
+	CGFAppearence* corPeca;
+
 public:
 	Peca(int cor);
 	Peca(void);

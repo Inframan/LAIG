@@ -4,6 +4,7 @@
 #include "CGFscene.h"
 #include "CGFappearance.h"
 #include "sceneGraph.h"
+#include "GameBoard.h"
 
 
 class LightingScene : public CGFscene

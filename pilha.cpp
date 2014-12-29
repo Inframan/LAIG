@@ -28,13 +28,18 @@ void pilha::setCor(int cor)
 
 void pilha::draw()
 {
-	glPushMatrix;
+	glPushMatrix();
+	glTranslated(x+0.5,z,y+0.5);
+
+	glPushMatrix();
 	for(vector<Peca>::iterator it = pecas.begin();it != pecas.end();it++)
 	{
+
 		it->draw();
-		glTranslated(0,1,0);
+		glTranslated(0,0.1,0);
 	}
-	glPopMatrix;
+	glPopMatrix();
+	glPopMatrix();
 }
 
 

@@ -8,7 +8,7 @@ GameBoard::GameBoard(void)
 	for(int i = 0; i < pecas.size();i++)
 		pecas[i].resize(7);
 	bool cor = 1;//começa com uma peça preta
-	
+
 	for(int i = 0; i < 7;i++)
 	{
 
@@ -35,16 +35,16 @@ GameBoard::GameBoard(void)
 				for(int k = 0; k < 3;k++)
 				{
 					Peca t(cor);
-					t.setCoords(i,j);
-					p->setCoords(i,j,1);
+					t.setCoords(j,i);
+					p->setCoords(j,i,1);
 					p->setCor(cor);
 					p->addPiece(t);
 				}
 				if(i != 3)
-				cor = !cor;
+					cor = !cor;
 			}
 			else
-				p->setCoords(i,j,0);
+				p->setCoords(j,i,0);
 			pecas[j][i] = p;
 		}
 	}
@@ -66,7 +66,7 @@ string GameBoard::transformMatrixToPrologList(){
 
 		res+="]";
 		if (i+1 != pecas.size())
-				res+=",";
+			res+=",";
 	}
 	res += "]).\n";
 
@@ -87,6 +87,18 @@ void GameBoard::sendBoard()
 
 	char ans[128];
 	recebe(ans);
+}
+void GameBoard::draw(){
+	tab->draw();
+	
+	for (int i = 0 ; i < pecas.size(); i++){
+
+		for(int j = 0 ; j < pecas[i].size(); j++){
+			pecas[i][j]->draw();
+		}
+	}
+
+
 }
 
 GameBoard::~GameBoard(void)

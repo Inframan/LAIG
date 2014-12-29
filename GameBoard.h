@@ -14,6 +14,7 @@ public:
 	string transformMatrixToPrologList();
 	void sendBoard();
 	~GameBoard(void);
+	void draw();
 
 };
 
