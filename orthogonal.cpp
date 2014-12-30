@@ -45,10 +45,11 @@ orthogonal::~orthogonal(void)
 
 void orthogonal::applyView() 
 {
+	
 	glMatrixMode(GL_PROJECTION);
 	glLoadIdentity();
 	glOrtho( left,right,bottom, top,getNear(),getFar());
-	glMatrixMode(GL_MODELVIEW);
+	glMatrixMode(GL_MODELVIEW);	
 	glLoadIdentity();
 }
 

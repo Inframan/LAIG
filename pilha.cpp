@@ -6,6 +6,15 @@ pilha::pilha(void)
 	size = 0;
 	cor = -1;
 	y = z = x = 0;
+	flag = new flagSelection(new CGFtexture("textures/flagOfMyPeople.gif"));
+}
+
+pilha::pilha(CGFtexture *t)
+{
+	size = 0;
+	cor = -1;
+	y = z = x = 0;
+	flag = new flagSelection(t);
 }
 
 Peca pilha:: removePiece()
@@ -25,8 +34,12 @@ void pilha::setCor(int cor)
 {
 	this->cor = cor;
 }
-
 void pilha::draw()
+{
+	draw(false);
+}
+
+void pilha::draw(bool drawFlag)
 {
 	glPushMatrix();
 	glTranslated(x+0.5,z,y+0.5);
@@ -40,6 +53,8 @@ void pilha::draw()
 		glPopName();
 		glTranslated(0,0.1,0);
 	}
+	if(drawFlag)
+		flag->draw();
 	glPopMatrix();
 	glPopMatrix();
 }

@@ -2,6 +2,8 @@
 #include "Peca.h"
 #include <sstream>
 #include <string>
+#include "flagSelection.h"
+
 class pilha :
 	public primitive
 {
@@ -9,8 +11,11 @@ class pilha :
 	vector<Peca> pecas;
 	int size;
 	int cor; //0-branca 1-preta vazio- -1
+	flagSelection *flag;
 public:
 	pilha(void);
+	pilha(CGFtexture *t);
+	void draw(bool drawFlag);
 	void draw();
 	Peca removePiece();
 	void addPiece(Peca peca);

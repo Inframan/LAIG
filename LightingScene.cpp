@@ -21,6 +21,12 @@ unsigned int lightArray[8] = {GL_LIGHT0,GL_LIGHT1,GL_LIGHT2,GL_LIGHT3,GL_LIGHT4,
 
 void LightingScene::init() 
 {
+	flagTexture = new CGFtexture("textures/flagOfMyPeople.gif");
+
+
+	selected = false;
+
+
 	Appearence * t = NULL;
 	createDisplayLists(pgraph.getRootNode(),t);
 
@@ -216,9 +222,11 @@ void LightingScene::display()
 
 	// ---- BEGIN Primitive drawing section
 	
-	GameBoard board = GameBoard();
-
-	board.draw();
+	GameBoard board = GameBoard(flagTexture);
+	if(selected)
+		board.draw(xSelected,ySelected);
+	else
+		board.draw();
 	glutSwapBuffers();
 }
 

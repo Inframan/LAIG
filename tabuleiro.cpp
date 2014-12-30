@@ -25,8 +25,13 @@ void tabuleiro::draw()
 	z = 0;
 	for(int i = 0; i < 7;i++)
 	{
+		glPushMatrix();
+		glLoadName(i);
 		for(int j = 0; j < 5;j++)
 		{
+			
+			glPushMatrix();
+			glPushName(j);
 			if(i == 0  || i == 6 || j == 0 || j == 4)
 			{
 				y = 0;
@@ -79,11 +84,16 @@ void tabuleiro::draw()
 			}
 			
 				x++;
+
+				glPopName();
+				glPopMatrix();
 		}
 		
 			x = 0;
 			z++;
+			glPopMatrix();
 	}
+
 	
 	drawCylinders();
 
@@ -107,6 +117,8 @@ void tabuleiro::draw(Texture *t)
 	z = 0;
 	for(int i = 0; i < 7;i++)
 	{
+		glPushMatrix();
+		glLoadName(i);
 		for(int j = 0; j < 5;j++)
 		{
 			if(i == 0  || i == 6 || j == 0 || j == 4)
@@ -185,11 +197,14 @@ void tabuleiro::draw(Texture *t)
 			
 				x++;
 				tX += incTX;
+				glPopName();
+				glPopMatrix();
 		}
 			tX = 0;
 			tY+= incTY;
 			x = 0;
-			z++;
+			z++;	
+			glPopMatrix();
 	}
 	drawCylinders();
 }

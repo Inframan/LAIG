@@ -11,6 +11,10 @@
 class LightingScene : public CGFscene
 {
 	friend PickInterface;
+	///for the selectiong flag
+	bool selected;
+	int xSelected,ySelected;
+	CGFtexture *flagTexture;
 public:
 	vector<camera*> cams;
 	vector<camera*>::iterator it;

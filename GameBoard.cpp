@@ -3,6 +3,7 @@
 
 GameBoard::GameBoard(void)
 {
+	
 	tab = new tabuleiro();
 	pecas.resize(5);
 	for(int i = 0; i < pecas.size();i++)
@@ -17,6 +18,57 @@ GameBoard::GameBoard(void)
 
 
 			pilha * p = new pilha();
+			if(!(i == 0  || i == 6 || j == 0 || j == 4 || (i == 3 && j == 2)))//não é uma das bordas
+			{
+				if(i == 3)//é na coluna do meio
+				{
+					if(j == 1)//azul
+					{
+						cor = 0;
+					}
+					else if(j == 3)//rosa
+					{
+						cor = 1;
+					}
+				}
+
+
+				for(int k = 0; k < 3;k++)
+				{
+					Peca t(cor);
+					t.setCoords(j,i);
+					p->setCoords(j,i,1);
+					p->setCor(cor);
+					p->addPiece(t);
+				}
+				if(i != 3)
+					cor = !cor;
+			}
+			else
+				p->setCoords(j,i,0);
+			pecas[j][i] = p;
+		}
+	}
+}
+
+
+GameBoard::GameBoard(CGFtexture * t)
+{
+	flagTexture = t;
+	tab = new tabuleiro();
+	pecas.resize(5);
+	for(int i = 0; i < pecas.size();i++)
+		pecas[i].resize(7);
+	bool cor = 1;//começa com uma peça preta
+
+	for(int i = 0; i < 7;i++)
+	{
+
+		for(int j = 0; j < 5;j++)	
+		{	
+
+
+			pilha * p = new pilha(t);
 			if(!(i == 0  || i == 6 || j == 0 || j == 4 || (i == 3 && j == 2)))//não é uma das bordas
 			{
 				if(i == 3)//é na coluna do meio
@@ -88,19 +140,41 @@ void GameBoard::sendBoard()
 	char ans[128];
 	recebe(ans);
 }
-void GameBoard::draw(){
-	tab->draw();
 
-	
-
+void GameBoard::draw(int x, int y){
 	glPushMatrix();
 	glPushName(-1);
 	
+	tab->draw();
+
 	for (int i = 0 ; i < pecas.size(); i++){
 		
 
 		for(int j = 0 ; j < pecas[i].size(); j++){
-			pecas[i][j]->draw();
+			if(i == x && j == y)
+				pecas[i][j]->draw(true);
+			else
+				pecas[i][j]->draw(false);
+		}
+	}
+
+	glPopMatrix();
+
+
+}
+
+void GameBoard::draw(){
+	
+	glPushMatrix();
+	glPushName(-1);
+	
+	tab->draw();
+
+	for (int i = 0 ; i < pecas.size(); i++){
+		
+
+		for(int j = 0 ; j < pecas[i].size(); j++){
+			pecas[i][j]->draw(false);
 		}
 	}
 
