@@ -173,10 +173,10 @@ void LightingScene::display()
 		(*it)->apply();
 	}
 	else
-	{
-		CGFscene::activeCamera->applyView();
-		glMatrixMode(GL_MODELVIEW);
+	{glMatrixMode(GL_MODELVIEW);
 		glLoadIdentity();
+		CGFscene::activeCamera->applyView();
+		
 	}
 	//pgraph.getCameras()[activCam]->apply(); // para evitar que o iterador fique a apontar para o vazio
 
