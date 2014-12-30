@@ -9,12 +9,12 @@ pilha::pilha(void)
 	flag = new flagSelection(new CGFtexture("textures/flagOfMyPeople.gif"));
 }
 
-pilha::pilha(CGFtexture *t)
+pilha::pilha(flagSelection * flag)
 {
 	size = 0;
 	cor = -1;
 	y = z = x = 0;
-	flag = new flagSelection(t);
+	this->flag = flag;
 }
 
 Peca pilha:: removePiece()
@@ -53,8 +53,9 @@ void pilha::draw(bool drawFlag)
 		glPopName();
 		glTranslated(0,0.1,0);
 	}
+	/*
 	if(drawFlag)
-		flag->draw();
+		flag->draw();*/
 	glPopMatrix();
 	glPopMatrix();
 }

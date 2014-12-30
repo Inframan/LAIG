@@ -10,6 +10,7 @@ public:
 	flagSelection(CGFtexture *t);
 	void setWind(int wind);
 	void draw();
+	void draw(int x, int y);
 	void update(unsigned long millis);
 	~flagSelection(void);
 };

@@ -52,9 +52,9 @@ GameBoard::GameBoard(void)
 }
 
 
-GameBoard::GameBoard(CGFtexture * t)
+GameBoard::GameBoard(flagSelection * flag)
 {
-	flagTexture = t;
+	this->flag=flag;
 	tab = new tabuleiro();
 	pecas.resize(5);
 	for(int i = 0; i < pecas.size();i++)
@@ -68,7 +68,7 @@ GameBoard::GameBoard(CGFtexture * t)
 		{	
 
 
-			pilha * p = new pilha(t);
+			pilha * p = new pilha(flag);
 			if(!(i == 0  || i == 6 || j == 0 || j == 4 || (i == 3 && j == 2)))//não é uma das bordas
 			{
 				if(i == 3)//é na coluna do meio
@@ -142,6 +142,8 @@ void GameBoard::sendBoard()
 }
 
 void GameBoard::draw(int x, int y){
+
+	bool selected=true;
 	glPushMatrix();
 	glPushName(-1);
 	
@@ -151,14 +153,19 @@ void GameBoard::draw(int x, int y){
 		
 
 		for(int j = 0 ; j < pecas[i].size(); j++){
-			if(i == x && j == y)
-				pecas[i][j]->draw(true);
-			else
-				pecas[i][j]->draw(false);
+
+				//if (x==i+1 && y==j+1){
+				//	selected=false;
+					//pecas[i][j]->draw(true);
+			//	}
+		//		else
+					pecas[i][j]->draw(false);
 		}
 	}
-
+	//if(selected)
+		flag->draw(x,y);
 	glPopMatrix();
+	
 
 
 }
@@ -177,7 +184,6 @@ void GameBoard::draw(){
 			pecas[i][j]->draw(false);
 		}
 	}
-
 	glPopMatrix();
 
 

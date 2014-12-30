@@ -88,15 +88,15 @@ void PickInterface::processHits (GLint hits, GLuint buffer[])
 	}
 	if(selected != NULL)
 	{
-	if( ((LightingScene *) scene)->selected)
-		((LightingScene *) scene)->selected = false;
-	else
-	{
+
 			((LightingScene *) scene)->selected = true;
 			((LightingScene *) scene)->xSelected = selected[0];
 			((LightingScene *) scene)->ySelected = selected[1];
-		
+				
 	}
+	else
+	{
+		((LightingScene *) scene)->selected = false;
 	}
 	// if there were hits, the one selected is in "selected", and it consist of nselected "names" (integer ID's)
 	if (selected!=NULL)

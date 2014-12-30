@@ -14,7 +14,7 @@ class pilha :
 	flagSelection *flag;
 public:
 	pilha(void);
-	pilha(CGFtexture *t);
+	pilha(flagSelection* flag);
 	void draw(bool drawFlag);
 	void draw();
 	Peca removePiece();

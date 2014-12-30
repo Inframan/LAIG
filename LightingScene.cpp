@@ -21,7 +21,7 @@ unsigned int lightArray[8] = {GL_LIGHT0,GL_LIGHT1,GL_LIGHT2,GL_LIGHT3,GL_LIGHT4,
 
 void LightingScene::init() 
 {
-	flagTexture = new CGFtexture("textures/flagOfMyPeople.gif");
+	flag = new flagSelection(new CGFtexture("textures/flagOfMyPeople.gif"));
 
 
 	selected = false;
@@ -222,7 +222,7 @@ void LightingScene::display()
 
 	// ---- BEGIN Primitive drawing section
 	
-	GameBoard board = GameBoard(flagTexture);
+	GameBoard board = GameBoard(flag);
 	if(selected)
 		board.draw(xSelected,ySelected);
 	else

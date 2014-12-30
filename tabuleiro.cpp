@@ -23,15 +23,16 @@ void tabuleiro::draw()
 	y = 1;
 	x = 0;
 	z = 0;
-	for(int i = 0; i < 7;i++)
+
+	for(int j = 0; j < 5;j++)
 	{
 		glPushMatrix();
-		glLoadName(i);
-		for(int j = 0; j < 5;j++)
-		{
-			
+		glLoadName(j);
+
+		for(int i = 0; i < 7;i++)
+		{	
 			glPushMatrix();
-			glPushName(j);
+			glPushName(i);
 			if(i == 0  || i == 6 || j == 0 || j == 4)
 			{
 				y = 0;
@@ -82,19 +83,19 @@ void tabuleiro::draw()
 				glEnd();
 
 			}
-			
-				x++;
 
-				glPopName();
-				glPopMatrix();
-		}
-		
-			x = 0;
 			z++;
+
+			glPopName();
 			glPopMatrix();
+		}
+
+		z = 0;
+		x++;
+		glPopMatrix();
 	}
 
-	
+
 	drawCylinders();
 
 
@@ -115,12 +116,14 @@ void tabuleiro::draw(Texture *t)
 	y = 1;
 	x = 0;
 	z = 0;
-	for(int i = 0; i < 7;i++)
+	for(int j = 0; j < 5;j++)
 	{
 		glPushMatrix();
-		glLoadName(i);
-		for(int j = 0; j < 5;j++)
+		glLoadName(j);
+		for(int i = 0; i < 7;i++)
 		{
+			glPushMatrix();
+			glPushName(i);
 			if(i == 0  || i == 6 || j == 0 || j == 4)
 			{
 				y = 0;
@@ -177,34 +180,34 @@ void tabuleiro::draw(Texture *t)
 				glBegin(GL_QUADS);
 				glNormal3f(0,1,0); 
 
-				
+
 				glTexCoord2f(tX,tY+incTY); 
 				glVertex3f(x,y,z+1);
 
-				
+
 				glTexCoord2f(tX+incTX,tY+incTY); 
 				glVertex3f(x+1,y,z+1);			
 
 				glTexCoord2f(tX+incTX,tY); 
 				glVertex3f(x+1,y,z);	
 
-				
+
 				glTexCoord2f(tX,tY); 
 				glVertex3f(x,y,z);
 				glEnd();
 
 			}
-			
-				x++;
-				tX += incTX;
-				glPopName();
-				glPopMatrix();
-		}
-			tX = 0;
-			tY+= incTY;
-			x = 0;
-			z++;	
+
+			z++;
+			tY += incTY;
+			glPopName();
 			glPopMatrix();
+		}
+		tY = 0;
+		tX+= incTX;
+		z = 0;
+		x++;	
+		glPopMatrix();
 	}
 	drawCylinders();
 }

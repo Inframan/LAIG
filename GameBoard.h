@@ -11,10 +11,10 @@ class GameBoard
 	tabuleiro *tab;
 	vector <vector <pilha *>> pecas;
 	Appearence *app;
-	CGFtexture * flagTexture;
+	flagSelection* flag;
 public:
 	GameBoard(void);
-	GameBoard(CGFtexture *t);
+	GameBoard(flagSelection* flag);
 	string transformMatrixToPrologList();
 	void sendBoard();
 	vector<vector <pilha *>> getPecas();

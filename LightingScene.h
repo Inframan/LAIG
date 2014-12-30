@@ -14,7 +14,7 @@ class LightingScene : public CGFscene
 	///for the selectiong flag
 	bool selected;
 	int xSelected,ySelected;
-	CGFtexture *flagTexture;
+	flagSelection *flag;
 public:
 	vector<camera*> cams;
 	vector<camera*>::iterator it;
