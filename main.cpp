@@ -33,7 +33,6 @@ int main(int argc, char* argv[]) {
 		XMLScene n = XMLScene(filename,pgraph);
 		scene->setGraph(graph);
 		app.setScene(scene);
-		
 		app.setInterface(new TPinterface(pgraph));
 		app.setInterface(new PickInterface());
 		app.run();

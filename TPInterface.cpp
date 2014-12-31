@@ -38,7 +38,7 @@ void TPinterface::initGUI()
 	addRadioButtonToGroup(wireFrameGroup, "\tFill");
 	addRadioButtonToGroup(wireFrameGroup, "\tWire");
 	addRadioButtonToGroup(wireFrameGroup, "\tPoint");
-	
+
 	addColumnToPanel(varPanel);
 	GLUI_Panel *cammodel = addPanelToPanel(varPanel, "Camera", 1);
 	GLUI_RadioGroup* camerasGroup = addRadioGroupToPanel(cammodel,cam);
@@ -48,7 +48,7 @@ void TPinterface::initGUI()
 		addRadioButtonToGroup(camerasGroup, (char *)cameras[i].c_str());
 	}
 	addRadioButtonToGroup(camerasGroup, "Free Camera");
-	
+
 
 	addColumnToPanel(varPanel);
 	GLUI_Panel *lightspanel = addPanelToPanel(varPanel, "Lights", 1);
@@ -67,22 +67,49 @@ void TPinterface::initGUI()
 	addColumnToPanel(varPanel);
 	GLUI_Panel *windpanel = addPanelToPanel(varPanel, "Wind", 1);
 	GLUI_Spinner *spin=   addSpinnerToPanel(windpanel,"wind",GLUI_SPINNER_INT,wind,11);
-
 	spin->set_int_limits(0,11,GLUI_LIMIT_WRAP);	
+
+
+	addColumnToPanel(varPanel);
+	GLUI_Panel *playPanel= addPanelToPanel(varPanel,"Play:", 12);
+
+	GLUI_Button* movebutton = addButtonToPanel(playPanel,"Move", 13);
+	GLUI_Button* exitbutton = addButtonToPanel(playPanel,"Exit", 14);
+	GLUI_Button* mergebutton = addButtonToPanel(playPanel,"Merge", 15);
 
 }
 
 
 void TPinterface::processGUI(GLUI_Control *ctrl)
 {
+	switch (ctrl->user_id)
+	{
 
-	if (ctrl->user_id >= 0 && ctrl->user_id <11)
+	case 13:
+		((LightingScene *) scene) ->setPlaymove(0);
+		break;
+	case 14:
+		((LightingScene *) scene) ->setPlaymove(1);
+		break;
+	case 15:
+		((LightingScene *) scene) ->setPlaymove(2);
+		break;
+	default:
+		break;
+	}
+
+
+
+
+	if (ctrl->user_id >= 0 && ctrl->user_id <16)
 		if (ctrl->get_int_val() == 1) {
 			pgraph->getLights()[ctrl->user_id].enabled = true;
 			((LightingScene *) scene)->lightsVector[ctrl->user_id]->enable();
 		} else {
 			pgraph->getLights()[ctrl->user_id].enabled = false;
 			((LightingScene *) scene)->lightsVector[ctrl->user_id]->disable();
-
 		}
+
+
+
 }

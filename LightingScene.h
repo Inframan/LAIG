@@ -20,9 +20,11 @@ public:
 	vector<camera*>::iterator it;
 	vector<CGFlight *> lightsVector;
 	sceneGraph pgraph;
+	GameBoard* board;
 	int  activCam;
 	int wire;
 	int wind;
+	int playmove;
 	int light0On, light1On, light2On, light3On;
 	void init();
 	void display();
@@ -35,7 +37,7 @@ public:
 	void setGraph(sceneGraph pgraph);
 	void drawNode(Node *n,Appearence * t);
 	void createDisplayLists(Node * node,Appearence * t);
-
+	void setPlaymove(int playmove);
 
 	CGFappearance* materialA;
 	CGFappearance* materialB;

@@ -23,9 +23,11 @@ void LightingScene::init()
 {
 	flag = new flagSelection(new CGFtexture("textures/flagOfMyPeople.gif"));
 
+	playmove=-1;
 
 	selected = false;
 
+	board = new GameBoard(flag);
 
 	Appearence * t = NULL;
 	createDisplayLists(pgraph.getRootNode(),t);
@@ -222,11 +224,11 @@ void LightingScene::display()
 
 	// ---- BEGIN Primitive drawing section
 	
-	GameBoard board = GameBoard(flag);
+	
 	if(selected)
-		board.draw(xSelected,ySelected);
+		board->draw(xSelected,ySelected);
 	else
-		board.draw();
+		board->draw();
 	glutSwapBuffers();
 }
 
@@ -237,6 +239,11 @@ void LightingScene::update(unsigned long millis)
 	pgraph.update(millis);
 	
 	
+}
+
+void LightingScene::setPlaymove(int playmove)
+{
+	this->playmove=playmove;
 }
 
 LightingScene::~LightingScene() 

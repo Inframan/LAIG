@@ -90,6 +90,9 @@ void PickInterface::processHits (GLint hits, GLuint buffer[])
 	{
 
 			((LightingScene *) scene)->selected = true;
+
+			prepareGameMove(((LightingScene *) scene)->xSelected, ((LightingScene *) scene)->ySelected , selected[0] , selected[1]);
+
 			((LightingScene *) scene)->xSelected = selected[0];
 			((LightingScene *) scene)->ySelected = selected[1];
 				
@@ -107,7 +110,74 @@ void PickInterface::processHits (GLint hits, GLuint buffer[])
 		for (int i=0; i<nselected; i++)
 			printf("%d ",selected[i]);
 		printf("\n");
+
+		
+
+
 	}
 	else
 		printf("Nothing selected while picking \n");	
+}
+
+
+void PickInterface::prepareGameMove(int previousX, int previousY , int selectedX, int selectedY){
+
+	int play = ((LightingScene *) scene)->playmove;
+
+	stringstream ss;
+	ss << previousX;
+	string prevX = ss.str();
+	ss.clear();
+	ss << previousY;
+	string prevY = ss.str();
+	ss.clear();
+	ss << selectedX;
+	string newX = ss.str();
+	ss.clear();
+	ss<< selectedY;
+	string newY=ss.str();
+	ss.clear();
+
+	int diffX= selectedX - previousX;
+	int diffY= selectedY - previousY;
+	int direction= -1;
+	string playmove;
+	string boardList = ((LightingScene *) scene)->board->transformMatrixToPrologList();
+
+	if ( diffX == 0 && diffY > 0)
+		direction= 1;
+	else if ( diffX == 0 && diffY < 0)
+		direction= 2;
+	else if ( diffX < 0 && diffY == 0)
+		direction= 3;
+	else if ( diffX > 0 && diffY == 0)
+		direction= 4;
+	else if ( diffX < 0 && diffY > 0)
+		direction= 5;
+	else if ( diffX < 0 && diffY < 0)
+		direction= 6;
+	else if ( diffX > 0 && diffY > 0)
+		direction= 7;
+	else if ( diffX > 0 && diffY < 0)
+		direction= 8;
+
+	ss<<direction;
+
+	string dir = ss.str();
+	string playcomand;
+	switch (play)
+	{
+	case 0: //move
+		playcomand ="move(" + boardList + ","+ newY + "," + newX + ","+ dir +",E,1).";
+		break;
+	case 1://exit
+		playcomand ="exit("+ boardList + "," + newY + "," + newX + "," + dir + ",1,21,E,NI).";
+		break;
+	case 2://merge
+		playcomand ="merge("+ boardList + "," + prevY + "," + newY + "," + prevX + "," + newX + ",1,E).";
+		break;
+	default:
+		break;
+	}
+
 }
