@@ -3,8 +3,8 @@
 #include "CGFapplication.h"
 
 // buffer to be used to store the hits during picking
-#define BUFSIZE 256
-GLuint selectBuf[BUFSIZE];
+//#define BUFSIZE 256
+//GLuint selectBuf[BUFSIZE];
 
 void PickInterface::processMouse(int button, int state, int x, int y) 
 {

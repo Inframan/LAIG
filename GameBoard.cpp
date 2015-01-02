@@ -104,7 +104,7 @@ GameBoard::GameBoard(flagSelection * flag)
 
 
 string GameBoard::transformMatrixToPrologList(){
-	string res = "boardgame([";
+	string res = "[";
 
 	for (unsigned int i = 0 ; i < pecas.size() ; i++)
 	{
@@ -120,7 +120,7 @@ string GameBoard::transformMatrixToPrologList(){
 		if (i+1 != pecas.size())
 			res+=",";
 	}
-	res += "]).\n";
+	res += "]";
 
 	return res;
 }

@@ -34,7 +34,7 @@ int main(int argc, char* argv[]) {
 		scene->setGraph(graph);
 		app.setScene(scene);
 		app.setInterface(new TPinterface(pgraph));
-		app.setInterface(new PickInterface());
+//		app.setInterface(new PickInterface());
 		app.run();
 	}
 	catch(GLexception& ex) {
