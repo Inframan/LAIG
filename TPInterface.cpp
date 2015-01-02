@@ -32,14 +32,18 @@ void TPinterface::initGUI()
 	// Check CGFinterface.h and GLUI documentation for the types of controls available
 	GLUI_Panel *varPanel= addPanel("Settings:", 1);
 
+	
+	GLUI_Button* movebutton = addButtonToPanel(varPanel,"Move", 12);
+	GLUI_Button* exitbutton = addButtonToPanel(varPanel,"Exit", 13);
+	GLUI_Button* mergebutton = addButtonToPanel(varPanel,"Merge", 15);
 
+	addColumnToPanel(varPanel);
 	GLUI_Panel *modepanel = addPanelToPanel(varPanel, "Mode", 1);
 	GLUI_RadioGroup* wireFrameGroup = addRadioGroupToPanel(modepanel,wire);
 	addRadioButtonToGroup(wireFrameGroup, "\tFill");
 	addRadioButtonToGroup(wireFrameGroup, "\tWire");
 	addRadioButtonToGroup(wireFrameGroup, "\tPoint");
 
-	addColumnToPanel(varPanel);
 	GLUI_Panel *cammodel = addPanelToPanel(varPanel, "Camera", 1);
 	GLUI_RadioGroup* camerasGroup = addRadioGroupToPanel(cammodel,cam);
 	for(int i = 0; i < cameras.size();i++)
@@ -71,17 +75,14 @@ void TPinterface::initGUI()
 
 
 	addColumnToPanel(varPanel);
-	GLUI_Panel *playPanel= addPanelToPanel(varPanel,"Play:", 12);
-
-	GLUI_Button* movebutton = addButtonToPanel(playPanel,"Move", 13);
-	GLUI_Button* exitbutton = addButtonToPanel(playPanel,"Exit", 14);
-	GLUI_Button* mergebutton = addButtonToPanel(playPanel,"Merge", 15);
+	
 
 }
 
 
 void TPinterface::processGUI(GLUI_Control *ctrl)
 {
+	printf ("GUI control id: %d\n  ",ctrl->user_id);
 	switch (ctrl->user_id)
 	{
 
@@ -94,12 +95,7 @@ void TPinterface::processGUI(GLUI_Control *ctrl)
 	case 15:
 		((LightingScene *) scene) ->setPlaymove(2);
 		break;
-	default:
-		break;
 	}
-
-
-
 
 	if (ctrl->user_id >= 0 && ctrl->user_id <16)
 		if (ctrl->get_int_val() == 1) {

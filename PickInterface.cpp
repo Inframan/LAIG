@@ -86,7 +86,7 @@ void PickInterface::processHits (GLint hits, GLuint buffer[])
 		for (int j=0; j < num; j++) 
 			ptr++;
 	}
-	if(selected != NULL)
+	if(selected != NULL && sizeof(selected)>1)
 	{
 
 			((LightingScene *) scene)->selected = true;

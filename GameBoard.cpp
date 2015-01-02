@@ -68,7 +68,7 @@ GameBoard::GameBoard(flagSelection * flag)
 		{	
 
 
-			pilha * p = new pilha(flag);
+			pilha * p = new pilha();
 			if(!(i == 0  || i == 6 || j == 0 || j == 4 || (i == 3 && j == 2)))//não é uma das bordas
 			{
 				if(i == 3)//é na coluna do meio
@@ -144,6 +144,8 @@ void GameBoard::sendBoard()
 void GameBoard::draw(int x, int y){
 
 	bool selected=true;
+	
+	flag->draw(x,y);
 	glPushMatrix();
 	glPushName(-1);
 	
@@ -151,20 +153,12 @@ void GameBoard::draw(int x, int y){
 
 	for (int i = 0 ; i < pecas.size(); i++){
 		
-
 		for(int j = 0 ; j < pecas[i].size(); j++){
-
-				//if (x==i+1 && y==j+1){
-				//	selected=false;
-					//pecas[i][j]->draw(true);
-			//	}
-		//		else
-					pecas[i][j]->draw(false);
+					pecas[i][j]->draw();
 		}
 	}
-	//if(selected)
-		flag->draw(x,y);
 	glPopMatrix();
+	
 	
 
 
@@ -181,7 +175,7 @@ void GameBoard::draw(){
 		
 
 		for(int j = 0 ; j < pecas[i].size(); j++){
-			pecas[i][j]->draw(false);
+			pecas[i][j]->draw();
 		}
 	}
 	glPopMatrix();
