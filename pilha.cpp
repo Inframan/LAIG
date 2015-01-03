@@ -64,6 +64,12 @@ bool pilha::isEmpty() const
 	return size == 0;
 }
 
+void pilha::update(unsigned long millis)
+{
+	for(int i = 0; i < pecas.size();i++)
+		pecas[i].update(millis);
+}
+
 string pilha::toString(){
 
 	stringstream ss;

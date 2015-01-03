@@ -23,6 +23,7 @@ public:
 	string toString();
 	void emptyStack();
 	bool isEmpty() const;
+	void update(unsigned long millis);
 	~pilha(void);
 };
 

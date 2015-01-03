@@ -46,7 +46,7 @@ public:
 
 	CGFappearance* materialA;
 	CGFappearance* materialB;
-
+	
 
 	~LightingScene();
 };

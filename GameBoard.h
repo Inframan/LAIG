@@ -29,5 +29,6 @@ public:
 	void move(int prevX,int prevY,int newX,int newY);
 	void merge(int prevX,int prevY,int newX,int newY);
 	void exit(int prevX,int prevY,int newX,int newY);
+	void update(unsigned long millis);
 };
 

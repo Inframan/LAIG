@@ -49,7 +49,6 @@ void GameBoard::createPieces()
 				for(int k = 0; k < 3;k++)
 				{
 					Peca t(cor);
-					t.setCoords(j,i);
 					p->setCoords(j,i,1);
 					p->setCor(cor);
 					p->addPiece(t);
@@ -194,6 +193,9 @@ void GameBoard::move(int prevX,int prevY,int newX,int newY)
 	while(!pecas[prevX][prevY]->isEmpty())
 	{
 		Peca p = pecas[prevX][prevY]->removePiece();
+		int x = prevX - newX;
+		int y = prevY - newY;
+		p.setMoveAnimation(x,0,y);
 		pecas[newX][newY]->addPiece(p);
 	}
 	pecas[newX][newY]->setCor(cor);
@@ -206,6 +208,9 @@ void GameBoard::merge(int prevX,int prevY,int newX,int newY)
 	while(!pecas[newX][newY]->isEmpty())
 	{
 		p = pecas[newX][newY]->removePiece();
+		int x = newX - prevX;
+		int y = newY - prevY;
+		p.setMergeAnimation(x,0,y);
 		pecas[prevX][prevY]->addPiece(p);
 	}
 }
@@ -213,11 +218,21 @@ void GameBoard::merge(int prevX,int prevY,int newX,int newY)
 void GameBoard::exit(int prevX,int prevY,int newX,int newY)
 {
 	bool cor = pecas[prevX][prevY]->getCor();
-	Peca p = pecas[prevX][prevY]->removePiece();
+	Peca p = pecas[prevX][prevY]->removePiece();	
+	int x = prevX - newX;
+	int y = prevY - newY;
+	p.setExitAnimation(x,1,y);
 	pecas[newX][newY]->addPiece(p);
 	pecas[newX][newY]->setCor(cor);
 }
 
+
+void GameBoard::update(unsigned long millis)
+{
+	for(int i = 0; i < pecas.size(); i++)
+		for(int j = 0; j < pecas[i].size();j++)
+			pecas[i][j]->update(millis);
+}
 
 GameBoard::~GameBoard(void)
 {

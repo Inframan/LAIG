@@ -63,7 +63,6 @@ void linearAnimation::addPoint(float x,float y,float z)
 void linearAnimation::update(unsigned long t)
 {
 
-
 	if(!isFinished())
 	{
 		if(firstTime)
@@ -82,7 +81,7 @@ void linearAnimation::update(unsigned long t)
 				setFinish(true);
 			}
 
-			x += dx*speed*delta;
+			x +=dx*speed*delta;
 			y +=dy*speed*delta;
 			z +=dz*speed*delta;
 			if(checkControlPoint())

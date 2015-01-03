@@ -244,7 +244,7 @@ void LightingScene::update(unsigned long millis)
 {
 	pgraph.updateWind(wind);
 	pgraph.update(millis);
-
+	board->update(millis);
 
 }
 

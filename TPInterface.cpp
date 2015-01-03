@@ -34,20 +34,20 @@ void TPinterface::initGUI()
 	int * cam = &(((LightingScene*) scene)->activCam);
 
 	// Check CGFinterface.h and GLUI documentation for the types of controls available
-	GLUI_Panel *varPanel= addPanel("Settings:", 1);
+	GLUI_Panel *varPanel= addPanel("GUI:", 1);
 
-
-	GLUI_Button* movebutton = addButtonToPanel(varPanel,"Move", 13);
-	GLUI_Button* exitbutton = addButtonToPanel(varPanel,"Exit", 14);
-	GLUI_Button* mergebutton = addButtonToPanel(varPanel,"Merge", 15);
+	GLUI_Panel *movepanel = addPanelToPanel(varPanel, "Moves:", 1);
+	GLUI_Button* movebutton = addButtonToPanel(movepanel,"Move", 13);
+	GLUI_Button* exitbutton = addButtonToPanel(movepanel,"Exit", 14);
+	GLUI_Button* mergebutton = addButtonToPanel(movepanel,"Merge", 15);
 
 	addColumnToPanel(varPanel);
-	GLUI_Panel *modepanel = addPanelToPanel(varPanel, "Mode", 1);
+	GLUI_Panel *modepanel = addPanelToPanel(varPanel, "Mode:", 1);
 	GLUI_RadioGroup* wireFrameGroup = addRadioGroupToPanel(modepanel,wire);
 	addRadioButtonToGroup(wireFrameGroup, "\tFill");
 	addRadioButtonToGroup(wireFrameGroup, "\tWire");
 	addRadioButtonToGroup(wireFrameGroup, "\tPoint");
-
+	addColumnToPanel(varPanel);
 	GLUI_Panel *cammodel = addPanelToPanel(varPanel, "Camera", 1);
 	GLUI_RadioGroup* camerasGroup = addRadioGroupToPanel(cammodel,cam);
 	for(int i = 0; i < cameras.size();i++)
@@ -98,6 +98,8 @@ void TPinterface::processGUI(GLUI_Control *ctrl)
 		break;
 	case 15:
 		((LightingScene *) scene) ->setPlaymove(2);
+		break;
+	default:
 		break;
 	}
 
@@ -319,10 +321,13 @@ void TPinterface::doMove(string move,int previousX, int previousY , int selected
 	int valid = strcmp(ans,no);
 	if(ans[0] != '8')
 	{
+
+
 		((LightingScene*) scene)->playerTurn = !((LightingScene*) scene)->playerTurn;
 		switch (play)
 		{
 		case 0: //move
+
 			((LightingScene*) scene)->board->move(previousX,previousY,selectedX,selectedY);
 			break;
 		case 1://exit
