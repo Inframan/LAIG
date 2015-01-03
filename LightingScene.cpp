@@ -21,6 +21,10 @@ unsigned int lightArray[8] = {GL_LIGHT0,GL_LIGHT1,GL_LIGHT2,GL_LIGHT3,GL_LIGHT4,
 
 void LightingScene::init() 
 {
+	gameOver= false;
+	playerTurn = true;
+	player1pieces = 21;
+	player2pieces = 21;
 	flag = new flagSelection(new CGFtexture("textures/flagOfMyPeople.gif"));
 
 	playmove=-1;
@@ -182,9 +186,9 @@ void LightingScene::display()
 	}
 	else
 	{glMatrixMode(GL_MODELVIEW);
-		glLoadIdentity();
-		CGFscene::activeCamera->applyView();
-		
+	glLoadIdentity();
+	CGFscene::activeCamera->applyView();
+
 	}
 	//pgraph.getCameras()[activCam]->apply(); // para evitar que o iterador fique a apontar para o vazio
 
@@ -223,13 +227,16 @@ void LightingScene::display()
 	// ---- END Background, camera and axis setup
 
 	// ---- BEGIN Primitive drawing section
-	
-	
-	if(selected)
-		board->draw(xSelected,ySelected);
-	else
-		board->draw();
-	glutSwapBuffers();
+
+	if (!gameOver){
+		if(selected)
+			board->draw(xSelected,ySelected);
+		else
+			board->draw();
+	}
+
+glutSwapBuffers();
+
 }
 
 
@@ -237,8 +244,8 @@ void LightingScene::update(unsigned long millis)
 {
 	pgraph.updateWind(wind);
 	pgraph.update(millis);
-	
-	
+
+
 }
 
 void LightingScene::setPlaymove(int playmove)
@@ -264,10 +271,10 @@ void LightingScene::drawNode(Node *n,Appearence * t)
 		glCallList(n->getDisplayList());
 	else
 	{
-		
+
 		glPushMatrix();
 		glMultMatrixf(n->matrix);
-		
+
 		for(vector<animation *>::iterator it = n->animations.begin();it != n->animations.end();it++)
 		{
 			if(!(*it)->isFinished())
@@ -317,11 +324,11 @@ void LightingScene::createDisplayLists(Node * node,Appearence *t)
 	if(t)
 		t->getAppearance()->apply();
 
-	
+
 	vector<Node*> nV = node->getDescendantNode();
 
 	for(vector<Node*>::iterator nIt = nV.begin(); nIt != nV.end();nIt++)
-			createDisplayLists(*nIt,t);
+		createDisplayLists(*nIt,t);
 
 
 	if(node->isDisplayList())

@@ -22,6 +22,7 @@ public:
 	vector<int> getCoords()const;
 	string toString();
 	void emptyStack();
+	bool isEmpty() const;
 	~pilha(void);
 };
 

@@ -5,6 +5,19 @@ GameBoard::GameBoard(void)
 {
 	
 	tab = new tabuleiro();
+	createPieces();
+}
+
+GameBoard::GameBoard(flagSelection * flag)
+{
+	this->flag = flag;
+	tab = new tabuleiro();
+	createPieces();
+}
+
+
+void GameBoard::createPieces()
+{
 	pecas.resize(5);
 	for(int i = 0; i < pecas.size();i++)
 		pecas[i].resize(7);
@@ -44,64 +57,44 @@ GameBoard::GameBoard(void)
 				if(i != 3)
 					cor = !cor;
 			}
+			else if(j ==2 && i==3)
+				p->setCoords(j,i,1);
 			else
 				p->setCoords(j,i,0);
 			pecas[j][i] = p;
 		}
 	}
+
 }
 
-
-GameBoard::GameBoard(flagSelection * flag)
+GameBoard::GameBoard(string prologList)
 {
 	this->flag=flag;
 	tab = new tabuleiro();
 	pecas.resize(5);
 	for(int i = 0; i < pecas.size();i++)
 		pecas[i].resize(7);
-	bool cor = 1;//começa com uma peça preta
-
-	for(int i = 0; i < 7;i++)
-	{
-
-		for(int j = 0; j < 5;j++)	
-		{	
-
-
-			pilha * p = new pilha();
-			if(!(i == 0  || i == 6 || j == 0 || j == 4 || (i == 3 && j == 2)))//não é uma das bordas
-			{
-				if(i == 3)//é na coluna do meio
-				{
-					if(j == 1)//azul
-					{
-						cor = 0;
-					}
-					else if(j == 3)//rosa
-					{
-						cor = 1;
-					}
-				}
-
-
-				for(int k = 0; k < 3;k++)
-				{
-					Peca t(cor);
-					t.setCoords(j,i);
-					p->setCoords(j,i,1);
-					p->setCor(cor);
-					p->addPiece(t);
-				}
-				if(i != 3)
-					cor = !cor;
-			}
-			else
-				p->setCoords(j,i,0);
-			pecas[j][i] = p;
-		}
-	}
 }
 
+
+/*vector <vector <pilha *>> GameBoard::transformPrologListToMatrix(string prologList)
+{
+	vector <vector <pilha *>> novasPecas;
+	novasPecas.resize(5);
+	for(int i = 0; i < pecas.size();i++)
+		novasPecas[i].resize(7);
+
+	for(int i = 0; i < 5;i++)
+	{
+		for(int j = 0; j < 7;j++)
+		{
+
+
+		}
+	}
+
+
+}*/
 
 string GameBoard::transformMatrixToPrologList(){
 	string res = "[";
@@ -124,6 +117,8 @@ string GameBoard::transformMatrixToPrologList(){
 
 	return res;
 }
+
+
 
 void GameBoard::sendBoard()
 { 
@@ -157,6 +152,8 @@ void GameBoard::draw(int x, int y){
 					pecas[i][j]->draw();
 		}
 	}
+
+	
 	glPopMatrix();
 	
 	
@@ -172,8 +169,6 @@ void GameBoard::draw(){
 	tab->draw();
 
 	for (int i = 0 ; i < pecas.size(); i++){
-		
-
 		for(int j = 0 ; j < pecas[i].size(); j++){
 			pecas[i][j]->draw();
 		}
@@ -192,6 +187,37 @@ tabuleiro* GameBoard::getTab(){
 
 	return tab;
 }
+
+void GameBoard::move(int prevX,int prevY,int newX,int newY)
+{
+	int cor = (*pecas[prevX][prevY]).getCor();
+	while(!pecas[prevX][prevY]->isEmpty())
+	{
+		Peca p = pecas[prevX][prevY]->removePiece();
+		pecas[newX][newY]->addPiece(p);
+	}
+	pecas[newX][newY]->setCor(cor);
+	pecas[prevX][prevY]->setCor(-1);
+}
+
+void GameBoard::merge(int prevX,int prevY,int newX,int newY)
+{
+	Peca p;
+	while(!pecas[newX][newY]->isEmpty())
+	{
+		p = pecas[newX][newY]->removePiece();
+		pecas[prevX][prevY]->addPiece(p);
+	}
+}
+
+void GameBoard::exit(int prevX,int prevY,int newX,int newY)
+{
+	bool cor = pecas[prevX][prevY]->getCor();
+	Peca p = pecas[prevX][prevY]->removePiece();
+	pecas[newX][newY]->addPiece(p);
+	pecas[newX][newY]->setCor(cor);
+}
+
 
 GameBoard::~GameBoard(void)
 {

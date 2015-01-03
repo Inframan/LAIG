@@ -8,11 +8,14 @@ pilha::pilha(void)
 	y = z = x = 0;
 }
 
+
 Peca pilha:: removePiece()
 {
 	Peca ret = pecas[pecas.size()-1];
 	pecas.pop_back();
 	size--;
+	if(size == 0)
+		cor = -1;
 	return ret;
 }
 
@@ -56,6 +59,10 @@ void pilha::emptyStack()
 	size =0;
 }
 
+bool pilha::isEmpty() const
+{
+	return size == 0;
+}
 
 string pilha::toString(){
 

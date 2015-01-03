@@ -10,6 +10,7 @@
 class TPinterface: public CGFinterface {
 	vector<string> cameras;
 	sceneGraph * pgraph;
+	void doMove(string move,int previousX, int previousY , int selectedX, int selectedY,int play);
 	public:
 		TPinterface(sceneGraph *graph);
 		void getCameraList();
@@ -19,7 +20,7 @@ class TPinterface: public CGFinterface {
 		void performPicking(int x, int y);
 		void processHits(GLint hits, GLuint buffer[]);
 		void prepareGameMove(int previousX, int previousY, int selectedX, int selectedY);
-
+		void gameOver();
 };
 
 

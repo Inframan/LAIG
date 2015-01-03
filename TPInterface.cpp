@@ -23,7 +23,7 @@ void TPinterface::getCameraList()
 
 void TPinterface::initGUI()
 {
-	
+
 	socketConnect();
 	pgraph = &(((LightingScene*) scene)->pgraph);
 
@@ -36,7 +36,7 @@ void TPinterface::initGUI()
 	// Check CGFinterface.h and GLUI documentation for the types of controls available
 	GLUI_Panel *varPanel= addPanel("Settings:", 1);
 
-	
+
 	GLUI_Button* movebutton = addButtonToPanel(varPanel,"Move", 13);
 	GLUI_Button* exitbutton = addButtonToPanel(varPanel,"Exit", 14);
 	GLUI_Button* mergebutton = addButtonToPanel(varPanel,"Merge", 15);
@@ -79,7 +79,7 @@ void TPinterface::initGUI()
 
 
 	addColumnToPanel(varPanel);
-	
+
 
 }
 
@@ -198,26 +198,26 @@ void TPinterface::processHits (GLint hits, GLuint buffer[])
 	if(selected != NULL)
 	{
 
-			((LightingScene *) scene)->selected = true;
-			if (((LightingScene *) scene)->playmove != -1)
+		((LightingScene *) scene)->selected = true;
+		if (((LightingScene *) scene)->playmove != -1)
 			prepareGameMove(((LightingScene *) scene)->xSelected, ((LightingScene *) scene)->ySelected , selected[0] , selected[1]);
 
-			((LightingScene *) scene)->xSelected = selected[0];
-			((LightingScene *) scene)->ySelected = selected[1];
-				// this should be replaced by code handling the picked object's ID's (stored in "selected"), 
+		((LightingScene *) scene)->xSelected = selected[0];
+		((LightingScene *) scene)->ySelected = selected[1];
+		// this should be replaced by code handling the picked object's ID's (stored in "selected"), 
 		// possibly invoking a method on the scene class and passing "selected" and "nselected"
 		printf("Picked ID's: ");
 		for (int i=0; i<nselected; i++)
 			printf("%d ",selected[i]);
 		printf("\n");
-		
+
 	}
 	else
 	{
 		((LightingScene *) scene)->selected = false;
 	}
-		
-		
+
+
 
 }
 
@@ -241,53 +241,115 @@ void TPinterface::prepareGameMove(int previousX, int previousY , int selectedX, 
 	ss.str(std::string());
 
 	//tabuleiro tem coordenadas X e Y trocadas
-	int diffY= selectedX - previousX;
+	int diffY= -selectedX + previousX;
 	int diffX= selectedY - previousY;
 	int direction= -1;
 	string playmove;
 	string boardList = ((LightingScene *) scene)->board->transformMatrixToPrologList();
-
-	if ( diffX == 0 && diffY > 0)
-		direction= 1;
-	else if ( diffX == 0 && diffY < 0)
-		direction= 2;
-	else if ( diffX < 0 && diffY == 0)
-		direction= 3;
-	else if ( diffX > 0 && diffY == 0)
-		direction= 4;
-	else if ( diffX < 0 && diffY > 0)
-		direction= 5;
-	else if ( diffX < 0 && diffY < 0)
-		direction= 6;
-	else if ( diffX > 0 && diffY > 0)
-		direction= 7;
-	else if ( diffX > 0 && diffY < 0)
-		direction= 8;
+	
+	if(abs(diffX) == abs(diffY) || diffY == 0 || diffX == 0)
+	{
+		if ( diffX == 0 && diffY > 0)
+			direction= 1;
+		else if ( diffX == 0 && diffY < 0)
+			direction= 2;
+		else if ( diffX < 0 && diffY == 0)
+			direction= 3;
+		else if ( diffX > 0 && diffY == 0)
+			direction= 4;
+		else if ( diffX < 0 && diffY > 0)
+			direction= 5;
+		else if ( diffX < 0 && diffY < 0)
+			direction= 6;
+		else if ( diffX > 0 && diffY > 0)
+			direction= 7;
+		else if ( diffX > 0 && diffY < 0)
+			direction= 8;
+	}
 
 	ss<<direction;
-
+	string player;
+	if(((LightingScene*) scene)->playerTurn)
+		player= "1";
+	else
+		player ="2";
+	
+	stringstream p1;
+	p1 << ((LightingScene*) scene)->player1pieces;
+	stringstream p2;
+	p2 << ((LightingScene*) scene)->player2pieces;
 	string dir = ss.str();
 	string playcomand;
 	switch (play)
 	{
 	case 0: //move
-		playcomand ="move(" + boardList + ","+ prevY + "," + prevX + ","+ dir +",1).\n";
+		playcomand ="move(" + boardList + ","+ prevY + "," + prevX + ","+ dir +","+player+").\n";
 		break;
 	case 1://exit
-		playcomand ="exit("+ boardList + "," + prevY + "," + prevX + "," + dir + ",1,21).\n";
+		playcomand ="exit("+ boardList + "," + prevY + "," + prevX + "," + dir + ","+player+",["+p1.str()+","+p2.str()+"]).\n";
 		break;
 	case 2://merge
-		playcomand ="merge("+ boardList + "," + prevY + "," + newY + "," + prevX + "," + newX + ",1).\n";
+		playcomand ="merge("+ boardList + "," + prevY + "," + newY + "," + prevX + "," + newX + ","+player+").\n";
 		break;
 	default:
 		break;
 	}
-	char * send = new char[playcomand.length() + 1];
-	strcpy(send, playcomand.c_str());
+	if ((play == 0 || play == 2) && abs(diffX) <2 && abs(diffY) < 2)
+		doMove(playcomand,previousX,previousY,selectedX,selectedY,play);
+	else if (play == 1  && sqrt(diffX*diffX+ diffY*diffY) > sqrt(2))
+		doMove(playcomand,previousX,previousY,selectedX,selectedY,play);
+
+
+	gameOver();
+
+}
+
+void TPinterface::doMove(string move,int previousX, int previousY , int selectedX, int selectedY,int play)
+{
+
+	char * send = new char[move.length() + 1];
+	strcpy(send, move.c_str());
 	envia(send, strlen(send));
 	char  ans[255];
+	string answer(ans);
+	char no[7] = "'NO'.\r";
 	recebe(ans);
 	((LightingScene*) scene)->playmove=-1;
-	
+	((LightingScene*) scene)->selected=false;
+	int valid = strcmp(ans,no);
+	if(ans[0] != '8')
+	{
+		((LightingScene*) scene)->playerTurn = !((LightingScene*) scene)->playerTurn;
+		switch (play)
+		{
+		case 0: //move
+			((LightingScene*) scene)->board->move(previousX,previousY,selectedX,selectedY);
+			break;
+		case 1://exit
+			if(((LightingScene*) scene)->playerTurn)
+				((LightingScene*) scene)->player1pieces--;
+			else
+				((LightingScene*) scene)->player2pieces--;
+			((LightingScene*) scene)->board->exit(previousX,previousY,selectedX,selectedY);
+			break;
+		case 2://merge
+			((LightingScene*) scene)->board->merge(previousX,previousY,selectedX,selectedY);
+			break;
+		}
+	}
+}
+
+void TPinterface::gameOver(){
+
+	if (((LightingScene*) scene)->player1pieces == 1){
+		printf("Player 1 wins!!!\n");
+		((LightingScene*) scene)->gameOver=true;
+		quit();
+	}
+	else if (((LightingScene*) scene)->player2pieces == 1){
+		printf("Player 1 wins!!!\n");
+		((LightingScene*) scene)->gameOver=true;
+		quit();
+	}
 
 }
