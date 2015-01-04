@@ -3,18 +3,26 @@
 
 GameBoard::GameBoard(void)
 {
+	
+	player1pieces = 21;
+	player2pieces = 21;
 	ani = NULL;
 	tab = new tabuleiro();
 	createPieces();
 	reposition=false;
+	initialState=pecas;
 }
 
 GameBoard::GameBoard(flagSelection * flag)
 {
+	player1pieces = 21;
+	player2pieces = 21;
 	ani = NULL;
 	this->flag = flag;
 	tab = new tabuleiro();
 	createPieces();
+	
+	initialState=pecas;
 	reposition=false;
 }
 
@@ -72,6 +80,8 @@ void GameBoard::createPieces()
 
 GameBoard::GameBoard(string prologList)
 {
+	player1pieces = 21;
+	player2pieces = 21;
 	reposition=false;
 	ani=NULL;
 	this->flag=flag;
@@ -79,27 +89,69 @@ GameBoard::GameBoard(string prologList)
 	pecas.resize(5);
 	for(int i = 0; i < pecas.size();i++)
 		pecas[i].resize(7);
+
+	initialState=pecas;
 }
 
-
-/*vector <vector <pilha *>> GameBoard::transformPrologListToMatrix(string prologList)
+void GameBoard::addPlay(int playType,int prevX,int prevY,int newX, int newY,int size,int cor)
 {
-	vector <vector <pilha *>> novasPecas;
-	novasPecas.resize(5);
-	for(int i = 0; i < pecas.size();i++)
-		novasPecas[i].resize(7);
+	vector<int> play;
+	vector<int> reversePlay;
 
-	for(int i = 0; i < 5;i++)
+	if(playType == 2)
 	{
-		for(int j = 0; j < 7;j++)
-		{
-
-
-		}
+		int tempx, tempy;
+		tempx = newX; tempy = newY;
+		newX = prevX; newY = prevY;
+		prevX = tempx;prevY = tempy;
 	}
 
 
-}*/
+	play.push_back(playType);
+	play.push_back(prevX);
+	play.push_back(prevY);
+	play.push_back(newX);
+	play.push_back(newY);
+	play.push_back(size);
+
+	reversePlay.push_back(playType);	
+	reversePlay.push_back(newX);
+	reversePlay.push_back(newY);
+	reversePlay.push_back(prevX);
+	reversePlay.push_back(prevY);
+	reversePlay.push_back(size);
+	reversePlay.push_back(cor);
+	plays.push_back(play);
+	reversePlays.push_back(reversePlay);
+}
+
+void GameBoard::undo()
+{
+	plays.pop_back();
+	vector<int> reverse = reversePlays[reversePlays.size()-1];
+	reversePlays.pop_back();
+	int type = reverse[0];
+	switch (type)
+	{
+	case 0:
+		move(reverse[1],reverse[2],reverse[3],reverse[4]);
+		break;
+	case 1:
+		exit(reverse[1],reverse[2],reverse[3],reverse[4]);
+		if(reverse[6])
+			player1pieces++;
+		else
+			player2pieces++;
+		break;
+	case 2:
+		for(int i = 0; i < reverse[5];i++)
+			exit(reverse[1],reverse[2],reverse[3],reverse[4]);
+		break;
+	default:
+		break;
+	}
+}
+
 
 string GameBoard::transformMatrixToPrologList(){
 	string res = "[";

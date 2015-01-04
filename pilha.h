@@ -24,6 +24,7 @@ public:
 	void emptyStack();
 	bool isEmpty() const;
 	void update(unsigned long millis);
+	int getSize() const;
 	~pilha(void);
 };
 

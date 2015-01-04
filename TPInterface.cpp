@@ -39,13 +39,16 @@ void TPinterface::initGUI()
 	gameModepanel= addPanelToPanel(varPanel,"Game Mode",1);
 	GLUI_Button* pvp=addButtonToPanel(gameModepanel,"Player vs Player",16);
 	GLUI_Button* pvm=addButtonToPanel(gameModepanel,"Player vs Machine",17);
-	GLUI_Button* mvm=addButtonToPanel(gameModepanel,"Machine vs Machine",16);
+	GLUI_Button* mvm=addButtonToPanel(gameModepanel,"Machine vs Machine",18);
 
 	addColumnToPanel(varPanel);
 	movepanel = addPanelToPanel(varPanel, "Moves:", 1);
-	GLUI_Button* movebutton = addButtonToPanel(movepanel,"Move", 13);
-	GLUI_Button* exitbutton = addButtonToPanel(movepanel,"Exit", 14);
-	GLUI_Button* mergebutton = addButtonToPanel(movepanel,"Merge", 15);
+	movebutton = addButtonToPanel(movepanel,"Move", 13);
+	exitbutton = addButtonToPanel(movepanel,"Exit", 14);
+	mergebutton = addButtonToPanel(movepanel,"Merge", 15);
+	addColumnToPanel(movepanel);
+	undo = addButtonToPanel(movepanel,"Undo",19);
+	endTurn = addButtonToPanel(movepanel, "End Turn",20);
 
 	addColumnToPanel(varPanel);
 	modepanel = addPanelToPanel(varPanel, "Mode:", 1);
@@ -105,16 +108,18 @@ void TPinterface::processGUI(GLUI_Control *ctrl)
 	switch (ctrl->user_id)
 	{
 	case 13:
-		((LightingScene *) scene) ->setPlaymove(0);
+		if(!((LightingScene *) scene)->canUndo)
+			((LightingScene *) scene) ->setPlaymove(0);
 		break;
 	case 14:
-		((LightingScene *) scene) ->setPlaymove(1);
+		if(!((LightingScene *) scene)->canUndo)
+			((LightingScene *) scene) ->setPlaymove(1);
 		break;
 	case 15:
-		((LightingScene *) scene) ->setPlaymove(2);
+		if(!((LightingScene *) scene)->canUndo)
+			((LightingScene *) scene) ->setPlaymove(2);
 		break;
 	case 16:
-
 		windpanel->enable();
 		windpanel->hidden=false;
 		lightspanel->enable();
@@ -127,6 +132,7 @@ void TPinterface::processGUI(GLUI_Control *ctrl)
 		movepanel->hidden=false;
 		gameModepanel->disable();
 		gameModepanel->hidden=true;
+		((LightingScene *) scene) ->gameMode=1;
 		break;
 
 	case 17:
@@ -142,6 +148,7 @@ void TPinterface::processGUI(GLUI_Control *ctrl)
 		movepanel->hidden=false;
 		gameModepanel->disable();
 		gameModepanel->hidden=true;
+		((LightingScene *) scene) ->gameMode=2;
 		break;
 
 
@@ -158,6 +165,23 @@ void TPinterface::processGUI(GLUI_Control *ctrl)
 		movepanel->hidden=false;
 		gameModepanel->disable();
 		gameModepanel->hidden=true;
+		((LightingScene *) scene) ->gameMode=3;
+		break;
+
+	case 19:
+		if(((LightingScene *)scene)->canUndo){
+			((LightingScene	*) scene)->board->undo();
+			((LightingScene *) scene)->canUndo=false;
+		}
+		break;
+	case 20:
+		if(((LightingScene *)scene)->canUndo)
+		{
+			((LightingScene *)scene)->canUndo = false;
+			((LightingScene *)scene)->playerTurn = !((LightingScene *)scene)->playerTurn;
+			((LightingScene *)scene)->playmove = -1;
+			((LightingScene*) scene)->board->setAnimation();
+		}
 		break;
 	default:
 		break;
@@ -257,7 +281,7 @@ void TPinterface::processHits (GLint hits, GLuint buffer[])
 		for (int j=0; j < num; j++) 
 			ptr++;
 	}
-	if(selected != NULL)
+	if(selected != NULL && ( ((LightingScene *) scene)->gameMode==1 || ( ((LightingScene *) scene)->gameMode==2 && ((LightingScene*)scene)->playerTurn) ))
 	{
 
 		((LightingScene *) scene)->selected = true;
@@ -274,6 +298,10 @@ void TPinterface::processHits (GLint hits, GLuint buffer[])
 		printf("\n");
 
 	}
+	else if( ((LightingScene *) scene)->gameMode==3 || (((LightingScene *) scene)->gameMode==2 && !((LightingScene*)scene)->playerTurn)){
+		((LightingScene *) scene)->selected = false;	
+		prepareRandomMove();
+	}
 	else
 	{
 		((LightingScene *) scene)->selected = false;
@@ -282,6 +310,149 @@ void TPinterface::processHits (GLint hits, GLuint buffer[])
 
 
 }
+
+
+void TPinterface::prepareRandomMove(){
+
+	string boardList = ((LightingScene *) scene)->board->transformMatrixToPrologList();
+
+
+	string player;
+	if(((LightingScene*) scene)->playerTurn)
+		player= "1";
+	else
+		player ="2";
+
+	stringstream p1;
+	p1 << ((LightingScene*) scene)->board->player1pieces;
+	stringstream p2;
+	p2 << ((LightingScene*) scene)->board->player2pieces;
+
+
+	string move = "aiRandomGameOp(1," + boardList + ",["+p1.str() + "," + p2.str() + "]," + player + ").\n";
+	char * send = new char[move.length() +1];
+	strcpy(send, move.c_str());
+	envia(send  , strlen(send));
+	char  ans[255];
+	recebe(ans);
+
+	int play = ans[1]-'0';
+	int prevY = (ans[3]-'0')-1;
+	int prevX = (ans[5]-'0')-1;
+	int dir = ans[7]-'0';
+	int newY = (ans[9]-'0')-1;
+	int newX = (ans[11]-'0')-1;
+
+	if (dir > -1)
+	{
+
+		switch(dir)
+		{
+		case 1:
+			newY = prevY;
+			if(play == 3)
+				newX = prevX -2;
+			else
+				newX = prevX -1;
+			break;
+		case 2:
+			newY = prevY;
+			if(play == 3)
+				newX = prevX +2;
+			else
+				newX = prevX +1;
+			break;
+		case 3:
+			newX = prevX;
+			if(play == 3)
+				newY = prevY -2;
+			else
+				newY = prevY -1;
+			break;
+		case 4:			
+			newX = prevX;
+			if(play == 3)
+				newY = prevY +2;
+			else
+				newY = prevY +1;
+			break;
+		case 5:
+			if(play == 3){
+				newX = prevX -2;
+				newY = prevY -2;}
+			else{
+				newX = prevX -1;
+				newY = prevY -1;
+			}
+			break;
+		case 6:
+			if(play == 3){
+				newX = prevX +2;
+				newY = prevY -2;}
+			else{
+				newX = prevX +1;
+				newY = prevY -1;
+			}
+			break;
+		case 7:
+			if(play == 3){
+				newX = prevX -2;
+				newY = prevY +2;}
+			else{
+				newX = prevX -1;
+				newY = prevY +1;
+			}
+			break;
+		case 8:
+			if(play == 3){
+				newX = prevX +2;
+				newY = prevY +2;}
+			else{
+				newX = prevX +1;
+				newY = prevY +1;
+			}
+			break;
+		default:
+			break;
+		}
+
+
+	}
+
+
+	((LightingScene*) scene)->playerTurn = !((LightingScene*) scene)->playerTurn;
+	switch(play){
+	case 1:
+		((LightingScene*) scene)->board->addPlay(0,prevX,prevY,newX,newY,((LightingScene*) scene)->board->getPecas()[prevX][prevY]->getSize(),((LightingScene*) scene)->board->getPecas()[prevX][prevY]->getCor());
+
+		((LightingScene*) scene)->board->move(prevX,prevY,newX,newY);
+		break;
+	case 2:
+		((LightingScene*) scene)->board->addPlay(2,prevX,prevY,newX,newY,((LightingScene*) scene)->board->getPecas()[newX][newY]->getSize(),((LightingScene*) scene)->board->getPecas()[newX][newY]->getCor());
+
+		((LightingScene*) scene)->board->merge(prevX,prevY,newX,newY);
+
+		break;
+	case 3:
+		((LightingScene*) scene)->board->addPlay(1,prevX,prevY,newX,newY,((LightingScene*) scene)->board->getPecas()[prevX][prevY]->getSize(),((LightingScene*) scene)->board->getPecas()[prevX][prevY]->getCor());
+
+		if(((LightingScene*) scene)->playerTurn)
+			((LightingScene*) scene)->board->player1pieces--;
+		else
+			((LightingScene*) scene)->board->player2pieces--;
+		((LightingScene*) scene)->board->exit(prevX,prevY,newX,newY);
+
+		break;
+	default:
+		break;
+	}
+
+	((LightingScene*) scene)->board->setAnimation();
+	gameOver();
+
+}
+
+
 
 
 void TPinterface::prepareGameMove(int previousX, int previousY , int selectedX, int selectedY){
@@ -337,9 +508,9 @@ void TPinterface::prepareGameMove(int previousX, int previousY , int selectedX, 
 		player ="2";
 
 	stringstream p1;
-	p1 << ((LightingScene*) scene)->player1pieces;
+	p1 << ((LightingScene*) scene)->board->player1pieces;
 	stringstream p2;
-	p2 << ((LightingScene*) scene)->player2pieces;
+	p2 << ((LightingScene*) scene)->board->player2pieces;
 	string dir = ss.str();
 	string playcomand;
 	switch (play)
@@ -373,27 +544,27 @@ void TPinterface::doMove(string move,int previousX, int previousY , int selected
 	envia(send, strlen(send));
 	char  ans[255];
 	string answer(ans);
-	char no[7] = "'NO'.\r";
 	recebe(ans);
 	((LightingScene*) scene)->playmove=-1;
 	((LightingScene*) scene)->selected=false;
-	int valid = strcmp(ans,no);
 	if(ans[0] != '8')
 	{
 
+		((LightingScene *) scene)->canUndo = true;
+		((LightingScene*) scene)->board->addPlay(play,previousX,previousY,selectedX,selectedY,((LightingScene*) scene)->board->getPecas()[selectedX][selectedY]->getSize(),((LightingScene*) scene)->board->getPecas()[previousX][previousY]->getCor());
 
-		((LightingScene*) scene)->playerTurn = !((LightingScene*) scene)->playerTurn;
 		switch (play)
 		{
 		case 0: //move
 
 			((LightingScene*) scene)->board->move(previousX,previousY,selectedX,selectedY);
+
 			break;
 		case 1://exit
 			if(((LightingScene*) scene)->playerTurn)
-				((LightingScene*) scene)->player1pieces--;
+				((LightingScene*) scene)->board->player1pieces--;
 			else
-				((LightingScene*) scene)->player2pieces--;
+				((LightingScene*) scene)->board->player2pieces--;
 			((LightingScene*) scene)->board->exit(previousX,previousY,selectedX,selectedY);
 			break;
 		case 2://merge
@@ -401,22 +572,23 @@ void TPinterface::doMove(string move,int previousX, int previousY , int selected
 			break;
 		}
 
-		((LightingScene*) scene)->board->setAnimation();
 
 	}
 }
 
 void TPinterface::gameOver(){
 
-	if (((LightingScene*) scene)->player1pieces == 1){
+	if (((LightingScene*) scene)->board->player1pieces == 1){
 		printf("Player 1 wins!!!\n");
 		((LightingScene*) scene)->gameOver=true;
 		quit();
 	}
-	else if (((LightingScene*) scene)->player2pieces == 1){
+	else if (((LightingScene*) scene)->board->player2pieces == 1){
 		printf("Player 1 wins!!!\n");
 		((LightingScene*) scene)->gameOver=true;
 		quit();
 	}
 
 }
+
+

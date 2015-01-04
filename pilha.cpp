@@ -70,6 +70,11 @@ void pilha::update(unsigned long millis)
 		pecas[i].update(millis);
 }
 
+int pilha::getSize()const
+{
+	return size;
+}
+
 string pilha::toString(){
 
 	stringstream ss;

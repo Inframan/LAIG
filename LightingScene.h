@@ -15,9 +15,10 @@ class LightingScene : public CGFscene
 	///for the selectiong flag
 	
 public:
-	int player1pieces,player2pieces;
 	bool playerTurn;
 	bool gameOver;
+	bool canUndo;
+	int gameMode;
 	bool selected;
 	int xSelected,ySelected;
 	flagSelection *flag;

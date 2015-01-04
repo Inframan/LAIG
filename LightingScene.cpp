@@ -21,10 +21,10 @@ unsigned int lightArray[8] = {GL_LIGHT0,GL_LIGHT1,GL_LIGHT2,GL_LIGHT3,GL_LIGHT4,
 
 void LightingScene::init() 
 {
+	canUndo=false;
 	gameOver= false;
 	playerTurn = true;
-	player1pieces = 21;
-	player2pieces = 21;
+	gameMode=-1;
 	flag = new flagSelection(new CGFtexture("textures/flagOfMyPeople.gif"));
 
 	playmove=-1;

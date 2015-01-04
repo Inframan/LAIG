@@ -13,15 +13,19 @@ class GameBoard
 	Appearence *app;
 	flagSelection* flag;
 	vector <vector <pilha *>> pecas;
+	vector <vector <pilha *>> initialState;
+	vector <vector <int>> plays;
+	vector <vector <int>> reversePlays;
 	circularAnimation * ani;
 	bool reposition;
 	void createPieces();
 public:
+	int player1pieces,player2pieces;
 	GameBoard(void);
 	GameBoard(string prologList);
 	GameBoard(flagSelection * flag);
-
-	//vector <vector <pilha *>> transformPrologListToMatrix(string prologList);
+	void addPlay(int playType, int previousX,int previousY,int newX,int newY,int size,int cor);
+	void undo();
 	string transformMatrixToPrologList();
 	void sendBoard();
 	vector<vector <pilha *>> getPecas();

@@ -17,6 +17,11 @@ class TPinterface: public CGFinterface {
 	GLUI_Panel* cammodel;
 	GLUI_Panel* modepanel;
 	GLUI_Panel* movepanel;
+	GLUI_Button* undo;
+	GLUI_Button* endTurn;
+	GLUI_Button* movebutton;
+	GLUI_Button* exitbutton;
+	GLUI_Button* mergebutton;
 
 	public:
 		TPinterface(sceneGraph *graph);
@@ -27,6 +32,7 @@ class TPinterface: public CGFinterface {
 		void performPicking(int x, int y);
 		void processHits(GLint hits, GLuint buffer[]);
 		void prepareGameMove(int previousX, int previousY, int selectedX, int selectedY);
+		void prepareRandomMove();
 		void gameOver();
 };
 
