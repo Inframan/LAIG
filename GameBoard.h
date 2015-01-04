@@ -5,6 +5,7 @@
 #include <vector>
 #include <string>
 #include "Appearence.h"
+#include "circularAnimation.h"
 
 class GameBoard
 {
@@ -12,6 +13,8 @@ class GameBoard
 	Appearence *app;
 	flagSelection* flag;
 	vector <vector <pilha *>> pecas;
+	circularAnimation * ani;
+	bool reposition;
 	void createPieces();
 public:
 	GameBoard(void);
@@ -30,5 +33,6 @@ public:
 	void merge(int prevX,int prevY,int newX,int newY);
 	void exit(int prevX,int prevY,int newX,int newY);
 	void update(unsigned long millis);
+	void setAnimation();
 };
 

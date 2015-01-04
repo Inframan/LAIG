@@ -11,6 +11,13 @@ class TPinterface: public CGFinterface {
 	vector<string> cameras;
 	sceneGraph * pgraph;
 	void doMove(string move,int previousX, int previousY , int selectedX, int selectedY,int play);
+	GLUI_Panel *gameModepanel;
+	GLUI_Panel* windpanel;
+	GLUI_Panel* lightspanel;
+	GLUI_Panel* cammodel;
+	GLUI_Panel* modepanel;
+	GLUI_Panel* movepanel;
+
 	public:
 		TPinterface(sceneGraph *graph);
 		void getCameraList();

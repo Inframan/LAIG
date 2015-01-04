@@ -36,19 +36,25 @@ void TPinterface::initGUI()
 	// Check CGFinterface.h and GLUI documentation for the types of controls available
 	GLUI_Panel *varPanel= addPanel("GUI:", 1);
 
-	GLUI_Panel *movepanel = addPanelToPanel(varPanel, "Moves:", 1);
+	gameModepanel= addPanelToPanel(varPanel,"Game Mode",1);
+	GLUI_Button* pvp=addButtonToPanel(gameModepanel,"Player vs Player",16);
+	GLUI_Button* pvm=addButtonToPanel(gameModepanel,"Player vs Machine",17);
+	GLUI_Button* mvm=addButtonToPanel(gameModepanel,"Machine vs Machine",16);
+
+	addColumnToPanel(varPanel);
+	movepanel = addPanelToPanel(varPanel, "Moves:", 1);
 	GLUI_Button* movebutton = addButtonToPanel(movepanel,"Move", 13);
 	GLUI_Button* exitbutton = addButtonToPanel(movepanel,"Exit", 14);
 	GLUI_Button* mergebutton = addButtonToPanel(movepanel,"Merge", 15);
 
 	addColumnToPanel(varPanel);
-	GLUI_Panel *modepanel = addPanelToPanel(varPanel, "Mode:", 1);
+	modepanel = addPanelToPanel(varPanel, "Mode:", 1);
 	GLUI_RadioGroup* wireFrameGroup = addRadioGroupToPanel(modepanel,wire);
 	addRadioButtonToGroup(wireFrameGroup, "\tFill");
 	addRadioButtonToGroup(wireFrameGroup, "\tWire");
 	addRadioButtonToGroup(wireFrameGroup, "\tPoint");
 	addColumnToPanel(varPanel);
-	GLUI_Panel *cammodel = addPanelToPanel(varPanel, "Camera", 1);
+	cammodel = addPanelToPanel(varPanel, "Camera", 1);
 	GLUI_RadioGroup* camerasGroup = addRadioGroupToPanel(cammodel,cam);
 	for(int i = 0; i < cameras.size();i++)
 	{
@@ -59,7 +65,7 @@ void TPinterface::initGUI()
 
 
 	addColumnToPanel(varPanel);
-	GLUI_Panel *lightspanel = addPanelToPanel(varPanel, "Lights", 1);
+	lightspanel = addPanelToPanel(varPanel, "Lights", 1);
 	for(int i = 0; i < pgraph->getLights().size();i++)
 	{
 		if (pgraph->getLights()[i].enabled)
@@ -73,14 +79,23 @@ void TPinterface::initGUI()
 	}
 
 	addColumnToPanel(varPanel);
-	GLUI_Panel *windpanel = addPanelToPanel(varPanel, "Wind", 1);
+	windpanel = addPanelToPanel(varPanel, "Wind", 1);
 	GLUI_Spinner *spin=   addSpinnerToPanel(windpanel,"wind",GLUI_SPINNER_INT,wind,11);
 	spin->set_int_limits(0,11,GLUI_LIMIT_WRAP);	
 
 
 	addColumnToPanel(varPanel);
 
-
+	windpanel->disable();
+	windpanel->hidden=true;
+	lightspanel->disable();
+	lightspanel->hidden=true;
+	cammodel->disable();
+	cammodel->hidden=true;
+	modepanel->disable();
+	modepanel->hidden=true;
+	movepanel->disable();
+	movepanel->hidden=true;
 }
 
 
@@ -89,7 +104,6 @@ void TPinterface::processGUI(GLUI_Control *ctrl)
 	printf ("GUI control id: %d\n  ",ctrl->user_id);
 	switch (ctrl->user_id)
 	{
-
 	case 13:
 		((LightingScene *) scene) ->setPlaymove(0);
 		break;
@@ -98,6 +112,52 @@ void TPinterface::processGUI(GLUI_Control *ctrl)
 		break;
 	case 15:
 		((LightingScene *) scene) ->setPlaymove(2);
+		break;
+	case 16:
+
+		windpanel->enable();
+		windpanel->hidden=false;
+		lightspanel->enable();
+		lightspanel->hidden=false;
+		cammodel->enable();
+		cammodel->hidden=false;
+		modepanel->enable();
+		modepanel->hidden=false;
+		movepanel->enable();
+		movepanel->hidden=false;
+		gameModepanel->disable();
+		gameModepanel->hidden=true;
+		break;
+
+	case 17:
+		windpanel->enable();
+		windpanel->hidden=false;
+		lightspanel->enable();
+		lightspanel->hidden=false;
+		cammodel->enable();
+		cammodel->hidden=false;
+		modepanel->enable();
+		modepanel->hidden=false;
+		movepanel->enable();
+		movepanel->hidden=false;
+		gameModepanel->disable();
+		gameModepanel->hidden=true;
+		break;
+
+
+	case 18:
+		windpanel->enable();
+		windpanel->hidden=false;
+		lightspanel->enable();
+		lightspanel->hidden=false;
+		cammodel->enable();
+		cammodel->hidden=false;
+		modepanel->enable();
+		modepanel->hidden=false;
+		movepanel->enable();
+		movepanel->hidden=false;
+		gameModepanel->disable();
+		gameModepanel->hidden=true;
 		break;
 	default:
 		break;
@@ -201,7 +261,7 @@ void TPinterface::processHits (GLint hits, GLuint buffer[])
 	{
 
 		((LightingScene *) scene)->selected = true;
-		if (((LightingScene *) scene)->playmove != -1)
+		if (((LightingScene *) scene)->playmove != -1 && !((LightingScene *) scene)->gameOver)
 			prepareGameMove(((LightingScene *) scene)->xSelected, ((LightingScene *) scene)->ySelected , selected[0] , selected[1]);
 
 		((LightingScene *) scene)->xSelected = selected[0];
@@ -248,7 +308,7 @@ void TPinterface::prepareGameMove(int previousX, int previousY , int selectedX, 
 	int direction= -1;
 	string playmove;
 	string boardList = ((LightingScene *) scene)->board->transformMatrixToPrologList();
-	
+
 	if(abs(diffX) == abs(diffY) || diffY == 0 || diffX == 0)
 	{
 		if ( diffX == 0 && diffY > 0)
@@ -275,7 +335,7 @@ void TPinterface::prepareGameMove(int previousX, int previousY , int selectedX, 
 		player= "1";
 	else
 		player ="2";
-	
+
 	stringstream p1;
 	p1 << ((LightingScene*) scene)->player1pieces;
 	stringstream p2;
@@ -308,7 +368,6 @@ void TPinterface::prepareGameMove(int previousX, int previousY , int selectedX, 
 
 void TPinterface::doMove(string move,int previousX, int previousY , int selectedX, int selectedY,int play)
 {
-
 	char * send = new char[move.length() + 1];
 	strcpy(send, move.c_str());
 	envia(send, strlen(send));
@@ -341,6 +400,9 @@ void TPinterface::doMove(string move,int previousX, int previousY , int selected
 			((LightingScene*) scene)->board->merge(previousX,previousY,selectedX,selectedY);
 			break;
 		}
+
+		((LightingScene*) scene)->board->setAnimation();
+
 	}
 }
 

@@ -3,21 +3,25 @@
 
 GameBoard::GameBoard(void)
 {
-	
+	ani = NULL;
 	tab = new tabuleiro();
 	createPieces();
+	reposition=false;
 }
 
 GameBoard::GameBoard(flagSelection * flag)
 {
+	ani = NULL;
 	this->flag = flag;
 	tab = new tabuleiro();
 	createPieces();
+	reposition=false;
 }
 
 
 void GameBoard::createPieces()
 {
+	ani = NULL;
 	pecas.resize(5);
 	for(int i = 0; i < pecas.size();i++)
 		pecas[i].resize(7);
@@ -68,6 +72,8 @@ void GameBoard::createPieces()
 
 GameBoard::GameBoard(string prologList)
 {
+	reposition=false;
+	ani=NULL;
 	this->flag=flag;
 	tab = new tabuleiro();
 	pecas.resize(5);
@@ -138,6 +144,12 @@ void GameBoard::sendBoard()
 void GameBoard::draw(int x, int y){
 
 	bool selected=true;
+
+	
+	glPushMatrix();
+	if(ani)
+		ani->transform();
+
 	
 	flag->draw(x,y);
 	glPushMatrix();
@@ -155,13 +167,17 @@ void GameBoard::draw(int x, int y){
 	
 	glPopMatrix();
 	
-	
-
+	glPopMatrix();
 
 }
 
 void GameBoard::draw(){
 	
+
+	glPushMatrix();
+	if(ani)
+		ani->transform();
+
 	glPushMatrix();
 	glPushName(-1);
 	
@@ -174,6 +190,7 @@ void GameBoard::draw(){
 	}
 	glPopMatrix();
 
+	glPopMatrix();
 
 }
 
@@ -229,9 +246,23 @@ void GameBoard::exit(int prevX,int prevY,int newX,int newY)
 
 void GameBoard::update(unsigned long millis)
 {
+	if(ani)
+		ani->update(millis);
 	for(int i = 0; i < pecas.size(); i++)
 		for(int j = 0; j < pecas[i].size();j++)
 			pecas[i][j]->update(millis);
+}
+
+void GameBoard::setAnimation()
+{
+	if(reposition){
+	ani = new circularAnimation("this ani",2,2.5,0,3.5,180,180,0);
+	reposition=false;
+	}
+	else{
+	ani = new circularAnimation("this ani",2,2.5,0,3.5,180,0,0);
+	reposition=true;
+	}
 }
 
 GameBoard::~GameBoard(void)

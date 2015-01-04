@@ -47,6 +47,7 @@ void circularAnimation::transform()
 	glTranslated(cx,cy,cz);
 	glRotated(angle,0,1,0);	
 	glTranslated(x,0,z);
+	glTranslated(-cx,-cy,-cz);
 }
 
 void circularAnimation::update(unsigned long t)
