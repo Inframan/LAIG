@@ -6,6 +6,7 @@ GLuint selectBuf[BUFSIZE];
 
 TPinterface::TPinterface(sceneGraph *graph)
 {
+	movieIndex = 0;
 	pgraph = graph;
 	getCameraList();
 }
@@ -33,9 +34,18 @@ void TPinterface::initGUI()
 
 	int * cam = &(((LightingScene*) scene)->activCam);
 
+	int * drawType = &(((LightingScene*) scene)->board->drawType);
+
 	// Check CGFinterface.h and GLUI documentation for the types of controls available
 	GLUI_Panel *varPanel= addPanel("GUI:", 1);
+	endGamepanel= addPanelToPanel(varPanel,"End",1);
+	endGame=addButtonToPanel(endGamepanel,"End Game",21);
+	gameMovie=addButtonToPanel(endGamepanel,"Game Movie",22);
 
+	forward = addButtonToPanel(endGamepanel, ">>",23);
+	backwards = addButtonToPanel(endGamepanel,"<<",24);
+
+	addColumnToPanel(varPanel);
 	gameModepanel= addPanelToPanel(varPanel,"Game Mode",1);
 	GLUI_Button* pvp=addButtonToPanel(gameModepanel,"Player vs Player",16);
 	GLUI_Button* pvm=addButtonToPanel(gameModepanel,"Player vs Machine",17);
@@ -49,13 +59,17 @@ void TPinterface::initGUI()
 	addColumnToPanel(movepanel);
 	undo = addButtonToPanel(movepanel,"Undo",19);
 	endTurn = addButtonToPanel(movepanel, "End Turn",20);
-
 	addColumnToPanel(varPanel);
 	modepanel = addPanelToPanel(varPanel, "Mode:", 1);
 	GLUI_RadioGroup* wireFrameGroup = addRadioGroupToPanel(modepanel,wire);
 	addRadioButtonToGroup(wireFrameGroup, "\tFill");
 	addRadioButtonToGroup(wireFrameGroup, "\tWire");
 	addRadioButtonToGroup(wireFrameGroup, "\tPoint");
+	addColumnToPanel(modepanel);
+	GLUI_RadioGroup* geometryGroup = addRadioGroupToPanel(modepanel,drawType);
+	addRadioButtonToGroup(geometryGroup, "\tDefault");
+	addRadioButtonToGroup(geometryGroup, "\tSphere");
+	addRadioButtonToGroup(geometryGroup, "\tCone");
 	addColumnToPanel(varPanel);
 	cammodel = addPanelToPanel(varPanel, "Camera", 1);
 	GLUI_RadioGroup* camerasGroup = addRadioGroupToPanel(cammodel,cam);
@@ -80,14 +94,11 @@ void TPinterface::initGUI()
 			(char*)pgraph->getLights()[i].id.c_str(), NULL, i)->set_int_val(
 			0);
 	}
-
 	addColumnToPanel(varPanel);
 	windpanel = addPanelToPanel(varPanel, "Wind", 1);
 	GLUI_Spinner *spin=   addSpinnerToPanel(windpanel,"wind",GLUI_SPINNER_INT,wind,11);
 	spin->set_int_limits(0,11,GLUI_LIMIT_WRAP);	
-
-
-	addColumnToPanel(varPanel);
+	windpanel->hidden=true;
 
 	windpanel->disable();
 	windpanel->hidden=true;
@@ -99,6 +110,10 @@ void TPinterface::initGUI()
 	modepanel->hidden=true;
 	movepanel->disable();
 	movepanel->hidden=true;
+	endGamepanel->disable();
+	endGamepanel->hidden=true;
+	forward->hidden=true;
+	backwards->hidden=true;
 }
 
 
@@ -120,8 +135,8 @@ void TPinterface::processGUI(GLUI_Control *ctrl)
 			((LightingScene *) scene) ->setPlaymove(2);
 		break;
 	case 16:
-		windpanel->enable();
-		windpanel->hidden=false;
+		//windpanel->enable();
+		//windpanel->hidden=false;
 		lightspanel->enable();
 		lightspanel->hidden=false;
 		cammodel->enable();
@@ -136,8 +151,8 @@ void TPinterface::processGUI(GLUI_Control *ctrl)
 		break;
 
 	case 17:
-		windpanel->enable();
-		windpanel->hidden=false;
+		//windpanel->enable();
+		//windpanel->hidden=false;
 		lightspanel->enable();
 		lightspanel->hidden=false;
 		cammodel->enable();
@@ -153,8 +168,8 @@ void TPinterface::processGUI(GLUI_Control *ctrl)
 
 
 	case 18:
-		windpanel->enable();
-		windpanel->hidden=false;
+		//windpanel->enable();
+		//windpanel->hidden=false;
 		lightspanel->enable();
 		lightspanel->hidden=false;
 		cammodel->enable();
@@ -178,15 +193,45 @@ void TPinterface::processGUI(GLUI_Control *ctrl)
 		if(((LightingScene *)scene)->canUndo)
 		{
 			((LightingScene *)scene)->canUndo = false;
-			((LightingScene *)scene)->playerTurn = !((LightingScene *)scene)->playerTurn;
 			((LightingScene *)scene)->playmove = -1;
 			((LightingScene*) scene)->board->setAnimation();
 		}
 		break;
+	case 21:
+		quit();
+		exit(0);
+		break;
+	case 22:
+		if(! ((LightingScene*) scene)->inMovie)
+		{
+			((LightingScene*) scene)->inMovie = true;
+			((LightingScene*) scene)->board->startMovie();
+			forward->hidden=false;
+			backwards->hidden=false;
+			movieIndex = 0;
+		}
+		break;
+	case 23:
+		if(((LightingScene*) scene)->inMovie)
+			movieIndex = ((LightingScene*) scene)->board->playMovie(movieIndex);
+
+		break;
+	case 24:
+		if(((LightingScene*) scene)->inMovie)
+			movieIndex = ((LightingScene*) scene)->board->undoMovie(movieIndex);
+		break;
+
 	default:
 		break;
 	}
-
+	if(movieIndex < 0)
+	{
+		((LightingScene*) scene)->inMovie = true;
+		((LightingScene*) scene)->board->startMovie();
+		forward->hidden=false;
+		backwards->hidden=false;
+		movieIndex = 0;
+	}
 	if (ctrl->user_id >= 0 && ctrl->user_id <13)
 		if (ctrl->get_int_val() == 1) {
 			pgraph->getLights()[ctrl->user_id].enabled = true;
@@ -285,7 +330,7 @@ void TPinterface::processHits (GLint hits, GLuint buffer[])
 	{
 
 		((LightingScene *) scene)->selected = true;
-		if (((LightingScene *) scene)->playmove != -1 && !((LightingScene *) scene)->gameOver)
+		if (((LightingScene *) scene)->playmove != -1)
 			prepareGameMove(((LightingScene *) scene)->xSelected, ((LightingScene *) scene)->ySelected , selected[0] , selected[1]);
 
 		((LightingScene *) scene)->xSelected = selected[0];
@@ -420,7 +465,6 @@ void TPinterface::prepareRandomMove(){
 	}
 
 
-	((LightingScene*) scene)->playerTurn = !((LightingScene*) scene)->playerTurn;
 	switch(play){
 	case 1:
 		((LightingScene*) scene)->board->addPlay(0,prevX,prevY,newX,newY,((LightingScene*) scene)->board->getPecas()[prevX][prevY]->getSize(),((LightingScene*) scene)->board->getPecas()[prevX][prevY]->getCor());
@@ -447,6 +491,7 @@ void TPinterface::prepareRandomMove(){
 		break;
 	}
 
+	((LightingScene*) scene)->playerTurn = !((LightingScene*) scene)->playerTurn;
 	((LightingScene*) scene)->board->setAnimation();
 	gameOver();
 
@@ -572,21 +617,26 @@ void TPinterface::doMove(string move,int previousX, int previousY , int selected
 			break;
 		}
 
+		((LightingScene *)scene)->playerTurn = !((LightingScene *)scene)->playerTurn;
 
 	}
 }
 
 void TPinterface::gameOver(){
 
-	if (((LightingScene*) scene)->board->player1pieces == 1){
+	if (((LightingScene*) scene)->board->player1pieces < 2){
+		endGamepanel->hidden=false;
+		endGamepanel->enable();
+		movepanel->hidden=true;
+		((LightingScene*) scene)->over = 1;
 		printf("Player 1 wins!!!\n");
-		((LightingScene*) scene)->gameOver=true;
-		quit();
 	}
-	else if (((LightingScene*) scene)->board->player2pieces == 1){
-		printf("Player 1 wins!!!\n");
-		((LightingScene*) scene)->gameOver=true;
-		quit();
+	else if (((LightingScene*) scene)->board->player2pieces < 2){
+		endGamepanel->hidden=false;
+		endGamepanel->enable();
+		movepanel->hidden=true;
+		((LightingScene*) scene)->over =  2;
+		printf("Player 2 wins!!!\n");
 	}
 
 }

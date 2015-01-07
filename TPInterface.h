@@ -17,12 +17,18 @@ class TPinterface: public CGFinterface {
 	GLUI_Panel* cammodel;
 	GLUI_Panel* modepanel;
 	GLUI_Panel* movepanel;
+	GLUI_Panel* endGamepanel;
 	GLUI_Button* undo;
 	GLUI_Button* endTurn;
 	GLUI_Button* movebutton;
 	GLUI_Button* exitbutton;
 	GLUI_Button* mergebutton;
+	GLUI_Button* endGame;
+	GLUI_Button* gameMovie;
+	GLUI_Button* forward;
+	GLUI_Button* backwards;
 
+		int movieIndex;
 	public:
 		TPinterface(sceneGraph *graph);
 		void getCameraList();

@@ -10,16 +10,17 @@
 class GameBoard
 {
 	tabuleiro *tab;
-	Appearence *app;
+	CGFappearance *app;
+	Texture *t;
 	flagSelection* flag;
 	vector <vector <pilha *>> pecas;
-	vector <vector <pilha *>> initialState;
 	vector <vector <int>> plays;
 	vector <vector <int>> reversePlays;
 	circularAnimation * ani;
 	bool reposition;
 	void createPieces();
 public:
+	int drawType;
 	int player1pieces,player2pieces;
 	GameBoard(void);
 	GameBoard(string prologList);
@@ -38,5 +39,9 @@ public:
 	void exit(int prevX,int prevY,int newX,int newY);
 	void update(unsigned long millis);
 	void setAnimation();
+	void startMovie();
+	int playMovie(int index);
+	int undoMovie(int index);
+	void updateWind(int wind);
 };
 

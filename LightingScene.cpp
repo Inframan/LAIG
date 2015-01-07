@@ -21,8 +21,10 @@ unsigned int lightArray[8] = {GL_LIGHT0,GL_LIGHT1,GL_LIGHT2,GL_LIGHT3,GL_LIGHT4,
 
 void LightingScene::init() 
 {
+	over = -1;
+	wind = 1;
+	inMovie = false;
 	canUndo=false;
-	gameOver= false;
 	playerTurn = true;
 	gameMode=-1;
 	flag = new flagSelection(new CGFtexture("textures/flagOfMyPeople.gif"));
@@ -217,24 +219,40 @@ void LightingScene::display()
 			glDisable(lightArray[i]);
 		lightsVector[i]->update();
 	}
-	// Draw axis
-
-
-	axis.draw();
 
 	Appearence * t = NULL;
+
+	if(over > -1)
+		{
+		glPushMatrix();
+		glTranslated(-2,1,0);
+		glRotated(20,0,1,0);
+		glScaled(0.01,0.01,0.01);
+		glColor3f(1,1,1);
+		glRasterPos3f(0,0,0);
+		glutStrokeCharacter(GLUT_STROKE_ROMAN, 'P');
+		glutStrokeCharacter(GLUT_STROKE_ROMAN, 'L');
+		glutStrokeCharacter(GLUT_STROKE_ROMAN, 'A');
+		glutStrokeCharacter(GLUT_STROKE_ROMAN, 'Y');
+		glutStrokeCharacter(GLUT_STROKE_ROMAN, 'E');
+		glutStrokeCharacter(GLUT_STROKE_ROMAN, 'R');
+		glutStrokeCharacter(GLUT_STROKE_ROMAN, ' ');
+		glutStrokeCharacter(GLUT_STROKE_ROMAN, '0' + over);
+		glutStrokeCharacter(GLUT_STROKE_ROMAN, ' ');
+		glutStrokeCharacter(GLUT_STROKE_ROMAN, 'W');
+		glutStrokeCharacter(GLUT_STROKE_ROMAN, 'I');
+		glutStrokeCharacter(GLUT_STROKE_ROMAN, 'N');
+		glutStrokeCharacter(GLUT_STROKE_ROMAN, 'S');
+		glPopMatrix();
+	}
 	drawNode(pgraph.getRootNode(),t);
 	// ---- END Background, camera and axis setup
 
 	// ---- BEGIN Primitive drawing section
+	board->draw(xSelected,ySelected);
 
-	if (!gameOver){
-		if(selected)
-			board->draw(xSelected,ySelected);
-		else
-			board->draw();
-	}
-
+		
+	
 glutSwapBuffers();
 
 }
@@ -245,7 +263,7 @@ void LightingScene::update(unsigned long millis)
 	pgraph.updateWind(wind);
 	pgraph.update(millis);
 	board->update(millis);
-
+	board->updateWind(wind);
 }
 
 void LightingScene::setPlaymove(int playmove)

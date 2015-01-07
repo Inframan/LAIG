@@ -3,6 +3,7 @@
 #include "CGFappearance.h"
 #include "linearAnimation.h"
 #include "circularAnimation.h"
+#include "sphere.h"
 
 class Peca
 {
@@ -11,6 +12,8 @@ class Peca
 	int initx,inity;
 	bool aniWork;
 	cylinder *innerCylinder, *outerCylinder;
+	sphere * esphere;
+	cylinder *cone;
 	CGFappearance *corPeca;
 	unsigned long prevTime;
 	float speedx,speedy,speedz;
@@ -19,6 +22,9 @@ public:
 	Peca(int cor);
 	Peca(void);
 	void draw();
+	void drawSphere();
+	void drawCylinder();
+	void draw(int type);
 	~Peca(void);
 	void setMoveAnimation(int x, int y,int z);
 	void setExitAnimation(int x, int y,int z);

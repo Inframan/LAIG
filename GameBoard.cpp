@@ -3,26 +3,39 @@
 
 GameBoard::GameBoard(void)
 {
-	
+	drawType = 0;
 	player1pieces = 21;
 	player2pieces = 21;
 	ani = NULL;
+	float amb[3] = {0.2, 0.2, 0.2};
+	float difA[3] = {1.0, 1.0, 1.0};
+	float specA[3] = {0.3, 0.3, 0.3};
+	float shininessA = 120.f;
+	app = new CGFappearance(amb,difA,specA,shininessA);
+	app->setTexture("textures/burstsort.png");
+	t= new Texture("id","textures/burstsort.png",1,1);
 	tab = new tabuleiro();
 	createPieces();
 	reposition=false;
-	initialState=pecas;
 }
 
 GameBoard::GameBoard(flagSelection * flag)
 {
+	drawType = 0;
 	player1pieces = 21;
 	player2pieces = 21;
 	ani = NULL;
 	this->flag = flag;
+	
+	float amb[3] = {0.2, 0.2, 0.2};
+	float difA[3] = {1.0, 1.0, 1.0};
+	float specA[3] = {0.3, 0.3, 0.3};
+	float shininessA = 120.f;
+	app = new CGFappearance(amb,difA,specA,shininessA);
+	app->setTexture("textures/burstsort.png");
+	t= new Texture("id","textures/burstsort.png",1,1);
 	tab = new tabuleiro();
 	createPieces();
-	
-	initialState=pecas;
 	reposition=false;
 }
 
@@ -80,6 +93,7 @@ void GameBoard::createPieces()
 
 GameBoard::GameBoard(string prologList)
 {
+	drawType = 0;
 	player1pieces = 21;
 	player2pieces = 21;
 	reposition=false;
@@ -90,7 +104,6 @@ GameBoard::GameBoard(string prologList)
 	for(int i = 0; i < pecas.size();i++)
 		pecas[i].resize(7);
 
-	initialState=pecas;
 }
 
 void GameBoard::addPlay(int playType,int prevX,int prevY,int newX, int newY,int size,int cor)
@@ -197,34 +210,35 @@ void GameBoard::draw(int x, int y){
 
 	bool selected=true;
 
-	
+
 	glPushMatrix();
 	if(ani)
 		ani->transform();
 
-	
+
 	flag->draw(x,y);
 	glPushMatrix();
 	glPushName(-1);
-	
-	tab->draw();
+
+	app->apply();
+	tab->draw(t);
 
 	for (int i = 0 ; i < pecas.size(); i++){
-		
+
 		for(int j = 0 ; j < pecas[i].size(); j++){
-					pecas[i][j]->draw();
+			pecas[i][j]->draw(drawType);
 		}
 	}
 
-	
+
 	glPopMatrix();
-	
+
 	glPopMatrix();
 
 }
 
 void GameBoard::draw(){
-	
+
 
 	glPushMatrix();
 	if(ani)
@@ -233,7 +247,8 @@ void GameBoard::draw(){
 	glPushMatrix();
 	glPushName(-1);
 	
-	tab->draw();
+	app->apply();
+	tab->draw(t);
 
 	for (int i = 0 ; i < pecas.size(); i++){
 		for(int j = 0 ; j < pecas[i].size(); j++){
@@ -295,11 +310,16 @@ void GameBoard::exit(int prevX,int prevY,int newX,int newY)
 	pecas[newX][newY]->setCor(cor);
 }
 
+void GameBoard::updateWind(int wind)
+{
+	flag->setWind(wind);
+}
 
 void GameBoard::update(unsigned long millis)
 {
 	if(ani)
 		ani->update(millis);
+	flag->update(millis);
 	for(int i = 0; i < pecas.size(); i++)
 		for(int j = 0; j < pecas[i].size();j++)
 			pecas[i][j]->update(millis);
@@ -308,14 +328,79 @@ void GameBoard::update(unsigned long millis)
 void GameBoard::setAnimation()
 {
 	if(reposition){
-	ani = new circularAnimation("this ani",2,2.5,0,3.5,180,180,0);
-	reposition=false;
+		ani = new circularAnimation("this ani",2,2.5,0,3.5,180,180,0);
+		reposition=false;
 	}
 	else{
-	ani = new circularAnimation("this ani",2,2.5,0,3.5,180,0,0);
-	reposition=true;
+		ani = new circularAnimation("this ani",2,2.5,0,3.5,180,0,0);
+		reposition=true;
 	}
 }
+
+void GameBoard::startMovie()
+{
+	pecas.clear();
+	createPieces();
+}
+
+
+int GameBoard::playMovie(int index)
+{
+	if(index > plays.size()-1 || index < 0)
+		return -1;
+
+	vector<int> play = plays[index];
+	int type = play[0];
+	switch (type)
+	{
+	case 0:
+		move(play[1],play[2],play[3],play[4]);
+		break;
+	case 1:
+		exit(play[1],play[2],play[3],play[4]);
+		break;
+	case 2:
+		merge(play[1],play[2],play[3],play[4]);
+		break;
+	default:
+		break;
+	}
+
+	return ++index;
+}
+
+int GameBoard::undoMovie(int index)
+{
+	--index;
+	if(index > plays.size()-1||index < 0)
+		return -1;
+	pecas.begin();
+	vector<int> reverse = reversePlays[index];
+	int type = reverse[0];
+	switch (type)
+	{
+	case 0:
+		move(reverse[1],reverse[2],reverse[3],reverse[4]);
+		break;
+	case 1:
+		exit(reverse[1],reverse[2],reverse[3],reverse[4]);
+		if(reverse[6])
+			player1pieces++;
+		else
+			player2pieces++;
+		break;
+	case 2:
+		for(int i = 0; i < reverse[5];i++)
+			exit(reverse[1],reverse[2],reverse[3],reverse[4]);
+		break;
+	default:
+		break;
+	}
+
+	return index;
+
+}
+
 
 GameBoard::~GameBoard(void)
 {

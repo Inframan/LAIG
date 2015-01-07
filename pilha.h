@@ -14,6 +14,7 @@ class pilha :
 public:
 	pilha(void);
 	void draw();
+	void draw(int drawType);
 	Peca removePiece();
 	void addPiece(Peca peca);
 	void setCor(int x);

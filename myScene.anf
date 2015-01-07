@@ -12,11 +12,7 @@
             <controlpoint xx="7" yy="0" zz="0" />
             <controlpoint xx="0" yy="5" zz="3" />
       </animation> -->
-      <animation id="AniMercurio" span="30" type="circular" center="-45 5 0" radius="37" startang="0" rotang="360" loop="true"/>
-   <animation id="Aniovni" span="3" type="linear" loop="true">
-            <controlpoint xx="0" yy="0" zz="0" />
-            <controlpoint xx="2000" yy="0" zz="0" />
-    </animation>
+   
 
 	</animations>	
 
@@ -24,21 +20,22 @@
 
 
 	<globals>
-		<drawing mode="fill" shading="gouraud" background="0 0 0 0" />
+		<drawing mode="fill" shading="gouraud" background="0.0 0.8 0.8 1" />
 		<culling face="back" order="ccw" />
 		<lighting doublesided="true" local="false" enabled="true" ambient="0.2 0.2 0.2 0.2" />
 	</globals>
 
-	<cameras initial="perspective1">
-		<perspective id="perspective1" near="-10" far="50" angle="45" pos="8.0 8.0 8.0" target="2.5 0.0 3.5" />
-		<perspective id="perspective2" near="-10" far="50" angle="45" pos="-2.5 8.0 -1.5" target="2.5 0.0 3.5" />
+	<cameras initial="above">
+		<perspective id="front" near="-10" far="50" angle="45" pos="8.0 8.0 8.0" target="2.5 0.0 3.5" />
+		<perspective id="back" near="-10" far="50" angle="45" pos="-2.5 8.0 -1.5" target="2.5 0.0 3.5" />
+		<perspective id="above" near="-10" far="50" angle="90" pos="3.5 10.0 4.5" target="2.5 0.0 3.5" />
 		</cameras>
 
 
 	<lights>
             <!-- Deve existir pelo menos uma luz declarada -->
             <!-- Atributo "marker" indica se deve ou nao desenhar-se uma esfera representativa -->
-          	 <light id="L1" type="omni" enabled="true" marker="true" pos="0 5 0" >
+          	 <light id="L1" type="omni" enabled="true" marker="false" pos="0 5 0" >
                <component type="ambient" value="0.0 0.0 0.0 0.1" />
                <component type="diffuse" value="1 1 1 1" />
                <component type="specular" value="0.0 0.8 1.0 0.4" />
@@ -60,51 +57,205 @@
        </lights>
 
 	<textures>
-		<texture id="metal" file="textures/metal.jpg" texlength_s="1.0" texlength_t="1.0" />
+	<texture id="plankText" file="textures/plankText.jpg" texlength_s="1.0" texlength_t="1.0" />
 	</textures>
-
 	<appearances>
-		<appearance id="FoguetaoAp" shininess="0.8" textureref="metal">
-			<component type="ambient" value="1.0 1.0 1.0 1.0" />
-			<component type="diffuse" value="1.0 1.0 1.0 1.0" />
-			<component type="specular" value="1.0 1.0 1.0 1.0" />
+		<appearance id="plank" shininess="1.0" textureref="plankText">
+			<component type="ambient" value="0.6 0.6 0.6 1.0" />
+			<component type="diffuse" value="0.6 0.6 0.6 1.0" />
+			<component type="specular" value="0.6 0.6 0.6 1.0" />
 		</appearance>
-		
-
 	</appearances>
 
 
-	<graph rootid="1">
-
-		<node id="1" >
-
+	<graph rootid="root">
+		<node id="root">
 			<transforms>
+				<transform type="scale" factor="0.4 0.6 0.5" />
+				<transform type="translate" to="6.5 0 7.0"/>
 			</transforms>
-
 			<primitives>
 			</primitives>
-
 			<descendants>
-				<noderef id="tabuleiroInf" />
+			<noderef id="table" />
 			</descendants>
-
 		</node>
-
-		<node id="tabuleiroInf" >
-
+		
+		
+		<node id="table">
 			<transforms>
-				<!--<transform type="rotate" axis="x" angle=""/>-->
+
 			</transforms>
-
-			<appearanceref id="FoguetaoAp" />
-
+			<appearanceref id="plank"/>
 			<primitives>
 			</primitives>
-
+			<descendants>
+				<noderef id="leg1" />
+				<noderef id="leg2" />
+				<noderef id="leg3" />
+				<noderef id="leg4" />
+				<noderef id="top" />
+			</descendants>
+		</node>
+		
+		<node id="leg1">
+			<transforms>
+				<transform type="translate" to="-8 0 8" />
+			</transforms>
+			<appearanceref id="inherit" />
+			<primitives>
+			</primitives>
+			<descendants>
+				<noderef id="leg" />
+			</descendants>
+		</node>
+		<node id="leg2">
+			<transforms>
+				<transform type="translate" to="8 0 8" />
+			</transforms>
+			<appearanceref id="inherit" />
+			<primitives>
+			</primitives>
+			<descendants>
+				<noderef id="leg" />
+			</descendants>
+		</node>
+		<node id="leg3">
+			<transforms>
+				<transform type="translate" to="-8 0 -8" />
+			</transforms>
+			<appearanceref id="inherit" />
+			<primitives>
+			</primitives>
+			<descendants>
+				<noderef id="leg" />
+			</descendants>
+		</node>
+		<node id="leg4">
+			<transforms>
+				<transform type="translate" to="8 0 -8" />
+			</transforms>
+			<appearanceref id="inherit" />
+			<primitives>
+			</primitives>
+			<descendants>
+				<noderef id="leg" />
+			</descendants>
+		</node>
+		<node id="leg">
+			<transforms>
+			<transform type="translate" to="0 -3.5 0" />
+			<transform type="scale" factor="2 6.0 2" />
+			</transforms>
+			<appearanceref id="inherit" />
+			<primitives>
+			</primitives>
+			<descendants>
+				<noderef id="cube" />
+			</descendants>
+		</node>
+		<node id="top">
+			<transforms>
+			<transform type="translate" to="0.0 -0.3 0.0" />
+			<transform type="scale" factor="20.0 0.4 20.0" />
+			<transform type="rotate" axis="x" angle="-90" />
+			</transforms>
+			<appearanceref id="inherit" />
+			<primitives>
+			</primitives>
+			<descendants>
+				<noderef id="cube" />
+			</descendants>
+		</node>
+				
+		<node id="cube">
+			<transforms>
+			</transforms>
+			<appearanceref id="inherit" />
+			<primitives>
+			</primitives>
+			<descendants>
+				<noderef id="cubeX1" />
+				<noderef id="cubeY1" />
+				<noderef id="cubeZ1" />
+				<noderef id="cubeX2" />
+				<noderef id="cubeY2" />
+				<noderef id="cubeZ2" />
+			</descendants>
+		</node>
+		<node id="cubeX1">
+			<transforms>
+				<transform type="translate" to="0.5 0.0 0.0" />
+				<transform type="rotate" axis="y" angle="90" />
+			</transforms>
+			<appearanceref id="inherit" />
+			<primitives>
+				<rectangle xy1="-0.5 -0.5" xy2="0.5 0.5" />
+			</primitives>
 			<descendants>
 			</descendants>
-
 		</node>
+		<node id="cubeY1">
+			<transforms>
+				<transform type="translate" to="0.0 0.5 0.0" />
+				<transform type="rotate" axis="x" angle="-90" />
+			</transforms>
+			<appearanceref id="inherit" />
+			<primitives>
+				<rectangle xy1="-0.5 -0.5" xy2="0.5 0.5" />
+			</primitives>
+			<descendants>
+			</descendants>
+		</node>
+		<node id="cubeZ1">
+			<transforms>
+				<transform type="translate" to="0.0 0.0 0.5" />
+			</transforms>
+			<appearanceref id="inherit" />
+			<primitives>
+				<rectangle xy1="-0.5 -0.5" xy2="0.5 0.5" />
+			</primitives>
+			<descendants>
+			</descendants>
+		</node>
+		<node id="cubeX2">
+			<transforms>
+				<transform type="translate" to="-0.5 0.0 0.0" />
+				<transform type="rotate" axis="y" angle="-90" />
+			</transforms>
+			<appearanceref id="inherit" />
+			<primitives>
+				<rectangle xy1="-0.5 -0.5" xy2="0.5 0.5" />
+			</primitives>
+			<descendants>
+			</descendants>
+		</node>
+		<node id="cubeY2">
+			<transforms>
+				<transform type="translate" to="0.0 -0.5 0.0" />
+				<transform type="rotate" axis="x" angle="90" />
+			</transforms>
+			<appearanceref id="inherit" />
+			<primitives>
+				<rectangle xy1="-0.5 -0.5" xy2="0.5 0.5" />
+			</primitives>
+			<descendants>
+			</descendants>
+		</node>
+		<node id="cubeZ2">
+			<transforms>
+				<transform type="translate" to="0.0 0.0 -0.5" />
+				<transform type="rotate" axis="y" angle="180" />
+			</transforms>
+			<appearanceref id="inherit" />
+			<primitives>
+				<rectangle xy1="-0.5 -0.5" xy2="0.5 0.5" />
+			</primitives>
+			<descendants>
+			</descendants>
+		</node>
+		
 	</graph>
+
 </anf>
 

@@ -2,8 +2,7 @@
 
 
 flagSelection::flagSelection(CGFtexture *t)
-{	//<cylinder base="5" top="2" height="0.5" slices="20" stacks="6" />
-
+{	
 	pole =new cylinder(0.2,0.2,1,20,6);
 
 	flag = new Flag(t);

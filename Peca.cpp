@@ -26,6 +26,8 @@ Peca::Peca(void)
 	z = 0;
 	innerCylinder = new cylinder(0.1,0.1,0.2,10,10);
 	outerCylinder = new cylinder(0.3,0.3,0.1,10,10);
+	esphere = new sphere(0.15,10,10);
+	cone = new cylinder(0.3,0,0.2,10,10);
 }
 
 Peca::Peca(int cor)
@@ -53,33 +55,54 @@ Peca::Peca(int cor)
 	z = 0;
 	innerCylinder = new cylinder(0.1,0.1,0.2,10,10);
 	outerCylinder = new cylinder(0.3,0.3,0.1,10,10);
+	esphere = new sphere(0.15,10,10);
+	cone = new cylinder(0.3,0,0.2,10,10);
 }
 
 Peca::~Peca(void)
 {
 }
 
-void Peca::draw(){
+void Peca::draw(int type){
 	corPeca->apply();
 	glPushMatrix();
 	if(aniWork)
 		ani->transform();
 	glTranslated(x,z,y);
 	glRotated(-90,1,0,0);
-	innerCylinder->draw();
-	outerCylinder->draw();
+	switch (type)
+	{
+	case 0:
+
+		innerCylinder->draw();
+		outerCylinder->draw();
+		break;
+	case 1:
+		esphere->draw();
+		break;
+	case 2:
+		cone->draw();
+		break;
+	default:		
+		innerCylinder->draw();
+		outerCylinder->draw();
+		break;
+	}
 	glPopMatrix();
+}
+void Peca::draw(){
+	draw(0);
 }
 
 void Peca::setMoveAnimation(int x, int y,int z){
-	
+
 	ani = new linearAnimation("this ani",0.5);
 	ani->addPoint(x,y,z);
 	ani->addPoint(0,0,0);
 	ani->changeControlPoint();
 	ani->calculateTotalDistance();
 	aniWork = true;
-	
+
 }
 
 void Peca::setExitAnimation(int x, int y, int z){
@@ -90,7 +113,7 @@ void Peca::setExitAnimation(int x, int y, int z){
 	ani->addPoint(0,y,0);
 	ani->addPoint(0,y/2,0);
 	ani->addPoint(0,0,0);
-	
+
 	ani->changeControlPoint();
 	ani->calculateTotalDistance();
 	aniWork = true;
@@ -103,7 +126,7 @@ void Peca::setMergeAnimation(int x, int y, int z){
 	ani->addPoint(x/2,y+0.5,z/2);
 	ani->addPoint(x/4,y+0.25,z/4);
 	ani->addPoint(0,0,0);
-	
+
 	ani->changeControlPoint();
 	ani->calculateTotalDistance();
 	aniWork = true;

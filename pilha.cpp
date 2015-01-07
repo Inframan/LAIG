@@ -28,7 +28,13 @@ void pilha::setCor(int cor)
 {
 	this->cor = cor;
 }
+
 void pilha::draw()
+{
+	draw(0);
+}
+
+void pilha::draw(int drawType)
 {
 	glPushMatrix();
 	glTranslated(x+0.5,z,y+0.5);
@@ -38,7 +44,7 @@ void pilha::draw()
 	{
 		
 		glPushName(y);
-		it->draw();
+		it->draw(drawType);
 		glPopName();
 		glTranslated(0,0.1,0);
 	}

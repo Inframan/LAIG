@@ -15,8 +15,9 @@ class LightingScene : public CGFscene
 	///for the selectiong flag
 	
 public:
+	int over;
+	bool inMovie;
 	bool playerTurn;
-	bool gameOver;
 	bool canUndo;
 	int gameMode;
 	bool selected;

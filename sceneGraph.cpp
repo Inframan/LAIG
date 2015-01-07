@@ -210,6 +210,7 @@ void sceneGraph::updateWind(int wind){
 
 
 	n->updateWind(wind);
+
 }
 
 sceneGraph::~sceneGraph(void)
